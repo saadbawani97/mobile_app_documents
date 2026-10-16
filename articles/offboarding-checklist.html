@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offboarding Checklist | Mobile App Playbook</title>
+<meta name="description" content="Same-day access removal across GitHub, GitLab, stores, Firebase and every other system.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="templates">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#templates">Templates &amp; Checklists</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-templates"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
+<div>
+<h1>Offboarding Checklist</h1>
+<p class="lede">Same-day access removal across GitHub, GitLab, stores, Firebase and every other system.</p>
+<p class="meta"><span>Template 11.5</span><span>1 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout no-toc">
+
+<main class="prose" id="content">
+<p>When <strong>any</strong> developer, QA, designer or contractor leaves, complete this <strong>on their last working day</strong>, and record it with date and who did it.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>System</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>GitHub</strong></td>
+<td>Remove from the <strong>Organization</strong> (not just repos). Check Outside Collaborators on all repos. Revoke any deploy keys/PATs they created; transfer any repos they own personally that belong to company work.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>GitLab</strong></td>
+<td>Remove from the <strong>top-level Group</strong>; block their company GitLab user if applicable.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>App Store Connect / Apple Developer</strong></td>
+<td>Remove the user from <em>Users and Access</em>. If they had access to certificates, consider revoking/re-issuing certificates and the App Store Connect API key they used.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Google Play Console</strong></td>
+<td>Remove from <em>Users and permissions</em>.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Firebase / Google Cloud</strong></td>
+<td>Remove from IAM on every project. Rotate any service-account keys they downloaded.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Expo / EAS</strong></td>
+<td>Remove from the Expo organization.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>CI/CD</strong></td>
+<td>Rotate tokens/secrets they had personal access to.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Password manager</strong></td>
+<td>Remove from vaults; <strong>rotate passwords of shared accounts</strong> they knew (store accounts, third-party dashboards).</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Third-party dashboards</strong></td>
+<td>Sentry, payment gateways, Maps, SMS, analytics, App Distribution, etc.</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Communication</strong></td>
+<td>Slack/Teams/Email, Jira/Trello/ClickUp, Google Drive shares.</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Devices</strong></td>
+<td>Collect test devices; remove their devices from the Apple device list if needed.</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Knowledge</strong></td>
+<td>Collect KT documents, update Project Registries with anything only they knew; reassign their open PRs/tickets.</td>
+</tr>
+</tbody></table></div>
+
+<nav class="pager"><a class="pager-link prev" href="live-apps-health-sheet.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Live Apps Health Sheet</span></a><a class="pager-link next" href="onboarding-checklist.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Onboarding Checklist</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

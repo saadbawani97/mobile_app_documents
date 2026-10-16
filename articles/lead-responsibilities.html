@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Other Key Responsibilities | Mobile App Playbook</title>
+<meta name="description" content="Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="after-launch">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#after-launch">After Launch</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-after-launch"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+<div>
+<h1>Other Key Responsibilities</h1>
+<p class="lede">Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.</p>
+<p class="meta"><span>Section 10</span><span>3 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#101-code-quality--standards">10.1 Code quality &amp; standards</a></li><li><a href="#102-cicd">10.2 CI/CD</a></li><li><a href="#103-dependency--react-native-upgrades">10.3 Dependency &amp; React Native upgrades</a></li><li><a href="#104-expiry--renewal-calendar-shared-company-calendar">10.4 Expiry &amp; renewal calendar (shared company calendar)</a></li><li><a href="#105-security">10.5 Security</a></li><li><a href="#106-versioning-release-notes--communication">10.6 Versioning, release notes &amp; communication</a></li><li><a href="#107-documentation--handover">10.7 Documentation &amp; handover</a></li><li><a href="#108-team--process">10.8 Team &amp; process</a></li><li><a href="#109-client-handover-when-a-project-ends">10.9 Client handover (when a project ends)</a></li></ol></details></nav>
+<main class="prose" id="content">
+<h2 id="101-code-quality--standards"><a class="anchor" href="#101-code-quality--standards" aria-hidden="true">#</a>10.1 Code quality &amp; standards</h2>
+<ul>
+<li>TypeScript strict mode; ESLint + Prettier; Husky pre-commit (lint-staged) and pre-push (type-check).</li>
+<li><strong>Mandatory code review</strong> on all PRs (rulesets enforce this).</li>
+<li>Shared component library / theme so apps look consistent and are faster to build.</li>
+<li>Unit tests for business logic (Jest), component tests (React Native Testing Library); E2E (Maestro or Detox) for critical flows (login, payment, checkout).</li>
+</ul>
+<h2 id="102-cicd"><a class="anchor" href="#102-cicd" aria-hidden="true">#</a>10.2 CI/CD</h2>
+<ul>
+<li>PR pipeline: lint → type-check → tests.</li>
+<li>Release pipeline: build signed AAB/IPA and upload to internal testing / TestFlight automatically (<strong>GitHub Actions + Fastlane</strong>, or <strong>EAS Build + EAS Submit</strong>).</li>
+<li>All signing material lives in CI secrets <strong>and</strong> the vault, never on one person&#39;s machine.</li>
+</ul>
+<h2 id="103-dependency--react-native-upgrades"><a class="anchor" href="#103-dependency--react-native-upgrades" aria-hidden="true">#</a>10.3 Dependency &amp; React Native upgrades</h2>
+<ul>
+<li>Use the <strong>React Native Upgrade Helper</strong> for CLI projects; for Expo, upgrade one SDK at a time.</li>
+<li>Keep each maintained app <strong>no more than 1–2 RN versions behind</strong>. Old versions eventually fail new store requirements (target API, Xcode SDK, 16 KB pages).</li>
+<li>Prefer well-maintained libraries compatible with the <strong>New Architecture</strong>. Check the React Native Directory before adding a dependency.</li>
+<li>Run <code>npm audit</code> / Dependabot regularly; patch critical vulnerabilities.</li>
+</ul>
+<h2 id="104-expiry--renewal-calendar-shared-company-calendar"><a class="anchor" href="#104-expiry--renewal-calendar-shared-company-calendar" aria-hidden="true">#</a>10.4 Expiry &amp; renewal calendar (shared company calendar)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Validity</th>
+<th>Consequence if missed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Apple Developer Program membership</td>
+<td>1 year</td>
+<td><strong>Apps removed from App Store</strong>, no new builds</td>
+</tr>
+<tr>
+<td>iOS Distribution certificate</td>
+<td>1 year</td>
+<td>Can&#39;t sign new builds (live apps keep working)</td>
+</tr>
+<tr>
+<td>iOS provisioning profiles</td>
+<td>1 year</td>
+<td>Can&#39;t build/distribute (Enterprise: installed apps stop)</td>
+</tr>
+<tr>
+<td>APNs .p12 push certificate (if used instead of .p8)</td>
+<td>1 year</td>
+<td><strong>Push notifications stop</strong></td>
+</tr>
+<tr>
+<td>Domain names (API, deep links, privacy policy)</td>
+<td>Per registrar</td>
+<td>App breaks, deep links fail, store listing invalid</td>
+</tr>
+<tr>
+<td>SSL certificates (if not auto-renewed)</td>
+<td>Varies</td>
+<td>API calls fail</td>
+</tr>
+<tr>
+<td>Third-party SaaS subscriptions (Maps, SMS, Sentry, RevenueCat…)</td>
+<td>Varies</td>
+<td>Features break</td>
+</tr>
+<tr>
+<td>Google Play target API deadline</td>
+<td>Yearly (Aug)</td>
+<td>Updates blocked</td>
+</tr>
+</tbody></table></div>
+<h2 id="105-security"><a class="anchor" href="#105-security" aria-hidden="true">#</a>10.5 Security</h2>
+<ul>
+<li>Store auth tokens in <strong>Keychain/Keystore</strong> (<code>react-native-keychain</code> / <code>expo-secure-store</code>), <strong>not</strong> AsyncStorage.</li>
+<li>HTTPS everywhere; consider <strong>SSL pinning</strong> for banking/fintech apps.</li>
+<li>Obfuscation (R8) for Android; no secrets in the bundle (Section 4).</li>
+<li>Firebase Security Rules reviewed before launch; App Check enabled.</li>
+<li>Root/jailbreak detection only where business requires (fintech).</li>
+</ul>
+<h2 id="106-versioning-release-notes--communication"><a class="anchor" href="#106-versioning-release-notes--communication" aria-hidden="true">#</a>10.6 Versioning, release notes &amp; communication</h2>
+<ul>
+<li>Semantic versioning (<code>MAJOR.MINOR.PATCH</code>), build numbers always increase.</li>
+<li>Maintain a <code>CHANGELOG.md</code> per repo (auto-generated from Conventional Commits).</li>
+<li>Inform client/management before each production release with release notes and the planned rollout.</li>
+</ul>
+<h2 id="107-documentation--handover"><a class="anchor" href="#107-documentation--handover" aria-hidden="true">#</a>10.7 Documentation &amp; handover</h2>
+<ul>
+<li>Every repo&#39;s README must allow a <strong>new developer to run the app within one hour</strong>: prerequisites, Node/Java/Xcode versions, env setup, how to build each flavor/scheme, how to release.</li>
+<li>Keep the <strong>Project Registry</strong> up to date after every change in accounts, keys, owners or URLs.</li>
+<li>Record architecture decisions in <code>docs/adr/</code> (short Architecture Decision Records).</li>
+</ul>
+<h2 id="108-team--process"><a class="anchor" href="#108-team--process" aria-hidden="true">#</a>10.8 Team &amp; process</h2>
+<ul>
+<li>Estimation includes <strong>store review time + buffer</strong> (at least 1 week for first release).</li>
+<li>Device lab: maintain at least one low-end Android, one recent Android, one older iPhone, one recent iPhone (+ iPad if supported).</li>
+<li>Onboarding/offboarding checklists followed <strong>every time</strong> (<a href="offboarding-checklist.html">11.5</a>).</li>
+</ul>
+<h2 id="109-client-handover-when-a-project-ends"><a class="anchor" href="#109-client-handover-when-a-project-ends" aria-hidden="true">#</a>10.9 Client handover (when a project ends)</h2>
+<ul>
+<li>Transfer repo (or provide a full archive with history) as per contract.</li>
+<li>Transfer app to the client&#39;s store accounts if it was published under ours (Apple <em>App Transfer</em>, Google <em>App transfer</em>).</li>
+<li>Hand over: Project Registry, keystore + passwords, <code>.env</code> files, Firebase project ownership, all third-party accounts, documentation, and remove our access afterwards if the contract says so.</li>
+</ul>
+
+<nav class="pager"><a class="pager-link prev" href="live-app-monitoring.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Detecting Google/Apple Changes on Live Apps</span></a><a class="pager-link next" href="project-registry-template.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Project Registry Template</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

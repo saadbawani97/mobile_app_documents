@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detecting Google/Apple Changes on Live Apps | Mobile App Playbook</title>
+<meta name="description" content="How live apps get hit by store updates, where warnings appear, and the monitoring routine.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="after-launch">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#after-launch">After Launch</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-after-launch"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+<div>
+<h1>Detecting Google/Apple Changes on Live Apps</h1>
+<p class="lede">How live apps get hit by store updates, where warnings appear, and the monitoring routine.</p>
+<p class="meta"><span>Section 9</span><span>5 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#91-how-an-app-gets-hit">9.1 How an app gets &quot;hit&quot;</a></li><li><a href="#92-current-platform-requirements-verify-every-quarter">9.2 Current platform requirements (verify every quarter)</a></li><li><a href="#93-detection-channels-who-watches-what">9.3 Detection channels: who watches what</a></li><li><a href="#94-recurring-monitoring-routine">9.4 Recurring monitoring routine</a></li><li><a href="#95-when-an-issue-is-found">9.5 When an issue is found</a></li></ol></details></nav>
+<main class="prose" id="content">
+<p>Apple and Google change their platforms <strong>every year</strong>: new OS versions, new SDK requirements, new privacy rules and new policies. A live app that isn&#39;t maintained will eventually be <strong>rejected on its next update, hidden from new users, or removed</strong>. The job is to find out <strong>before</strong> users or clients do.</p>
+<h2 id="91-how-an-app-gets-hit"><a class="anchor" href="#91-how-an-app-gets-hit" aria-hidden="true">#</a>9.1 How an app gets &quot;hit&quot;</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type of change</th>
+<th>Typical effect on a live app</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>New Google Play target API requirement</strong> (every year, deadline usually 31 August)</td>
+<td>Updates are <strong>blocked</strong> until the app targets the new API level; apps targeting too-old API levels become <strong>unavailable to new users</strong> on newer Android devices.</td>
+</tr>
+<tr>
+<td><strong>New Xcode/iOS SDK minimum</strong> (every spring)</td>
+<td><strong>New builds can&#39;t be uploaded</strong> until rebuilt with the new Xcode/SDK.</td>
+</tr>
+<tr>
+<td><strong>New OS release</strong> (iOS every September, Android yearly)</td>
+<td>Crashes, UI/layout breaks (e.g. Android edge-to-edge enforcement), permission behaviour changes, deprecated APIs.</td>
+</tr>
+<tr>
+<td><strong>New store policy</strong> (privacy, permissions, payments, account deletion, data safety, age ratings…)</td>
+<td>Policy warning email with a deadline → app <strong>removed or updates rejected</strong> if not fixed.</td>
+</tr>
+<tr>
+<td><strong>Third-party SDK becomes non-compliant or deprecated</strong> (Google Play SDK Index, Facebook SDK, ads SDKs, Firebase services)</td>
+<td>Policy violation or broken functionality (e.g. Dynamic Links shutdown).</td>
+</tr>
+<tr>
+<td><strong>Expiry of certificates/keys/memberships</strong></td>
+<td>Push stops (old .p12 certs), CI can&#39;t sign, Apple membership lapse removes apps.</td>
+</tr>
+<tr>
+<td><strong>Backend/API dependency changes</strong> (Google Maps pricing, social login API versions)</td>
+<td>Silent feature breakage.</td>
+</tr>
+</tbody></table></div>
+<h2 id="92-current-platform-requirements-verify-every-quarter"><a class="anchor" href="#92-current-platform-requirements-verify-every-quarter" aria-hidden="true">#</a>9.2 Current platform requirements (verify every quarter)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Requirement (as of Oct 2026)</th>
+<th>Where to verify</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Google Play</td>
+<td>New apps &amp; updates must target <strong>Android 16 (API 36)</strong> from 31 Aug 2026 (+ the yearly bump each August). Apps targeting Android 15+ must support <strong>16 KB memory page sizes</strong> (keep RN &amp; native libs updated).</td>
+<td>developer.android.com/google/play/requirements/target-sdk</td>
+</tr>
+<tr>
+<td>Apple</td>
+<td>Uploads must be built with <strong>Xcode 26 / iOS 26 SDK</strong> or later (from April 2026). Privacy manifests required for apps and listed third-party SDKs.</td>
+<td>developer.apple.com/news/upcoming-requirements</td>
+</tr>
+<tr>
+<td>Both</td>
+<td>In-app account deletion, accurate privacy labels / Data safety form, only necessary permissions.</td>
+<td>Store policy pages</td>
+</tr>
+</tbody></table></div>
+<h2 id="93-detection-channels-who-watches-what"><a class="anchor" href="#93-detection-channels-who-watches-what" aria-hidden="true">#</a>9.3 Detection channels: who watches what</h2>
+<p>Make sure <strong>notification emails from both stores go to a shared company mailbox</strong> (e.g. <code>mobile-alerts@company.com</code>) that more than one person reads, <strong>not</strong> to a personal inbox. This is the single most important step.</p>
+<p><strong>Google Play Console</strong></p>
+<ul>
+<li><strong>Inbox</strong> (bell icon) and the account owner&#39;s <strong>email</strong>: policy warnings, deadlines and new requirements are announced here first.</li>
+<li><strong>Policy status</strong> page (<em>Policy and programs → Policy status</em>): shows any app with violations/warnings and deadlines.</li>
+<li><strong>Dashboard warnings</strong> per app: e.g. &quot;Your app must target API level XX by …&quot;.</li>
+<li><strong>Android vitals</strong>: crash rate &amp; ANR rate vs. the &quot;bad behaviour&quot; thresholds (exceeding them reduces store visibility).</li>
+<li><strong>Pre-launch report</strong> on every upload.</li>
+<li><strong>SDK Index / SDK console warnings</strong>: Play shows warnings if an included SDK version is outdated or policy-violating.</li>
+</ul>
+<p><strong>App Store Connect / Apple</strong></p>
+<ul>
+<li>Account Holder &amp; Admin <strong>emails</strong> and the <strong>App Store Connect app</strong> notifications.</li>
+<li><strong>Apple Developer News &amp; &quot;Upcoming requirements&quot;</strong> page: all new SDK/Xcode/policy deadlines are published here.</li>
+<li><strong>App Review Guidelines change log</strong> (updated after WWDC each June and occasionally during the year).</li>
+<li><strong>Resolution Center</strong> messages and <strong>App Store Connect → Apps → (app) → App Store / Ratings &amp; Reviews</strong>.</li>
+<li><strong>Xcode Organizer → Crashes / Energy / Hangs</strong> and <strong>App Analytics</strong> for live-app health.</li>
+<li><strong>Developer program membership status</strong> (renewal date).</li>
+</ul>
+<p><strong>Our own monitoring</strong></p>
+<ul>
+<li><strong>Firebase Crashlytics</strong> velocity &amp; new-issue alerts (to shared mailbox/Slack). A spike right after an iOS/Android release usually means the new OS broke something.</li>
+<li><strong>Store reviews</strong>: sudden 1-star reviews mentioning &quot;crash after update&quot; or a specific device/OS.</li>
+<li><strong>Dependabot / <code>npm audit</code></strong> on every repo, plus React Native release notes.</li>
+<li><strong>OS beta testing:</strong> every June (WWDC, iOS beta) and with each Android beta, install the beta on a test device and smoke-test all live apps <strong>before</strong> the public release in September.</li>
+</ul>
+<h2 id="94-recurring-monitoring-routine"><a class="anchor" href="#94-recurring-monitoring-routine" aria-hidden="true">#</a>9.4 Recurring monitoring routine</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Frequency</th>
+<th>Task</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Daily</strong> (5 min)</td>
+<td>Scan shared mailbox for store emails; check Crashlytics alerts</td>
+<td>Mobile Lead / on-duty dev</td>
+</tr>
+<tr>
+<td><strong>Weekly</strong></td>
+<td>Play Console Inbox + Policy status; App Store Connect messages; review new store ratings</td>
+<td>Mobile Lead</td>
+</tr>
+<tr>
+<td><strong>Monthly</strong></td>
+<td>Fill the <strong>Live Apps Health Sheet</strong> (<a href="live-apps-health-sheet.html">11.4</a>) for every live app: crash-free %, ANR %, target SDK, last release date, pending warnings</td>
+<td>Mobile Lead</td>
+</tr>
+<tr>
+<td><strong>Quarterly</strong></td>
+<td>Read Apple &quot;Upcoming requirements&quot; + Android &quot;Target API&quot; + Play policy updates; plan updates for affected apps; check certificate/profile/membership expiry dates</td>
+<td>Mobile Lead</td>
+</tr>
+<tr>
+<td><strong>June (WWDC)</strong></td>
+<td>Test all live apps on iOS beta; read new App Review Guidelines</td>
+<td>Mobile Team</td>
+</tr>
+<tr>
+<td><strong>Before 31 Aug</strong></td>
+<td>All live Android apps updated to the new target API level</td>
+<td>Mobile Team</td>
+</tr>
+<tr>
+<td><strong>September</strong></td>
+<td>Verify all live apps on the new public iOS/Android release; watch Crashlytics closely</td>
+<td>Mobile Team</td>
+</tr>
+<tr>
+<td><strong>Yearly</strong></td>
+<td>Upgrade React Native / Expo SDK on each maintained app (staying max ~1 year behind); renew Apple memberships</td>
+<td>Mobile Lead</td>
+</tr>
+</tbody></table></div>
+<h2 id="95-when-an-issue-is-found"><a class="anchor" href="#95-when-an-issue-is-found" aria-hidden="true">#</a>9.5 When an issue is found</h2>
+<ol>
+<li>Log it in the <strong>Live Apps Health Sheet</strong> with the deadline.</li>
+<li>Inform <strong>management &amp; the client</strong> (if client-owned) with: what changed, deadline, impact if ignored, estimated effort.</li>
+<li>Plan the fix release well before the deadline (store reviews can be slow near deadlines).</li>
+<li>After the fix is live, confirm the warning disappears from Play Console / Apple and close the item.</li>
+<li>If a deadline is impossible to meet, Google Play often lets you <strong>request an extension</strong> from the warning in Play Console (usually a few months). Use it early, not on the last day.</li>
+</ol>
+
+<nav class="pager"><a class="pager-link prev" href="store-publishing.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Publishing to App Store &amp; Google Play</span></a><a class="pager-link next" href="lead-responsibilities.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Other Key Responsibilities</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

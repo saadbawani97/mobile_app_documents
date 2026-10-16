@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firebase Setup | Mobile App Playbook</title>
+<meta name="description" content="Why Firebase matters, per-environment projects, push (FCM/APNs), Crashlytics, Remote Config and App Check.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="setup">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#setup">Project Setup</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-setup"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+<div>
+<h1>Firebase Setup</h1>
+<p class="lede">Why Firebase matters, per-environment projects, push (FCM/APNs), Crashlytics, Remote Config and App Check.</p>
+<p class="meta"><span>Section 5</span><span>4 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#51-why-firebase-is-an-essential-part-of-almost-every-app">5.1 Why Firebase is an essential part of almost every app</a></li><li><a href="#52-ownership--access">5.2 Ownership &amp; access</a></li><li><a href="#53-step-by-step-setup">5.3 Step-by-step setup</a></li><li><a href="#54-should-google-servicesjson--googleservice-infoplist-be-committed">5.4 Should google-services.json / GoogleService-Info.plist be committed?</a></li></ol></details></nav>
+<main class="prose" id="content">
+<h2 id="51-why-firebase-is-an-essential-part-of-almost-every-app"><a class="anchor" href="#51-why-firebase-is-an-essential-part-of-almost-every-app" aria-hidden="true">#</a>5.1 Why Firebase is an essential part of almost every app</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Firebase service</th>
+<th>What it gives us</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloud Messaging (FCM)</strong></td>
+<td>Push notifications on Android <strong>and</strong> iOS (via APNs)</td>
+<td>Almost every app needs push.</td>
+</tr>
+<tr>
+<td><strong>Crashlytics</strong></td>
+<td>Real-time crash &amp; ANR reports with stack traces, affected users, OS/device</td>
+<td>The #1 tool to know if a live app is broken, especially after a new iOS/Android OS release.</td>
+</tr>
+<tr>
+<td><strong>Analytics</strong></td>
+<td>Users, sessions, retention, events, funnels</td>
+<td>Business reporting; also powers Remote Config targeting.</td>
+</tr>
+<tr>
+<td><strong>Remote Config</strong></td>
+<td>Change app behaviour without a store release</td>
+<td><strong>Force/soft update</strong> prompts, feature flags, kill switches, maintenance mode.</td>
+</tr>
+<tr>
+<td><strong>App Distribution</strong></td>
+<td>Send test builds to QA/clients</td>
+<td>Fast internal testing (alternative to TestFlight/Play testing tracks).</td>
+</tr>
+<tr>
+<td><strong>Performance Monitoring</strong></td>
+<td>App start time, network latency, slow screens</td>
+<td>Detect performance regressions.</td>
+</tr>
+<tr>
+<td><strong>App Check</strong></td>
+<td>Ensures requests come from our genuine app</td>
+<td>Protects Firebase/backend from abuse.</td>
+</tr>
+<tr>
+<td>Auth / Firestore / Storage (optional)</td>
+<td>Backend-as-a-service</td>
+<td>Used when the project doesn&#39;t have its own backend.</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Note:</strong> Firebase Dynamic Links has been <strong>shut down (August 2025)</strong>. Do not use it in new projects. Use native <strong>Universal Links (iOS) / App Links (Android)</strong> or a third-party deep-link service instead.</p>
+<p><strong>Note:</strong> Microsoft App Center (incl. CodePush) was retired in <strong>March 2025</strong>. For over-the-air JS updates use <strong>Expo EAS Update</strong> or a self-hosted alternative.</p>
+</blockquote>
+<h2 id="52-ownership--access"><a class="anchor" href="#52-ownership--access" aria-hidden="true">#</a>5.2 Ownership &amp; access</h2>
+<ul>
+<li>Create Firebase projects while logged in with the <strong>company Google account</strong> (e.g. <code>mobile@company.com</code> or the client&#39;s account if the client owns the app).</li>
+<li>In <strong>Project settings → Users and permissions</strong> (IAM), ensure at least <strong>two company Owners</strong>. Developers get <strong>Editor</strong> or narrower roles.</li>
+<li>Link billing (<strong>Blaze plan</strong>) to the <strong>company/client billing account</strong>, and set a <strong>budget alert</strong> in Google Cloud Billing.</li>
+</ul>
+<h2 id="53-step-by-step-setup"><a class="anchor" href="#53-step-by-step-setup" aria-hidden="true">#</a>5.3 Step-by-step setup</h2>
+<ol>
+<li><strong>Create one Firebase project per environment:</strong>
+<code>acme-delivery-dev</code>, <code>acme-delivery-staging</code>, <code>acme-delivery-prod</code>.
+(Mixing test and production data in one project pollutes analytics and risks sending test pushes to real users.)</li>
+<li>In each project, <strong>add an Android app</strong> with the environment&#39;s application ID (e.g. <code>com.acme.delivery.staging</code> / <code>com.acme.delivery</code>).<ul>
+<li>Add the <strong>SHA-1 and SHA-256</strong> fingerprints of: the debug keystore, the upload keystore, <strong>and the Play App Signing key</strong> (from <em>Play Console → Test and release → App integrity</em>). Missing the Play signing SHA is the most common cause of &quot;Google Sign-In works in testing but fails in production&quot;.</li>
+<li>Download <code>google-services.json</code>.</li>
+</ul>
+</li>
+<li><strong>Add an iOS app</strong> with the matching bundle ID. Download <code>GoogleService-Info.plist</code>.</li>
+<li>Install <strong>React Native Firebase</strong> (<code>@react-native-firebase/app</code> + needed modules) or configure via the Expo config plugin.</li>
+<li>Place config files per environment (Android product flavors: <code>android/app/src/&lt;flavor&gt;/google-services.json</code>; iOS: one plist per scheme copied by a build phase script, or via Expo&#39;s <code>app.config.js</code> per profile).</li>
+<li><strong>Push notifications on iOS:</strong><ul>
+<li>In Apple Developer → <em>Keys</em> → create an <strong>APNs Auth Key (.p8)</strong>. One key works for all apps in the team and <strong>does not expire</strong> (preferred over yearly <code>.p12</code> certificates).</li>
+<li>Note the <strong>Key ID</strong> and <strong>Team ID</strong>, upload the <code>.p8</code> to <em>Firebase → Project settings → Cloud Messaging → Apple app configuration</em>.</li>
+<li><strong>Back up the .p8 immediately</strong>: Apple lets you download it <strong>only once</strong>.</li>
+<li>Enable <em>Push Notifications</em> and <em>Background Modes → Remote notifications</em> capabilities in Xcode.</li>
+<li>Android 13+: request the <code>POST_NOTIFICATIONS</code> runtime permission.</li>
+</ul>
+</li>
+<li><strong>Crashlytics:</strong> enable, add the Gradle plugin and the iOS dSYM upload build phase (otherwise iOS crashes appear unsymbolicated). Force a test crash in staging to verify.</li>
+<li><strong>Remote Config:</strong> add at minimum these parameters on every project:<ul>
+<li><code>min_supported_version_android</code>, <code>min_supported_version_ios</code> → <strong>force update</strong> below this version.</li>
+<li><code>latest_version_android</code>, <code>latest_version_ios</code> → <strong>soft update</strong> prompt.</li>
+<li><code>maintenance_mode</code> (boolean) + <code>maintenance_message</code>.</li>
+</ul>
+</li>
+<li><strong>Crashlytics alerts:</strong> in <em>Project settings → Integrations / Alerts</em>, enable email alerts (new fatal issue, regressed issue, <strong>velocity alert</strong>) to a shared mobile team mailbox, not a personal email.</li>
+<li><strong>App Check:</strong> enable with Play Integrity (Android) and App Attest/DeviceCheck (iOS) for production.</li>
+<li>Record all project IDs, console links and owners in the <strong>Project Registry</strong>.</li>
+</ol>
+<h2 id="54-should-google-servicesjson--googleservice-infoplist-be-committed"><a class="anchor" href="#54-should-google-servicesjson--googleservice-infoplist-be-committed" aria-hidden="true">#</a>5.4 Should <code>google-services.json</code> / <code>GoogleService-Info.plist</code> be committed?</h2>
+<p>These files contain <strong>identifiers, not secrets</strong> (Firebase security is enforced by Security Rules and App Check, not by hiding these files). Committing them in a <strong>private</strong> repo is acceptable and simplifies builds. If the repo is ever public, or company policy prefers it, keep them out of Git and inject them from CI secrets. <strong>Either way, back them up in the project vault.</strong> In addition:</p>
+<ul>
+<li>Restrict the API key inside them in Google Cloud Console (Android apps by package + SHA-1, iOS apps by bundle ID).</li>
+<li>Write proper <strong>Firestore/Storage Security Rules</strong>. Never ship with test-mode rules (<code>allow read, write: if true</code>).</li>
+</ul>
+
+<nav class="pager"><a class="pager-link prev" href="environment-variables.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Environment Variables (.env)</span></a><a class="pager-link next" href="store-accounts.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Store Developer Accounts</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

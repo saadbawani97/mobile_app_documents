@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release Checklist | Mobile App Playbook</title>
+<meta name="description" content="Pre-release, release and post-release steps for every store build.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="templates">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#templates">Templates &amp; Checklists</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-templates"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></div>
+<div>
+<h1>Release Checklist</h1>
+<p class="lede">Pre-release, release and post-release steps for every store build.</p>
+<p class="meta"><span>Template 11.3</span><span>1 min read</span></p>
+</div>
+</div>
+<button class="btn copy-raw" type="button" data-target="raw-md">Copy as Markdown</button><script type="text/plain" id="raw-md">Pre-release
+- [ ] Release branch created from develop; version & build numbers bumped
+- [ ] Correct .env (production) and production Firebase config used
+- [ ] No console logs / dev menus / test endpoints in release build
+- [ ] Release build tested on real devices (low-end Android, older iPhone)
+- [ ] Critical flows tested: signup/login, payments, push, deep links, account deletion
+- [ ] Crashlytics receiving events from the release build
+- [ ] Target SDK / Xcode version meets current store requirements
+- [ ] Privacy labels / Data safety updated if new data or SDK added
+- [ ] Store screenshots & "What's New" updated
+- [ ] Demo account for reviewers working
+
+Release
+- [ ] Uploaded to TestFlight + Play internal track; QA sign-off
+- [ ] Client/management sign-off
+- [ ] Submitted for review (iOS manual/phased release; Android staged rollout)
+
+Post-release
+- [ ] Merged release → main, tagged vX.Y.Z, merged back to develop
+- [ ] Monitored Crashlytics & reviews for 48–72h before increasing rollout
+- [ ] Remote Config "latest version" updated (and min version if forcing update)
+- [ ] Project Registry release history updated</script>
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#pre-release">Pre-release</a></li><li><a href="#release">Release</a></li><li><a href="#post-release">Post-release</a></li></ol></details></nav>
+<main class="prose" id="content">
+<h2 id="pre-release"><a class="anchor" href="#pre-release" aria-hidden="true">#</a>Pre-release</h2>
+<ul class="tasks">
+<li class="task"><input type="checkbox"> Release branch created from develop; version &amp; build numbers bumped</li>
+<li class="task"><input type="checkbox"> Correct .env (production) and production Firebase config used</li>
+<li class="task"><input type="checkbox"> No console logs / dev menus / test endpoints in release build</li>
+<li class="task"><input type="checkbox"> Release build tested on real devices (low-end Android, older iPhone)</li>
+<li class="task"><input type="checkbox"> Critical flows tested: signup/login, payments, push, deep links, account deletion</li>
+<li class="task"><input type="checkbox"> Crashlytics receiving events from the release build</li>
+<li class="task"><input type="checkbox"> Target SDK / Xcode version meets current store requirements</li>
+<li class="task"><input type="checkbox"> Privacy labels / Data safety updated if new data or SDK added</li>
+<li class="task"><input type="checkbox"> Store screenshots &amp; &quot;What&#39;s New&quot; updated</li>
+<li class="task"><input type="checkbox"> Demo account for reviewers working</li>
+</ul>
+<h2 id="release"><a class="anchor" href="#release" aria-hidden="true">#</a>Release</h2>
+<ul class="tasks">
+<li class="task"><input type="checkbox"> Uploaded to TestFlight + Play internal track; QA sign-off</li>
+<li class="task"><input type="checkbox"> Client/management sign-off</li>
+<li class="task"><input type="checkbox"> Submitted for review (iOS manual/phased release; Android staged rollout)</li>
+</ul>
+<h2 id="post-release"><a class="anchor" href="#post-release" aria-hidden="true">#</a>Post-release</h2>
+<ul class="tasks">
+<li class="task"><input type="checkbox"> Merged release → main, tagged vX.Y.Z, merged back to develop</li>
+<li class="task"><input type="checkbox"> Monitored Crashlytics &amp; reviews for 48–72h before increasing rollout</li>
+<li class="task"><input type="checkbox"> Remote Config &quot;latest version&quot; updated (and min version if forcing update)</li>
+<li class="task"><input type="checkbox"> Project Registry release history updated</li>
+</ul>
+
+<nav class="pager"><a class="pager-link prev" href="new-project-checklist.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">New Project Checklist</span></a><a class="pager-link next" href="live-apps-health-sheet.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Live Apps Health Sheet</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

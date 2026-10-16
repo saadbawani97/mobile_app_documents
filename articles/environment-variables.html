@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Environment Variables (.env) | Mobile App Playbook</title>
+<meta name="description" content="What belongs in .env, what must never ship in an app, and how every .env is backed up.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="setup">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#setup">Project Setup</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-setup"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg></div>
+<div>
+<h1>Environment Variables (.env)</h1>
+<p class="lede">What belongs in .env, what must never ship in an app, and how every .env is backed up.</p>
+<p class="meta"><span>Section 4</span><span>3 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#41-the-most-important-fact">4.1 The most important fact</a></li><li><a href="#42-what-should-go-in-the-apps-env">4.2 What SHOULD go in the app&#39;s .env</a></li><li><a href="#43-what-must-never-go-in-the-app-or-in-git">4.3 What must NEVER go in the app (or in Git)</a></li><li><a href="#44-recommended-setup">4.4 Recommended setup</a></li><li><a href="#45-backing-up-env-files-yes-always">4.5 Backing up .env files: yes, always</a></li></ol></details></nav>
+<main class="prose" id="content">
+<h2 id="41-the-most-important-fact"><a class="anchor" href="#41-the-most-important-fact" aria-hidden="true">#</a>4.1 The most important fact</h2>
+<blockquote>
+<p><strong>Everything inside a mobile app is public.</strong> <code>.env</code> values in React Native are compiled into the JavaScript bundle / native code. Anyone can extract them from the APK/IPA in minutes.
+Therefore <code>.env</code> in a mobile app is for <strong>configuration</strong>, not for <strong>secrets</strong>.</p>
+</blockquote>
+<h2 id="42-what-should-go-in-the-apps-env"><a class="anchor" href="#42-what-should-go-in-the-apps-env" aria-hidden="true">#</a>4.2 What SHOULD go in the app&#39;s <code>.env</code></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Put in <code>.env</code></th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Environment name</td>
+<td><code>APP_ENV=production</code></td>
+</tr>
+<tr>
+<td>API base URLs</td>
+<td><code>API_BASE_URL=https://api.example.com/v1</code></td>
+</tr>
+<tr>
+<td>Web/socket URLs</td>
+<td><code>SOCKET_URL=wss://...</code></td>
+</tr>
+<tr>
+<td><strong>Public/publishable</strong> client keys</td>
+<td>Stripe <em>publishable</em> key, Google Maps key (restricted by package name/bundle ID + SHA-1), Sentry DSN, OneSignal App ID, RevenueCat public key, Mixpanel token</td>
+</tr>
+<tr>
+<td>OAuth <strong>client IDs</strong> (not secrets)</td>
+<td>Google Sign-In web/iOS client ID</td>
+</tr>
+<tr>
+<td>Feature flags / toggles</td>
+<td><code>ENABLE_ANALYTICS=true</code></td>
+</tr>
+<tr>
+<td>App-level constants that differ per environment</td>
+<td><code>DEEP_LINK_SCHEME=myapp-staging</code></td>
+</tr>
+</tbody></table></div>
+<h2 id="43-what-must-never-go-in-the-app-or-in-git"><a class="anchor" href="#43-what-must-never-go-in-the-app-or-in-git" aria-hidden="true">#</a>4.3 What must NEVER go in the app (or in Git)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Never in the app / never committed</th>
+<th>Where it belongs instead</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Any <strong>secret</strong> key: Stripe secret key, payment gateway secrets, AWS secret keys, Twilio auth token, SendGrid key, OpenAI/LLM API keys</td>
+<td><strong>Backend only.</strong> The app calls our backend; the backend calls the third party.</td>
+</tr>
+<tr>
+<td>Database credentials, admin passwords</td>
+<td>Backend / password manager</td>
+</tr>
+<tr>
+<td>Firebase <strong>service account</strong> JSON (Admin SDK)</td>
+<td>Backend / CI secrets only</td>
+</tr>
+<tr>
+<td>Android keystore &amp; passwords, iOS <code>.p12</code>, <code>.p8</code> keys</td>
+<td>Password manager + CI secrets (<a href="production-setup.html#73-signing-keys-the-most-critical-assets">7.3</a>)</td>
+</tr>
+<tr>
+<td>App Store Connect API key, Google Play service account JSON (used by Fastlane/EAS)</td>
+<td>CI secrets + password manager</td>
+</tr>
+<tr>
+<td>Personal tokens of any developer</td>
+<td>Nowhere. Use company/bot tokens.</td>
+</tr>
+</tbody></table></div>
+<blockquote>
+<p><strong>Rule of thumb:</strong> if a value would allow someone to <strong>spend money, read other users&#39; data, or impersonate the company</strong>, it must not be in the app.</p>
+</blockquote>
+<h2 id="44-recommended-setup"><a class="anchor" href="#44-recommended-setup" aria-hidden="true">#</a>4.4 Recommended setup</h2>
+<ul>
+<li><strong>React Native CLI:</strong> <code>react-native-config</code> with <code>.env.development</code>, <code>.env.staging</code>, <code>.env.production</code>, selected per build scheme/flavor.</li>
+<li><strong>Expo:</strong> variables prefixed with <code>EXPO_PUBLIC_</code> are bundled into the app; store per-environment values in <strong>EAS Environment Variables</strong> (development / preview / production), using &quot;secret&quot; visibility for build-time-only values.</li>
+<li>Commit <strong>only</strong> <code>.env.example</code> (all keys, dummy values, a comment explaining each one).</li>
+<li>Access env values through a single <code>src/config/env.ts</code> file that validates them at startup (e.g. with <code>zod</code>). The app should fail loudly in dev if a key is missing.</li>
+<li>Restrict every public key at the provider side (Google Cloud API key restrictions by package name + SHA-1 / bundle ID; Firebase App Check).</li>
+</ul>
+<h2 id="45-backing-up-env-files-yes-always"><a class="anchor" href="#45-backing-up-env-files-yes-always" aria-hidden="true">#</a>4.5 Backing up <code>.env</code> files: yes, always</h2>
+<p><code>.env</code> files are not in Git, so <strong>if they are only on a developer&#39;s laptop they will be lost</strong> when that person leaves or the laptop dies.</p>
+<p><strong>Backup policy:</strong></p>
+<ol>
+<li>Every project has a vault/folder in the <strong>company password manager</strong> (e.g. 1Password, Bitwarden, or similar business plan) named after the project.</li>
+<li>Each environment&#39;s <code>.env</code> is stored there as a <strong>Secure Note</strong> or attached document: <code>acme-delivery / .env.production</code>, <code>.env.staging</code>, <code>.env.development</code>.</li>
+<li>Whenever a value changes, the person changing it <strong>updates the vault in the same PR/day</strong>. Add this to the PR template checklist.</li>
+<li>CI/CD secrets (GitHub Actions secrets / GitLab CI variables / EAS env) are a <strong>copy</strong> for automation, <strong>not</strong> the backup, because they can&#39;t be read back once saved.</li>
+<li>Access to the vault is through groups (Mobile Leads, Management), never shared via WhatsApp/Slack/email.</li>
+<li>If a password manager is not yet in place: at minimum, store an <strong>encrypted</strong> archive (e.g. password-protected 7z / age / GPG) on the company Google Drive in a management-owned folder, with the password held by management. <strong>Getting a proper password manager is strongly recommended.</strong></li>
+</ol>
+
+<nav class="pager"><a class="pager-link prev" href="repository-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Repository Setup (GitHub &amp; GitLab)</span></a><a class="pager-link next" href="firebase-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Firebase Setup</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

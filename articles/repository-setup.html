@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repository Setup (GitHub &amp; GitLab) | Mobile App Playbook</title>
+<meta name="description" content="Creating repos from the company org, teams, branch rulesets, .gitignore, branching strategy and GitLab rules.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="setup">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#setup">Project Setup</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-setup"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></div>
+<div>
+<h1>Repository Setup (GitHub &amp; GitLab)</h1>
+<p class="lede">Creating repos from the company org, teams, branch rulesets, .gitignore, branching strategy and GitLab rules.</p>
+<p class="meta"><span>Section 3</span><span>4 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#31-non-negotiable-rules">3.1 Non-negotiable rules</a></li><li><a href="#32-github-step-by-step-repository-creation">3.2 GitHub: step-by-step repository creation</a></li><li><a href="#33-branching--release-strategy">3.3 Branching &amp; release strategy</a></li><li><a href="#34-gitlab-legacy-projects">3.4 GitLab (legacy projects)</a></li></ol></details></nav>
+<main class="prose" id="content">
+<p><strong>Current company policy:</strong> legacy projects live on <strong>GitLab</strong>; <strong>all new projects are created on GitHub.</strong></p>
+<h2 id="31-non-negotiable-rules"><a class="anchor" href="#31-non-negotiable-rules" aria-hidden="true">#</a>3.1 Non-negotiable rules</h2>
+<ol>
+<li><strong>Always create the repo inside the company GitHub Organization</strong> (or company GitLab Group), <strong>never</strong> under a personal account and then &quot;transferred later&quot;.</li>
+<li>Visibility: <strong>Private</strong> by default. Public only with management approval.</li>
+<li>Access is given through <strong>Teams/Groups</strong>, not to individuals one by one. This makes offboarding a one-click action.</li>
+<li><strong>When anyone leaves the company, they are removed from the Organization/Group on their last working day</strong> (not just from the repo). Removing someone from the org removes their access to every repo at once.</li>
+<li>Freelancers/contractors are added as <strong>Outside Collaborators</strong> on specific repos only, with an end date recorded in the registry.</li>
+<li><strong>2FA is mandatory</strong> for all organization members (enforce it in org settings).</li>
+</ol>
+<h2 id="32-github-step-by-step-repository-creation"><a class="anchor" href="#32-github-step-by-step-repository-creation" aria-hidden="true">#</a>3.2 GitHub: step-by-step repository creation</h2>
+<p><strong>One-time organization setup (done once by an Org Owner):</strong></p>
+<ol>
+<li>Organization <strong>Settings → Authentication security → Require two-factor authentication</strong> for everyone.</li>
+<li><strong>Settings → Member privileges</strong>:<ul>
+<li>Base permissions: <strong>No permission</strong> (access only through teams).</li>
+<li>Repository creation: restrict to <strong>Owners/Admins only</strong>. This prevents random repos.</li>
+<li>Disable repository forking for private repos.</li>
+<li>Disable &quot;Allow members to delete or transfer repositories&quot;.</li>
+</ul>
+</li>
+<li>Create <strong>Teams</strong>, e.g. <code>mobile-leads</code> (Maintain/Admin), <code>mobile-devs</code> (Write), <code>qa</code> (Triage/Read), <code>clients-readonly</code> (Read).</li>
+<li><strong>Code security</strong>: enable <strong>Secret scanning + Push protection</strong>, <strong>Dependabot alerts</strong> and <strong>Dependabot security updates</strong> for all new repos by default.</li>
+<li>At least <strong>two Org Owners</strong>, both company management, not just one developer.</li>
+</ol>
+<p><strong>Creating a new repo (every project):</strong></p>
+<ol>
+<li>Go to the <strong>company organization</strong> → <strong>New repository</strong>. Double-check the <em>Owner</em> dropdown shows the <strong>organization</strong>, not your username.</li>
+<li><strong>Name</strong>, using the naming convention:
+<code>&lt;client-or-product&gt;-&lt;app&gt;-&lt;platform&gt;</code> → e.g. <code>acme-delivery-mobile</code>, <code>acme-delivery-backend</code>, <code>acme-delivery-admin</code>
+(lowercase, hyphen-separated, no spaces).</li>
+<li><strong>Description</strong>: one line, e.g. <em>&quot;Acme Delivery: React Native customer app (iOS/Android).&quot;</em></li>
+<li><strong>Visibility: Private.</strong></li>
+<li>Initialize with <strong>README</strong>, <strong>.gitignore</strong> (Node template, then add the React Native entries below), <strong>no license</strong> for client/proprietary work.</li>
+<li><strong>Settings → Collaborators and teams</strong>: add <code>mobile-leads</code> (Admin/Maintain) and <code>mobile-devs</code> (Write). No individual additions except outside collaborators.</li>
+<li><strong>Settings → General</strong>:<ul>
+<li>Default branch: <code>main</code>.</li>
+<li>Enable <strong>&quot;Automatically delete head branches&quot;</strong> after merge.</li>
+<li>Allow <strong>Squash merging</strong> (recommended), disable merge commits if you want linear history.</li>
+</ul>
+</li>
+<li><strong>Settings → Rules → Rulesets</strong> (or Branch protection) for <code>main</code> and <code>develop</code>:<ul>
+<li>Require a pull request before merging, <strong>minimum 1 approval</strong> (2 for <code>main</code> on large teams).</li>
+<li>Dismiss stale approvals when new commits are pushed.</li>
+<li>Require status checks to pass (lint, type-check, tests).</li>
+<li>Require conversation resolution.</li>
+<li><strong>Block force pushes</strong> and <strong>block deletion</strong>.</li>
+<li>Restrict who can push directly: nobody. Everything via PR.</li>
+</ul>
+</li>
+<li>Add these files in the first commit:<ul>
+<li><code>README.md</code>: project overview, setup steps, how to run, env setup, release steps.</li>
+<li><code>.env.example</code>: all keys with dummy values (see Section 4).</li>
+<li><code>.github/CODEOWNERS</code>, e.g. <code>* @company/mobile-leads</code>, so the leads are auto-requested as reviewers.</li>
+<li><code>.github/pull_request_template.md</code>: what changed, screenshots, test steps, checklist.</li>
+<li><code>.github/workflows/ci.yml</code>: lint, type-check, test.</li>
+<li><code>.nvmrc</code> / <code>.node-version</code>: pin the Node version.</li>
+<li><code>docs/PROJECT_REGISTRY.md</code> <strong>or</strong> a link to the registry in the password manager (never put secrets in the repo; the registry in the repo contains <strong>references only</strong>).</li>
+</ul>
+</li>
+<li>Record the repo URL in the <strong>Project Registry</strong>.</li>
+</ol>
+<p><strong>Recommended <code>.gitignore</code> additions for React Native:</strong></p>
+<pre><code class="language-gitignore"># Environment &amp; secrets
+.env
+.env.*
+!.env.example
+
+# Signing
+*.keystore
+*.jks
+!debug.keystore
+*.p8
+*.p12
+*.mobileprovision
+android/keystore.properties
+android/app/google-services.json        # if you choose not to commit it (see 5.4)
+ios/GoogleService-Info.plist            # same as above
+
+# Build outputs
+android/app/build/
+ios/build/
+ios/Pods/
+*.ipa
+*.apk
+*.aab
+</code></pre>
+<h2 id="33-branching--release-strategy"><a class="anchor" href="#33-branching--release-strategy" aria-hidden="true">#</a>3.3 Branching &amp; release strategy</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>Purpose</th>
+<th>Deploys to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>main</code></td>
+<td>Always equals what is live in the stores</td>
+<td>Production (store builds)</td>
+</tr>
+<tr>
+<td><code>develop</code></td>
+<td>Integration branch for the next release</td>
+<td>Staging / internal testing</td>
+</tr>
+<tr>
+<td><code>feature/&lt;ticket&gt;-&lt;short-name&gt;</code></td>
+<td>New work</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>release/x.y.z</code></td>
+<td>Stabilization before a store release</td>
+<td>TestFlight / Play closed testing</td>
+</tr>
+<tr>
+<td><code>hotfix/x.y.z</code></td>
+<td>Urgent production fix from <code>main</code></td>
+<td>Production</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>Every production release is <strong>tagged</strong>: <code>v1.4.0</code> (and optionally <code>v1.4.0+42</code> with the build number).</li>
+<li>Commit messages: <strong>Conventional Commits</strong> (<code>feat:</code>, <code>fix:</code>, <code>chore:</code>…) to make changelogs automatic.</li>
+</ul>
+<h2 id="34-gitlab-legacy-projects"><a class="anchor" href="#34-gitlab-legacy-projects" aria-hidden="true">#</a>3.4 GitLab (legacy projects)</h2>
+<p>The same principles apply:</p>
+<ul>
+<li>Repos live under the <strong>company Group</strong> (use sub-groups per client, e.g. <code>company/acme/...</code>).</li>
+<li>Give access at <strong>Group level</strong> with roles: <em>Maintainer</em> (leads), <em>Developer</em> (devs), <em>Reporter</em> (QA/clients).</li>
+<li><strong>Settings → Repository → Protected branches</strong>: <code>main</code> and <code>develop</code> → <em>Allowed to push: No one</em>, <em>Allowed to merge: Maintainers</em>.</li>
+<li><strong>Settings → Merge requests</strong>: require approvals, pipelines must succeed.</li>
+<li>CI/CD variables (<code>Settings → CI/CD → Variables</code>): mark secrets as <strong>Masked</strong> and <strong>Protected</strong>.</li>
+<li><strong>Offboarding:</strong> remove the user from the <strong>top-level group</strong> (this removes access to all sub-groups/projects) and, if they had a company GitLab account, <strong>block</strong> it.</li>
+<li>Plan: migrate actively maintained legacy projects to GitHub when convenient (GitHub has a built-in importer that keeps history, branches and tags). Archive the GitLab project afterwards (read-only) instead of deleting it.</li>
+</ul>
+
+<nav class="pager"><a class="pager-link prev" href="new-project-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">New Project Setup</span></a><a class="pager-link next" href="environment-variables.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Environment Variables (.env)</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

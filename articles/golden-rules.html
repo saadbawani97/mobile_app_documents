@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golden Rules | Mobile App Playbook</title>
+<meta name="description" content="The seven non-negotiables: company ownership, no single point of failure, same-day offboarding, signing keys and secrets.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="foundations">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#foundations">Foundations</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-foundations"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+<div>
+<h1>Golden Rules</h1>
+<p class="lede">The seven non-negotiables: company ownership, no single point of failure, same-day offboarding, signing keys and secrets.</p>
+<p class="meta"><span>Section 1</span><span>1 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout no-toc">
+
+<main class="prose" id="content">
+<p>These rules exist because breaking any one of them has, at some point in the industry, cost a company an app, a client or weeks of recovery work.</p>
+<ol>
+<li><strong>The company owns everything.</strong> Every repository, store account, Firebase project, domain, email and third-party service is created from a <strong>company-owned account</strong> (company email on the company domain), never a personal one.</li>
+<li><strong>No single person is a single point of failure.</strong> Every critical account has at least <strong>two company admins</strong>, and its credentials live in the company password manager.</li>
+<li><strong>Access is role-based and removed on the day someone leaves.</strong> See the <a href="offboarding-checklist.html">Offboarding Checklist</a>.</li>
+<li><strong>Signing keys are irreplaceable.</strong> The Android keystore and iOS signing assets are backed up in two places the day they are created. Losing them means you may not be able to update the app.</li>
+<li><strong>Secrets never go into Git, and never into the mobile app.</strong> A mobile app bundle can be decompiled; anything shipped inside it is public.</li>
+<li><strong>Every project has one Project Registry file</strong> (template in <a href="project-registry-template.html">11.1</a>) holding all key information about that project. If it isn&#39;t in the registry, it doesn&#39;t exist.</li>
+<li><strong>Production is never released from a developer&#39;s laptop without a tag.</strong> Every store build maps to a Git tag and a version number.</li>
+</ol>
+
+<nav class="pager"><span></span><a class="pager-link next" href="new-project-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">New Project Setup</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

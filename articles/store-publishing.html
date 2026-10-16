@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publishing to App Store &amp; Google Play | Mobile App Playbook</title>
+<meta name="description" content="Step-by-step release on both stores, testing tracks, review and common rejection reasons.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="stores">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#stores">Stores &amp; Release</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-stores"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+<div>
+<h1>Publishing to App Store &amp; Google Play</h1>
+<p class="lede">Step-by-step release on both stores, testing tracks, review and common rejection reasons.</p>
+<p class="meta"><span>Section 8</span><span>3 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#81-apple-app-store-release-process">8.1 Apple App Store: release process</a></li><li><a href="#82-google-play-release-process">8.2 Google Play: release process</a></li><li><a href="#83-every-update-release-checklist">8.3 Every update: release checklist</a></li></ol></details></nav>
+<main class="prose" id="content">
+<h2 id="81-apple-app-store-release-process"><a class="anchor" href="#81-apple-app-store-release-process" aria-hidden="true">#</a>8.1 Apple App Store: release process</h2>
+<ol>
+<li><strong>Register the Bundle ID</strong> in <em>Certificates, Identifiers &amp; Profiles → Identifiers</em>, enable needed capabilities (Push, Sign in with Apple, Associated Domains…).</li>
+<li><strong>Create the app record</strong> in <em>App Store Connect → Apps → +</em>: platform, name, primary language, bundle ID, SKU (internal, e.g. <code>acme-delivery-ios</code>).</li>
+<li><strong>Build &amp; upload:</strong><ul>
+<li>Bump version/build number.</li>
+<li>Xcode → <em>Product → Archive</em> → <em>Distribute App → App Store Connect</em>, <strong>or</strong> <code>eas build -p ios --profile production</code> + <code>eas submit</code>, <strong>or</strong> Fastlane <code>gym</code> + <code>pilot</code>.</li>
+<li>The build must use the <strong>minimum Xcode/SDK Apple currently requires</strong> (from April 2026: Xcode 26 / iOS 26 SDK).</li>
+</ul>
+</li>
+<li><strong>TestFlight:</strong> build processes in ~10–30 min. Internal testers (up to 100 team users) get it immediately; <strong>external testers</strong> need a short beta review first. Do full QA on TestFlight.</li>
+<li><strong>Fill in the version page:</strong> screenshots, description, keywords, support/marketing URLs, promotional text, &quot;What&#39;s New&quot;.</li>
+<li><strong>App Privacy</strong>: complete the privacy questionnaire (must match what the app and SDKs actually collect).</li>
+<li><strong>App Review Information:</strong> demo username/password, contact details, notes for the reviewer (explain non-obvious features, OTP bypass, hardware needed, etc.).</li>
+<li><strong>Age rating</strong>, <strong>pricing &amp; availability</strong> (countries), <strong>export compliance</strong>.</li>
+<li>Choose release option: <strong>Manual release</strong> (recommended, so we control launch time), automatic, or <strong>phased release over 7 days</strong> (recommended for updates).</li>
+<li><strong>Submit for Review.</strong> Typical review time: 24–48 hours.</li>
+<li><strong>If rejected:</strong> read the message in <strong>Resolution Center</strong>, fix, reply or resubmit. If the rejection is unclear, reply asking for clarification or request a call; you can appeal to the App Review Board.</li>
+<li>After approval: release, verify the live listing, <strong>tag the commit</strong> (<code>v1.0.0</code>) and update the Project Registry.</li>
+</ol>
+<p><strong>Most common Apple rejection reasons:</strong> crashes/bugs found during review (Guideline 2.1), missing demo account, incomplete metadata or placeholder content, vague permission strings, no in-app account deletion, missing Sign in with Apple, external payment links for digital goods (outside allowed regions/entitlements), &quot;minimum functionality&quot; (app is just a website wrapper).</p>
+<h2 id="82-google-play-release-process"><a class="anchor" href="#82-google-play-release-process" aria-hidden="true">#</a>8.2 Google Play: release process</h2>
+<ol>
+<li><strong>Create app</strong> in Play Console: app name, default language, app or game, free or paid (<strong>free → paid is not possible later</strong>), accept declarations.</li>
+<li><strong>Set up your app</strong> (dashboard tasks), all mandatory:<ul>
+<li>Privacy policy · App access (demo login) · Ads declaration · Content rating (IARC) · Target audience &amp; content · <strong>Data safety</strong> · Government/financial/health declarations if applicable · News app declaration · <strong>Account deletion URL</strong> if accounts exist.</li>
+</ul>
+</li>
+<li><strong>Store listing:</strong> short &amp; full description, icon, feature graphic, screenshots, category, contact details.</li>
+<li><strong>Build &amp; upload an AAB:</strong><ul>
+<li>Bump <code>versionCode</code> (must always increase) and <code>versionName</code>.</li>
+<li><code>cd android &amp;&amp; ./gradlew bundleRelease</code>, <strong>or</strong> <code>eas build -p android --profile production</code>, <strong>or</strong> Fastlane <code>gradle</code> + <code>supply</code>.</li>
+<li>Enroll in <strong>Play App Signing</strong> on first upload (default).</li>
+</ul>
+</li>
+<li><strong>Testing tracks (in order):</strong><ul>
+<li><strong>Internal testing</strong> (up to 100 testers, available within minutes, no review) → QA.</li>
+<li><strong>Closed testing</strong> → client UAT. <strong>Personal accounts:</strong> 12+ testers opted-in for 14 consecutive days before production access can be requested.</li>
+<li><strong>Open testing</strong> (optional public beta).</li>
+</ul>
+</li>
+<li>Check the <strong>Pre-launch report</strong> (automated tests on real devices: crashes, accessibility, security warnings) and fix critical issues.</li>
+<li><strong>Production release:</strong> create release → select the AAB → release notes → choose <strong>staged rollout</strong> (e.g. 10% → 25% → 50% → 100%) for updates.</li>
+<li><strong>Send for review.</strong> New apps/new accounts can take several days; updates are often hours to ~2 days. Use <strong>Managed publishing</strong> if you want to control the exact go-live moment after approval.</li>
+<li><strong>If rejected / policy issue:</strong> see <em>Policy status</em> and the <strong>Inbox</strong> in Play Console, fix and resubmit, or <strong>appeal</strong> if you believe it&#39;s incorrect.</li>
+<li>After going live: verify the listing, <strong>tag the commit</strong>, update the Project Registry.</li>
+</ol>
+<h2 id="83-every-update-release-checklist"><a class="anchor" href="#83-every-update-release-checklist" aria-hidden="true">#</a>8.3 Every update: release checklist</h2>
+<p>See <a href="release-checklist.html">11.3 Release Checklist</a>.</p>
+
+<nav class="pager"><a class="pager-link prev" href="production-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Production Environment Setup</span></a><a class="pager-link next" href="live-app-monitoring.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Detecting Google/Apple Changes on Live Apps</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

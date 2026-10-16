@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Registry Template | Mobile App Playbook</title>
+<meta name="description" content="The single consolidated file holding all key information for a project.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="templates">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#templates">Templates &amp; Checklists</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-templates"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+<div>
+<h1>Project Registry Template</h1>
+<p class="lede">The single consolidated file holding all key information for a project.</p>
+<p class="meta"><span>Template 11.1</span><span>2 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout no-toc">
+
+<main class="prose" id="content">
+<blockquote>
+<p>One per project. Keep the <strong>filled copy in the company password manager</strong> (it references secrets). A copy <strong>without secrets</strong> may live in the repo at <code>docs/PROJECT_REGISTRY.md</code>.</p>
+</blockquote>
+<pre><code class="language-markdown"># Project Registry: &lt;Project Name&gt;
+
+## General
+- Client / Product owner:
+- Project start date:            Go-live date:
+- Mobile Lead:                   Backend Lead:          PM:
+- Status: In development | Live | Maintenance | Archived
+- Contract notes (code ownership, support period):
+
+## Identity
+- App name (iOS / Android):
+- iOS Bundle ID:                 Android Application ID:
+- Staging IDs (if different):
+- Current live version (iOS / Android):
+- Min OS supported (iOS / Android):     Target SDK (Android):
+
+## Repositories
+- Mobile repo URL (GitHub/GitLab):
+- Backend repo URL:              Admin panel repo URL:
+- Default branch / release branch:
+
+## Store Accounts
+- Apple: account owner (company / client), Team ID, Account Holder email:
+- App Store Connect app ID / Apple ID:  SKU:
+- App Store listing URL:
+- Google Play: developer account owner, Account owner email, Developer ID:
+- Play Console app link / package:
+- Play Store listing URL:
+- Who from our team has access (role):
+
+## Firebase / Google Cloud
+- Dev project ID:        Staging project ID:        Prod project ID:
+- Owners (emails):
+- Billing account &amp; budget alert:
+- Services used: FCM / Crashlytics / Analytics / Remote Config / Auth / Firestore / ...
+
+## Environments
+| Env | API base URL | Firebase project | Vault item for .env |
+|-----|--------------|------------------|----------------------|
+| development | | | |
+| staging | | | |
+| production | | | |
+
+## Signing &amp; Keys (stored in vault; list the vault item names here, NOT the values)
+- Android upload keystore: vault item ____ (alias, passwords, SHA-1/SHA-256)
+- Play App Signing SHA-1/SHA-256:
+- iOS Distribution cert (.p12): vault item ____, expires on ____
+- Provisioning profiles: expire on ____
+- APNs Auth Key (.p8): Key ID ____, vault item ____
+- App Store Connect API key: Key ID ____, Issuer ID ____, vault item ____
+- Google Play service account JSON: vault item ____
+
+## Third-party Services
+| Service | Purpose | Account owner email | Plan/billing | Vault item | Renewal date |
+|---------|---------|---------------------|--------------|------------|--------------|
+| Google Maps | | | | | |
+| Sentry | | | | | |
+| Payment gateway | | | | | |
+| SMS/OTP | | | | | |
+
+## Domains &amp; URLs
+- API domain:            Deep link domain:
+- Privacy policy URL:    Terms URL:     Support URL/email:
+- Domain registrar &amp; renewal date:
+
+## Store Review
+- Demo account for reviewers (vault item):
+- Notes for reviewer:
+
+## Release History
+| Version | Build | Platform | Release date | Notes |
+|---------|-------|----------|--------------|-------|
+
+## Known Issues / Warnings / Deadlines
+| Date found | Source (Play/Apple/Crashlytics) | Issue | Deadline | Status |
+|------------|----------------------------------|-------|----------|--------|
+</code></pre>
+
+<nav class="pager"><a class="pager-link prev" href="lead-responsibilities.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Other Key Responsibilities</span></a><a class="pager-link next" href="new-project-checklist.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">New Project Checklist</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>
