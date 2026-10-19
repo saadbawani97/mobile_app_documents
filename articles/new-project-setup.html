@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>New Project Setup | Mobile App Playbook</title>
-<meta name="description" content="Day-one kick-off: ownership decisions, Bundle IDs, stack choice, environments and folder structure.">
+<title>Starting a New Project | Mobile App Playbook</title>
+<meta name="description" content="What to settle with the client in week one, the day-one technical setup, and our folder structure.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -19,102 +19,92 @@
 <div class="hero-row">
 <div class="hero-icon cat-foundations"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></div>
 <div>
-<h1>New Project Setup</h1>
-<p class="lede">Day-one kick-off: ownership decisions, Bundle IDs, stack choice, environments and folder structure.</p>
+<h1>Starting a New Project</h1>
+<p class="lede">What to settle with the client in week one, the day-one technical setup, and our folder structure.</p>
 <p class="meta"><span>Section 2</span><span>3 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#21-business--ownership-decisions-before-any-code">2.1 Business &amp; ownership decisions (before any code)</a></li><li><a href="#22-technical-kick-off">2.2 Technical kick-off</a></li><li><a href="#23-recommended-folder-structure-react-native">2.3 Recommended folder structure (React Native)</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#21-settle-these-before-writing-any-code">2.1 Settle these before writing any code</a></li><li><a href="#22-day-one-technical-setup">2.2 Day-one technical setup</a></li><li><a href="#23-folder-structure-we-use">2.3 Folder structure we use</a></li></ol></details></nav>
 <main class="prose" id="content">
-<p>Run this checklist on <strong>day 1</strong> of every new mobile project.</p>
-<h2 id="21-business--ownership-decisions-before-any-code"><a class="anchor" href="#21-business--ownership-decisions-before-any-code" aria-hidden="true">#</a>2.1 Business &amp; ownership decisions (before any code)</h2>
+<h2 id="21-settle-these-before-writing-any-code"><a class="anchor" href="#21-settle-these-before-writing-any-code" aria-hidden="true">#</a>2.1 Settle these before writing any code</h2>
+<p>Most of the painful problems I&#39;ve seen on projects came from questions nobody asked at the start. These are the ones to sort out with the client and management in the first week.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>#</th>
 <th>Question</th>
 <th>Why it matters</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>1</td>
-<td><strong>Whose store account will the app be published under: the company&#39;s or the client&#39;s?</strong></td>
-<td>Decides who owns the app listing, reviews, revenue and user data. If it&#39;s the client&#39;s, they must invite our company account with the right role. Recommended for client work: <strong>client&#39;s own organization account</strong>, our company added as Admin/Developer.</td>
+<td>Whose store accounts will the app go out on, ours or the client&#39;s?</td>
+<td>Whoever owns the account owns the app listing, reviews, revenue and user data. For client projects my recommendation is the client&#39;s own organization account, with our company account invited as Admin.</td>
 </tr>
 <tr>
-<td>2</td>
-<td>Who owns the source code, and where is it hosted after delivery?</td>
-<td>Contract/IP clarity. Repo transfer may be required at handover.</td>
+<td>Who owns the code, and where does it live after delivery?</td>
+<td>Needs to be clear in the contract. We may have to transfer the repo at handover.</td>
 </tr>
 <tr>
-<td>3</td>
-<td>Who pays for third-party services (Firebase Blaze, Maps, SMS, Sentry, etc.)?</td>
-<td>Billing must be on the owner&#39;s card/account, not an employee&#39;s.</td>
+<td>Who pays for Firebase, Maps, SMS, Sentry and other services?</td>
+<td>Billing should be on the owner&#39;s card, never an employee&#39;s personal card.</td>
 </tr>
 <tr>
-<td>4</td>
-<td>Target platforms &amp; minimum OS versions</td>
-<td>Affects library choices and testing matrix.</td>
+<td>App name and Bundle ID / Application ID</td>
+<td>The Bundle ID (<code>com.company.appname</code>) can&#39;t be changed once the app is on the store. Decide it once and write it in the registry.</td>
 </tr>
 <tr>
-<td>5</td>
-<td>Final <strong>App name</strong>, <strong>Bundle ID / Application ID</strong></td>
-<td>Bundle ID (<code>com.company.appname</code>) <strong>cannot be changed</strong> after the first store release. Decide once.</td>
+<td>Privacy policy URL, terms URL, support email</td>
+<td>Both stores require them. Clients usually take a while to provide these, so ask early.</td>
 </tr>
 <tr>
-<td>6</td>
-<td>Privacy policy URL, Terms URL, Support email/URL</td>
-<td>Mandatory on both stores. Ask the client early.</td>
+<td>Any in-app purchases or subscriptions?</td>
+<td>Needs paid-app agreements, tax and bank details on both stores. That alone can take a week or more.</td>
 </tr>
 <tr>
-<td>7</td>
-<td>Are there in-app purchases / subscriptions?</td>
-<td>Requires paid-app agreements, tax &amp; banking setup on both stores (takes days).</td>
+<td>Which login methods?</td>
+<td>If the iOS app has Google or Facebook login, Apple will generally require Sign in with Apple as well.</td>
 </tr>
 <tr>
-<td>8</td>
-<td>Login methods (Google, Apple, Facebook, Phone OTP)</td>
-<td>If any third-party/social login is used on iOS, <strong>Sign in with Apple</strong> is generally required as well.</td>
+<td>Minimum OS versions and devices</td>
+<td>Affects library choices and how much testing we need.</td>
 </tr>
 </tbody></table></div>
-<h2 id="22-technical-kick-off"><a class="anchor" href="#22-technical-kick-off" aria-hidden="true">#</a>2.2 Technical kick-off</h2>
-<ul class="tasks">
-<li class="task"><input type="checkbox"> Create the repository from the <strong>company organization</strong> (Section 3).</li>
-<li class="task"><input type="checkbox"> Choose the stack: <strong>React Native CLI</strong> or <strong>Expo (with EAS)</strong>. Recommended default for new projects: <strong>Expo + EAS Build/Submit/Update</strong>, unless there is a strong native requirement. Both support the New Architecture (default since RN 0.76).</li>
-<li class="task"><input type="checkbox"> Use <strong>TypeScript</strong>, ESLint, Prettier, Husky + lint-staged from the first commit.</li>
-<li class="task"><input type="checkbox"> Set up <strong>three environments</strong>: <code>development</code>, <code>staging</code>, <code>production</code> (Section 4).</li>
-<li class="task"><input type="checkbox"> Create <strong>separate Firebase projects</strong> per environment (Section 5).</li>
-<li class="task"><input type="checkbox"> Register the Bundle ID / Application ID on Apple Developer and Play Console early (reserves the name, unlocks push/capabilities).</li>
-<li class="task"><input type="checkbox"> Generate the <strong>Android upload keystore</strong> and back it up immediately (<a href="production-setup.html#73-signing-keys-the-most-critical-assets">7.3</a>).</li>
-<li class="task"><input type="checkbox"> Set up CI (GitHub Actions / GitLab CI) for lint + type-check + tests on every PR.</li>
-<li class="task"><input type="checkbox"> Set up internal distribution: <strong>TestFlight</strong> (iOS) and <strong>Play Internal Testing</strong> or <strong>Firebase App Distribution</strong> (Android).</li>
-<li class="task"><input type="checkbox"> Create the <strong>Project Registry</strong> file and fill in everything known so far (<a href="project-registry-template.html">11.1</a>).</li>
-<li class="task"><input type="checkbox"> Add the project to the company&#39;s master project index (one line per project, linking to its registry).</li>
+<h2 id="22-day-one-technical-setup"><a class="anchor" href="#22-day-one-technical-setup" aria-hidden="true">#</a>2.2 Day-one technical setup</h2>
+<ul>
+<li>Ask the Repo Owner for a private repo under the company organization (Section 3).</li>
+<li>Pick the stack. For most new projects I&#39;d go with <strong>Expo + EAS</strong> (Build, Submit, Update) unless there&#39;s a real native requirement that rules it out. Plain React Native CLI is fine too. Both use the New Architecture by default now.</li>
+<li>TypeScript, ESLint, Prettier and Husky from the very first commit. Adding them later is always more painful.</li>
+<li>Three environments from the start: <code>development</code>, <code>staging</code>, <code>production</code> (Section 4).</li>
+<li>A separate Firebase project for each environment (Section 5).</li>
+<li>Register the Bundle ID / Application ID on the Apple Developer portal and in Play Console early. It reserves the ID and lets you turn on push and other capabilities.</li>
+<li>Generate the Android upload keystore and back it up straight away (<a href="production-setup.html#73-signing-keys">Signing Keys</a>).</li>
+<li>Set up CI so every pull request runs lint, type-check and tests.</li>
+<li>Set up test distribution: TestFlight for iOS, Play internal testing or Firebase App Distribution for Android.</li>
+<li>Create the Project Registry and fill in what&#39;s known so far.</li>
 </ul>
-<h2 id="23-recommended-folder-structure-react-native"><a class="anchor" href="#23-recommended-folder-structure-react-native" aria-hidden="true">#</a>2.3 Recommended folder structure (React Native)</h2>
+<h2 id="23-folder-structure-we-use"><a class="anchor" href="#23-folder-structure-we-use" aria-hidden="true">#</a>2.3 Folder structure we use</h2>
 <pre><code>src/
   api/            # API clients, interceptors
-  assets/         # images, fonts, lottie
-  components/     # reusable UI components
+  assets/         # images, fonts, animations
+  components/     # shared UI components
   config/         # env access, constants, feature flags
   hooks/
   navigation/
-  screens/        # one folder per feature/screen
+  screens/        # one folder per feature
   services/       # firebase, analytics, push, storage
-  store/          # state management (Redux Toolkit / Zustand / React Query)
+  store/          # state (Redux Toolkit / Zustand / React Query)
   theme/          # colors, typography, spacing
   utils/
   i18n/
 </code></pre>
 
-<nav class="pager"><a class="pager-link prev" href="golden-rules.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Golden Rules</span></a><a class="pager-link next" href="repository-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Repository Setup (GitHub &amp; GitLab)</span></a></nav>
+<nav class="pager"><a class="pager-link prev" href="ground-rules.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Ground Rules</span></a><a class="pager-link next" href="repository-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Repository Setup and Ownership</span></a></nav>
 </main>
 </div>
 <footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>
 <script src="../assets/app.js"></script>

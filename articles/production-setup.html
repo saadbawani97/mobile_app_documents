@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Production Environment Setup | Mobile App Playbook</title>
-<meta name="description" content="Go-live readiness: backend, app config, signing keys and store listing assets.">
+<title>Getting Production Ready | Mobile App Playbook</title>
+<meta name="description" content="Backend, app configuration, signing keys and store listing material to sort out before launch.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -19,91 +19,92 @@
 <div class="hero-row">
 <div class="hero-icon cat-stores"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
 <div>
-<h1>Production Environment Setup</h1>
-<p class="lede">Go-live readiness: backend, app config, signing keys and store listing assets.</p>
+<h1>Getting Production Ready</h1>
+<p class="lede">Backend, app configuration, signing keys and store listing material to sort out before launch.</p>
 <p class="meta"><span>Section 7</span><span>4 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#71-backend--services">7.1 Backend &amp; services</a></li><li><a href="#72-app-configuration">7.2 App configuration</a></li><li><a href="#73-signing-keys-the-most-critical-assets">7.3 Signing keys: the most critical assets</a></li><li><a href="#74-store-listing-assets--information-prepare-in-advance">7.4 Store listing assets &amp; information (prepare in advance)</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#71-backend-and-services">7.1 Backend and services</a></li><li><a href="#72-app-configuration">7.2 App configuration</a></li><li><a href="#73-signing-keys">7.3 Signing Keys</a></li><li><a href="#74-store-listing-what-to-prepare">7.4 Store listing: what to prepare</a></li></ol></details></nav>
 <main class="prose" id="content">
-<p>Start this <strong>at least 2–3 weeks before</strong> the planned launch date.</p>
-<h2 id="71-backend--services"><a class="anchor" href="#71-backend--services" aria-hidden="true">#</a>7.1 Backend &amp; services</h2>
-<ul class="tasks">
-<li class="task"><input type="checkbox"> Production API deployed, HTTPS only, with a domain owned by the company/client.</li>
-<li class="task"><input type="checkbox"> Production <strong>Firebase project</strong> (5.3) and all third-party services switched to <strong>production/live keys</strong> (payments, maps, SMS, email, analytics).</li>
-<li class="task"><input type="checkbox"> <code>.env.production</code> finalized, <strong>backed up in the vault</strong>.</li>
-<li class="task"><input type="checkbox"> Payment gateway in <strong>live mode</strong> and tested with a real small transaction.</li>
-<li class="task"><input type="checkbox"> Deep links: host <code>/.well-known/apple-app-site-association</code> (iOS Universal Links) and <code>/.well-known/assetlinks.json</code> (Android App Links, including the <strong>Play App Signing</strong> SHA-256) on the production domain.</li>
-<li class="task"><input type="checkbox"> Monitoring: Crashlytics (and/or Sentry) enabled, alerts going to a shared mailbox/Slack channel.</li>
-<li class="task"><input type="checkbox"> Remote Config: force/soft update values set for v1.0.</li>
+<p>I&#39;d start this two to three weeks before the planned launch. It always takes longer than expected, mostly because of waiting on the client for content and on the stores for review.</p>
+<h2 id="71-backend-and-services"><a class="anchor" href="#71-backend-and-services" aria-hidden="true">#</a>7.1 Backend and services</h2>
+<ul>
+<li>Production API is deployed on HTTPS, on a domain owned by us or the client.</li>
+<li>Production Firebase project is set up (Section 5), and every third-party service is switched to live keys: payments, maps, SMS, email.</li>
+<li><code>.env.production</code> is final and saved in the vault.</li>
+<li>Payment gateway is in live mode and tested with a real small transaction.</li>
+<li>Deep links: <code>/.well-known/apple-app-site-association</code> for iOS and <code>/.well-known/assetlinks.json</code> for Android are on the production domain. The Android file needs the Play App Signing SHA-256, not just the upload key.</li>
+<li>Crashlytics (or Sentry) is on, with alerts going to the shared team email or Slack.</li>
+<li>Remote Config has the force-update and soft-update values set for version 1.0.</li>
 </ul>
 <h2 id="72-app-configuration"><a class="anchor" href="#72-app-configuration" aria-hidden="true">#</a>7.2 App configuration</h2>
-<ul class="tasks">
-<li class="task"><input type="checkbox"> Final <strong>app name, icon (all sizes), splash screen</strong>.</li>
-<li class="task"><input type="checkbox"> Final <strong>Bundle ID / Application ID</strong> (cannot change after release).</li>
-<li class="task"><input type="checkbox"> <strong>Version strategy:</strong> <code>versionName</code>/<code>CFBundleShortVersionString</code> = <code>1.0.0</code> (semantic), <code>versionCode</code>/<code>CFBundleVersion</code> = integer build number that <strong>always increases</strong>.</li>
-<li class="task"><input type="checkbox"> Release build settings:<ul>
-<li>Android: <strong>R8/ProGuard</strong> minification enabled (with tested keep-rules), <strong>Hermes</strong> on, <code>android:debuggable=false</code>, cleartext traffic disabled, <strong>AAB</strong> output.</li>
-<li>iOS: Release scheme, dSYM upload to Crashlytics/Sentry, <code>NSAppTransportSecurity</code> without global exceptions.</li>
-<li>Remove <code>console.log</code> in production (babel plugin <code>transform-remove-console</code>), no dev menus or test endpoints.</li>
+<ul>
+<li>Final app name, icon in all sizes, splash screen.</li>
+<li>Final Bundle ID / Application ID. This can&#39;t change after release.</li>
+<li>Versions: the version name (<code>1.0.0</code>) follows semantic versioning, and the build number (<code>versionCode</code> / <code>CFBundleVersion</code>) always goes up.</li>
+<li>Release settings:<ul>
+<li>Android: R8 / ProGuard on and tested, Hermes on, not debuggable, no cleartext HTTP, building an AAB.</li>
+<li>iOS: Release configuration, dSYMs uploading to Crashlytics or Sentry, no blanket App Transport Security exceptions.</li>
+<li>No <code>console.log</code> output, dev menus or test endpoints in the production build.</li>
 </ul>
 </li>
-<li class="task"><input type="checkbox"> <strong>Permissions audit:</strong> request only what&#39;s used. Every iOS permission has a clear, specific usage description string (vague strings are a common rejection reason).</li>
-<li class="task"><input type="checkbox"> <strong>iOS Privacy Manifest</strong> (<code>PrivacyInfo.xcprivacy</code>) present and covering &quot;required reason&quot; APIs; third-party SDKs up to date with their own manifests.</li>
-<li class="task"><input type="checkbox"> <strong>Target SDK</strong> meets the current Google Play requirement (9.2).</li>
-<li class="task"><input type="checkbox"> <strong>Account deletion:</strong> if users can create an account, they must be able to <strong>delete it from inside the app</strong> (Apple) and via a <strong>web link</strong> (Google Play). Both are mandatory.</li>
-<li class="task"><input type="checkbox"> <strong>Sign in with Apple</strong> implemented if other social logins exist on iOS.</li>
-<li class="task"><input type="checkbox"> Test the <strong>release build</strong> (not debug) on real low-end Android and older iPhone devices.</li>
+<li>Permissions: only ask for what the app actually uses. Every iOS permission needs a clear, specific explanation string. Vague ones get rejected.</li>
+<li>iOS privacy manifest (<code>PrivacyInfo.xcprivacy</code>) is included, and third-party SDKs are on versions that include theirs.</li>
+<li>Android target SDK meets the current Google Play requirement (Section 9.2).</li>
+<li>Account deletion: if users can sign up, they must be able to delete their account from inside the app (Apple) and through a web link (Google Play). Both are required.</li>
+<li>Sign in with Apple is there if the iOS app has other social logins.</li>
+<li>Test the actual release build, not a debug build, on a cheap Android phone and an older iPhone.</li>
 </ul>
-<h2 id="73-signing-keys-the-most-critical-assets"><a class="anchor" href="#73-signing-keys-the-most-critical-assets" aria-hidden="true">#</a>7.3 Signing keys: the most critical assets</h2>
-<h3 id="android"><a class="anchor" href="#android" aria-hidden="true">#</a>Android</h3>
+<h2 id="73-signing-keys"><a class="anchor" href="#73-signing-keys" aria-hidden="true">#</a>7.3 Signing Keys</h2>
+<p>These are the most important files in the whole project. Lose them and you may not be able to update the app.</p>
+<p><strong>Android</strong></p>
 <ul>
-<li>Use <strong>Play App Signing</strong> (mandatory for new apps): Google holds the <strong>app signing key</strong>; we hold the <strong>upload key</strong>.</li>
-<li>Generate the <strong>upload keystore</strong> once per app:<pre><code class="language-bash">keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
+<li>Play App Signing is mandatory for new apps. Google keeps the app signing key, and we keep the upload key.</li>
+<li>Create the upload keystore once per app:<pre><code class="language-bash">keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
   -alias acme-delivery-upload -keyalg RSA -keysize 2048 -validity 10000
 </code></pre>
 </li>
-<li><strong>Back up immediately</strong> to the project vault: the <code>.keystore</code> file, <strong>store password, key alias, key password</strong>, and SHA-1/SHA-256 fingerprints.</li>
-<li>Keep <code>keystore.properties</code> out of Git; CI reads the keystore from secrets (base64-encoded).</li>
-<li>If the upload key is lost/compromised, the Account Owner can request an <strong>upload key reset</strong> in Play Console (possible only because Play App Signing is used, and it takes time). Without a backup, every release is blocked until then.</li>
+<li>Back it up to the project vault immediately: the <code>.keystore</code> file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints.</li>
+<li><code>keystore.properties</code> stays out of Git. CI gets the keystore from secrets.</li>
+<li>If the upload key is lost, the account owner can ask Google for an upload key reset. It&#39;s possible because of Play App Signing, but it takes time and blocks releases until it&#39;s done. A backup avoids all of that.</li>
 </ul>
-<h3 id="ios"><a class="anchor" href="#ios" aria-hidden="true">#</a>iOS</h3>
+<p><strong>iOS</strong></p>
 <ul>
-<li>Prefer <strong>automatic signing</strong> for development and <strong>EAS / Fastlane match</strong> for CI so certificates are shared and reproducible, not stuck on one Mac.</li>
-<li>Assets to back up in the vault: <strong>Distribution certificate (.p12 + password)</strong>, <strong>APNs Auth Key (.p8, Key ID)</strong>, <strong>App Store Connect API Key (.p8, Key ID, Issuer ID)</strong>.</li>
-<li>Distribution certificates &amp; provisioning profiles <strong>expire after 1 year</strong>. Put renewal dates in the calendar (Section 10.4).</li>
+<li>Automatic signing is fine for development. For CI use EAS or Fastlane match, so certificates aren&#39;t stuck on one person&#39;s Mac.</li>
+<li>Back up to the vault: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).</li>
+<li>Distribution certificates and provisioning profiles expire after a year. Put the dates on the shared calendar (Section 10.4).</li>
 </ul>
-<h2 id="74-store-listing-assets--information-prepare-in-advance"><a class="anchor" href="#74-store-listing-assets--information-prepare-in-advance" aria-hidden="true">#</a>7.4 Store listing assets &amp; information (prepare in advance)</h2>
+<h2 id="74-store-listing-what-to-prepare"><a class="anchor" href="#74-store-listing-what-to-prepare" aria-hidden="true">#</a>7.4 Store listing: what to prepare</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Item</th>
-<th>Apple App Store</th>
+<th></th>
+<th>App Store</th>
 <th>Google Play</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>App name</td>
-<td>max 30 chars</td>
-<td>max 30 chars</td>
+<td>Up to 30 characters</td>
+<td>Up to 30 characters</td>
 </tr>
 <tr>
 <td>Subtitle / short description</td>
-<td>Subtitle 30 chars</td>
-<td>Short description 80 chars</td>
+<td>Subtitle, 30 characters</td>
+<td>Short description, 80 characters</td>
 </tr>
 <tr>
-<td>Description</td>
-<td>up to 4000 chars</td>
-<td>up to 4000 chars</td>
+<td>Full description</td>
+<td>Up to 4000 characters</td>
+<td>Up to 4000 characters</td>
 </tr>
 <tr>
 <td>Keywords</td>
-<td>100 chars</td>
-<td>— (from description)</td>
+<td>100 characters</td>
+<td>Not used (taken from the description)</td>
 </tr>
 <tr>
 <td>Icon</td>
@@ -112,13 +113,13 @@
 </tr>
 <tr>
 <td>Screenshots</td>
-<td>iPhone 6.9&quot;/6.5&quot; required, iPad if supported</td>
-<td>Phone min 2 (recommended 4–8); tablets if supported</td>
+<td>iPhone 6.9&quot; or 6.5&quot; required, iPad if the app supports it</td>
+<td>At least 2 phone screenshots (4 to 8 is better), tablet if supported</td>
 </tr>
 <tr>
 <td>Feature graphic</td>
-<td>—</td>
-<td>1024×500 required</td>
+<td>Not needed</td>
+<td>1024×500, required</td>
 </tr>
 <tr>
 <td>Privacy policy URL</td>
@@ -126,37 +127,37 @@
 <td>Required</td>
 </tr>
 <tr>
-<td>Support URL / email</td>
-<td>Required</td>
-<td>Email required</td>
+<td>Support</td>
+<td>Support URL required</td>
+<td>Support email required</td>
 </tr>
 <tr>
-<td>Privacy declaration</td>
-<td><strong>App Privacy &quot;nutrition labels&quot;</strong></td>
-<td><strong>Data safety form</strong></td>
+<td>Privacy form</td>
+<td>App Privacy questions</td>
+<td>Data safety form</td>
 </tr>
 <tr>
 <td>Age rating</td>
-<td>Age rating questionnaire</td>
-<td>IARC content rating questionnaire</td>
+<td>Age rating questions</td>
+<td>IARC content rating questions</td>
 </tr>
 <tr>
-<td>Review/demo account</td>
-<td><strong>Required</strong> if app has login (with any OTP bypass explained)</td>
-<td>Required in <em>App access</em> if login needed</td>
+<td>Reviewer login</td>
+<td>Required if the app has login (explain any OTP bypass)</td>
+<td>Required under App access if there&#39;s a login</td>
 </tr>
 <tr>
-<td>Other forms</td>
+<td>Other</td>
 <td>Export compliance (encryption)</td>
-<td>Target audience, ads declaration, news/government/financial declarations, etc.</td>
+<td>Target audience, ads, and other declarations</td>
 </tr>
 </tbody></table></div>
 
-<nav class="pager"><a class="pager-link prev" href="store-accounts.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Store Developer Accounts</span></a><a class="pager-link next" href="store-publishing.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Publishing to App Store &amp; Google Play</span></a></nav>
+<nav class="pager"><a class="pager-link prev" href="store-accounts.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Store Developer Accounts</span></a><a class="pager-link next" href="store-publishing.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Publishing to the Stores</span></a></nav>
 </main>
 </div>
 <footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>
 <script src="../assets/app.js"></script>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Other Key Responsibilities | Mobile App Playbook</title>
+<title>Other Things the Lead Owns | Mobile App Playbook</title>
 <meta name="description" content="Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
@@ -19,124 +19,125 @@
 <div class="hero-row">
 <div class="hero-icon cat-after-launch"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
 <div>
-<h1>Other Key Responsibilities</h1>
+<h1>Other Things the Lead Owns</h1>
 <p class="lede">Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.</p>
-<p class="meta"><span>Section 10</span><span>3 min read</span></p>
+<p class="meta"><span>Section 10</span><span>4 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#101-code-quality--standards">10.1 Code quality &amp; standards</a></li><li><a href="#102-cicd">10.2 CI/CD</a></li><li><a href="#103-dependency--react-native-upgrades">10.3 Dependency &amp; React Native upgrades</a></li><li><a href="#104-expiry--renewal-calendar-shared-company-calendar">10.4 Expiry &amp; renewal calendar (shared company calendar)</a></li><li><a href="#105-security">10.5 Security</a></li><li><a href="#106-versioning-release-notes--communication">10.6 Versioning, release notes &amp; communication</a></li><li><a href="#107-documentation--handover">10.7 Documentation &amp; handover</a></li><li><a href="#108-team--process">10.8 Team &amp; process</a></li><li><a href="#109-client-handover-when-a-project-ends">10.9 Client handover (when a project ends)</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#101-code-quality">10.1 Code quality</a></li><li><a href="#102-cicd">10.2 CI/CD</a></li><li><a href="#103-keeping-dependencies-and-react-native-up-to-date">10.3 Keeping dependencies and React Native up to date</a></li><li><a href="#104-expiry-calendar">10.4 Expiry calendar</a></li><li><a href="#105-security">10.5 Security</a></li><li><a href="#106-versions-and-release-notes">10.6 Versions and release notes</a></li><li><a href="#107-documentation">10.7 Documentation</a></li><li><a href="#108-team">10.8 Team</a></li><li><a href="#109-handing-a-project-over-to-a-client">10.9 Handing a project over to a client</a></li></ol></details></nav>
 <main class="prose" id="content">
-<h2 id="101-code-quality--standards"><a class="anchor" href="#101-code-quality--standards" aria-hidden="true">#</a>10.1 Code quality &amp; standards</h2>
+<h2 id="101-code-quality"><a class="anchor" href="#101-code-quality" aria-hidden="true">#</a>10.1 Code quality</h2>
 <ul>
-<li>TypeScript strict mode; ESLint + Prettier; Husky pre-commit (lint-staged) and pre-push (type-check).</li>
-<li><strong>Mandatory code review</strong> on all PRs (rulesets enforce this).</li>
-<li>Shared component library / theme so apps look consistent and are faster to build.</li>
-<li>Unit tests for business logic (Jest), component tests (React Native Testing Library); E2E (Maestro or Detox) for critical flows (login, payment, checkout).</li>
+<li>TypeScript in strict mode, ESLint and Prettier, Husky running lint on commit and type-check on push.</li>
+<li>Every pull request is reviewed before merging. The branch rules enforce this.</li>
+<li>A shared component library and theme, so apps look consistent and new screens are faster to build.</li>
+<li>Jest for business logic, React Native Testing Library for components, and Maestro or Detox for the critical flows (login, payment, checkout).</li>
 </ul>
 <h2 id="102-cicd"><a class="anchor" href="#102-cicd" aria-hidden="true">#</a>10.2 CI/CD</h2>
 <ul>
-<li>PR pipeline: lint → type-check → tests.</li>
-<li>Release pipeline: build signed AAB/IPA and upload to internal testing / TestFlight automatically (<strong>GitHub Actions + Fastlane</strong>, or <strong>EAS Build + EAS Submit</strong>).</li>
-<li>All signing material lives in CI secrets <strong>and</strong> the vault, never on one person&#39;s machine.</li>
+<li>On every pull request: lint, type-check, tests.</li>
+<li>On release: build a signed AAB and IPA and upload to internal testing and TestFlight automatically, with GitHub Actions and Fastlane, or EAS Build and EAS Submit.</li>
+<li>Signing files live in CI secrets and in the vault, never only on someone&#39;s laptop.</li>
 </ul>
-<h2 id="103-dependency--react-native-upgrades"><a class="anchor" href="#103-dependency--react-native-upgrades" aria-hidden="true">#</a>10.3 Dependency &amp; React Native upgrades</h2>
+<h2 id="103-keeping-dependencies-and-react-native-up-to-date"><a class="anchor" href="#103-keeping-dependencies-and-react-native-up-to-date" aria-hidden="true">#</a>10.3 Keeping dependencies and React Native up to date</h2>
 <ul>
-<li>Use the <strong>React Native Upgrade Helper</strong> for CLI projects; for Expo, upgrade one SDK at a time.</li>
-<li>Keep each maintained app <strong>no more than 1–2 RN versions behind</strong>. Old versions eventually fail new store requirements (target API, Xcode SDK, 16 KB pages).</li>
-<li>Prefer well-maintained libraries compatible with the <strong>New Architecture</strong>. Check the React Native Directory before adding a dependency.</li>
-<li>Run <code>npm audit</code> / Dependabot regularly; patch critical vulnerabilities.</li>
+<li>React Native CLI projects: use the React Native Upgrade Helper. Expo projects: upgrade one SDK version at a time.</li>
+<li>Keep every maintained app within one or two React Native versions of the latest. Apps that fall far behind eventually fail the store requirements (target API, Xcode, 16 KB pages) and the upgrade becomes a big project.</li>
+<li>Before adding a library, check it&#39;s maintained and supports the New Architecture (React Native Directory is useful for this).</li>
+<li>Fix critical vulnerabilities flagged by <code>npm audit</code> or Dependabot.</li>
 </ul>
-<h2 id="104-expiry--renewal-calendar-shared-company-calendar"><a class="anchor" href="#104-expiry--renewal-calendar-shared-company-calendar" aria-hidden="true">#</a>10.4 Expiry &amp; renewal calendar (shared company calendar)</h2>
+<h2 id="104-expiry-calendar"><a class="anchor" href="#104-expiry-calendar" aria-hidden="true">#</a>10.4 Expiry calendar</h2>
+<p>These go on a shared company calendar with reminders a month ahead.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Item</th>
-<th>Validity</th>
-<th>Consequence if missed</th>
+<th>What</th>
+<th>Lasts</th>
+<th>If we miss it</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Apple Developer Program membership</td>
 <td>1 year</td>
-<td><strong>Apps removed from App Store</strong>, no new builds</td>
+<td>Apps removed from the App Store, no new builds</td>
 </tr>
 <tr>
-<td>iOS Distribution certificate</td>
+<td>iOS distribution certificate</td>
 <td>1 year</td>
 <td>Can&#39;t sign new builds (live apps keep working)</td>
 </tr>
 <tr>
 <td>iOS provisioning profiles</td>
 <td>1 year</td>
-<td>Can&#39;t build/distribute (Enterprise: installed apps stop)</td>
+<td>Can&#39;t build or distribute</td>
 </tr>
 <tr>
-<td>APNs .p12 push certificate (if used instead of .p8)</td>
+<td>APNs .p12 push certificate (if used instead of a .p8 key)</td>
 <td>1 year</td>
-<td><strong>Push notifications stop</strong></td>
+<td>Push notifications stop</td>
 </tr>
 <tr>
-<td>Domain names (API, deep links, privacy policy)</td>
-<td>Per registrar</td>
+<td>Domains (API, deep links, privacy policy)</td>
+<td>Depends on registrar</td>
 <td>App breaks, deep links fail, store listing invalid</td>
 </tr>
 <tr>
-<td>SSL certificates (if not auto-renewed)</td>
+<td>SSL certificates (if not auto-renewing)</td>
 <td>Varies</td>
 <td>API calls fail</td>
 </tr>
 <tr>
-<td>Third-party SaaS subscriptions (Maps, SMS, Sentry, RevenueCat…)</td>
+<td>Paid services (Maps, SMS, Sentry and so on)</td>
 <td>Varies</td>
-<td>Features break</td>
+<td>Features stop working</td>
 </tr>
 <tr>
 <td>Google Play target API deadline</td>
-<td>Yearly (Aug)</td>
+<td>Every August</td>
 <td>Updates blocked</td>
 </tr>
 </tbody></table></div>
 <h2 id="105-security"><a class="anchor" href="#105-security" aria-hidden="true">#</a>10.5 Security</h2>
 <ul>
-<li>Store auth tokens in <strong>Keychain/Keystore</strong> (<code>react-native-keychain</code> / <code>expo-secure-store</code>), <strong>not</strong> AsyncStorage.</li>
-<li>HTTPS everywhere; consider <strong>SSL pinning</strong> for banking/fintech apps.</li>
-<li>Obfuscation (R8) for Android; no secrets in the bundle (Section 4).</li>
-<li>Firebase Security Rules reviewed before launch; App Check enabled.</li>
-<li>Root/jailbreak detection only where business requires (fintech).</li>
+<li>Store login tokens in the Keychain / Keystore (<code>react-native-keychain</code> or <code>expo-secure-store</code>), not AsyncStorage.</li>
+<li>HTTPS everywhere. For banking or fintech apps, think about SSL pinning.</li>
+<li>R8 obfuscation on Android, and no secrets in the app (Section 4).</li>
+<li>Review Firebase security rules before launch and turn on App Check.</li>
+<li>Root and jailbreak detection only where the business actually needs it (fintech, for example).</li>
 </ul>
-<h2 id="106-versioning-release-notes--communication"><a class="anchor" href="#106-versioning-release-notes--communication" aria-hidden="true">#</a>10.6 Versioning, release notes &amp; communication</h2>
+<h2 id="106-versions-and-release-notes"><a class="anchor" href="#106-versions-and-release-notes" aria-hidden="true">#</a>10.6 Versions and release notes</h2>
 <ul>
-<li>Semantic versioning (<code>MAJOR.MINOR.PATCH</code>), build numbers always increase.</li>
-<li>Maintain a <code>CHANGELOG.md</code> per repo (auto-generated from Conventional Commits).</li>
-<li>Inform client/management before each production release with release notes and the planned rollout.</li>
+<li>Semantic versions (<code>MAJOR.MINOR.PATCH</code>), build numbers always go up.</li>
+<li>A <code>CHANGELOG.md</code> in each repo, generated from commit messages.</li>
+<li>Before every production release, send management and the client the release notes and the rollout plan.</li>
 </ul>
-<h2 id="107-documentation--handover"><a class="anchor" href="#107-documentation--handover" aria-hidden="true">#</a>10.7 Documentation &amp; handover</h2>
+<h2 id="107-documentation"><a class="anchor" href="#107-documentation" aria-hidden="true">#</a>10.7 Documentation</h2>
 <ul>
-<li>Every repo&#39;s README must allow a <strong>new developer to run the app within one hour</strong>: prerequisites, Node/Java/Xcode versions, env setup, how to build each flavor/scheme, how to release.</li>
-<li>Keep the <strong>Project Registry</strong> up to date after every change in accounts, keys, owners or URLs.</li>
-<li>Record architecture decisions in <code>docs/adr/</code> (short Architecture Decision Records).</li>
+<li>A repo&#39;s README should let a new developer run the app within an hour: required Node, Java and Xcode versions, env setup, how to build each environment, how to release.</li>
+<li>Update the Project Registry whenever an account, key, owner or URL changes.</li>
+<li>For bigger technical decisions, write a short note in <code>docs/adr/</code> explaining what was decided and why.</li>
 </ul>
-<h2 id="108-team--process"><a class="anchor" href="#108-team--process" aria-hidden="true">#</a>10.8 Team &amp; process</h2>
+<h2 id="108-team"><a class="anchor" href="#108-team" aria-hidden="true">#</a>10.8 Team</h2>
 <ul>
-<li>Estimation includes <strong>store review time + buffer</strong> (at least 1 week for first release).</li>
-<li>Device lab: maintain at least one low-end Android, one recent Android, one older iPhone, one recent iPhone (+ iPad if supported).</li>
-<li>Onboarding/offboarding checklists followed <strong>every time</strong> (<a href="offboarding-checklist.html">11.5</a>).</li>
+<li>Estimates should include store review time plus a buffer. At least a week for the first release.</li>
+<li>Keep a small set of test devices: a cheap Android, a recent Android, an older iPhone, a recent iPhone, and an iPad if any app supports tablets.</li>
+<li>Use the onboarding and offboarding checklists every single time someone joins or leaves.</li>
 </ul>
-<h2 id="109-client-handover-when-a-project-ends"><a class="anchor" href="#109-client-handover-when-a-project-ends" aria-hidden="true">#</a>10.9 Client handover (when a project ends)</h2>
+<h2 id="109-handing-a-project-over-to-a-client"><a class="anchor" href="#109-handing-a-project-over-to-a-client" aria-hidden="true">#</a>10.9 Handing a project over to a client</h2>
 <ul>
-<li>Transfer repo (or provide a full archive with history) as per contract.</li>
-<li>Transfer app to the client&#39;s store accounts if it was published under ours (Apple <em>App Transfer</em>, Google <em>App transfer</em>).</li>
-<li>Hand over: Project Registry, keystore + passwords, <code>.env</code> files, Firebase project ownership, all third-party accounts, documentation, and remove our access afterwards if the contract says so.</li>
+<li>Transfer the repo, or give a full archive with history, as the contract says.</li>
+<li>If the app was published on our store accounts, transfer it to the client&#39;s (App Transfer on Apple, app transfer on Google).</li>
+<li>Hand over the Project Registry, keystore and passwords, <code>.env</code> files, Firebase ownership, every third-party account and the documentation. Then remove our own access if the contract says so.</li>
 </ul>
 
-<nav class="pager"><a class="pager-link prev" href="live-app-monitoring.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Detecting Google/Apple Changes on Live Apps</span></a><a class="pager-link next" href="project-registry-template.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Project Registry Template</span></a></nav>
+<nav class="pager"><a class="pager-link prev" href="live-app-monitoring.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Catching Apple and Google Changes</span></a><a class="pager-link next" href="project-registry-template.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Project Registry Template</span></a></nav>
 </main>
 </div>
 <footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>
 <script src="../assets/app.js"></script>

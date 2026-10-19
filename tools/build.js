@@ -44,23 +44,24 @@ const CATEGORIES = [
 
 // key = section number in README; title = display title
 const PAGES = [
-  { key: '1', slug: 'golden-rules', cat: 'foundations', icon: 'shield', title: 'Golden Rules', desc: 'The seven non-negotiables: company ownership, no single point of failure, same-day offboarding, signing keys and secrets.' },
-  { key: '2', slug: 'new-project-setup', cat: 'foundations', icon: 'rocket', title: 'New Project Setup', desc: 'Day-one kick-off: ownership decisions, Bundle IDs, stack choice, environments and folder structure.' },
-  { key: '3', slug: 'repository-setup', cat: 'setup', icon: 'branch', title: 'Repository Setup (GitHub & GitLab)', desc: 'Creating repos from the company org, teams, branch rulesets, .gitignore, branching strategy and GitLab rules.' },
-  { key: '4', slug: 'environment-variables', cat: 'setup', icon: 'key', title: 'Environment Variables (.env)', desc: 'What belongs in .env, what must never ship in an app, and how every .env is backed up.' },
-  { key: '5', slug: 'firebase-setup', cat: 'setup', icon: 'flame', title: 'Firebase Setup', desc: 'Why Firebase matters, per-environment projects, push (FCM/APNs), Crashlytics, Remote Config and App Check.' },
-  { key: '6', slug: 'store-accounts', cat: 'stores', icon: 'idcard', title: 'Store Developer Accounts', desc: 'Apple & Google: individual vs organization accounts, limitations, D-U-N-S and step-by-step enrollment.' },
-  { key: '7', slug: 'production-setup', cat: 'stores', icon: 'server', title: 'Production Environment Setup', desc: 'Go-live readiness: backend, app config, signing keys and store listing assets.' },
-  { key: '8', slug: 'store-publishing', cat: 'stores', icon: 'upload', title: 'Publishing to App Store & Google Play', desc: 'Step-by-step release on both stores, testing tracks, review and common rejection reasons.' },
-  { key: '9', slug: 'live-app-monitoring', cat: 'after-launch', icon: 'activity', title: 'Detecting Google/Apple Changes on Live Apps', desc: 'How live apps get hit by store updates, where warnings appear, and the monitoring routine.' },
-  { key: '10', slug: 'lead-responsibilities', cat: 'after-launch', icon: 'users', title: 'Other Key Responsibilities', desc: 'Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.' },
-  { key: '11.1', slug: 'project-registry-template', cat: 'templates', icon: 'file', title: 'Project Registry Template', desc: 'The single consolidated file holding all key information for a project.' },
-  { key: '11.2', slug: 'new-project-checklist', cat: 'templates', icon: 'check', title: 'New Project Checklist', desc: 'Short tick-list for starting any new mobile project.', checklist: true },
-  { key: '11.3', slug: 'release-checklist', cat: 'templates', icon: 'clipboard', title: 'Release Checklist', desc: 'Pre-release, release and post-release steps for every store build.', checklist: true },
-  { key: '11.4', slug: 'live-apps-health-sheet', cat: 'templates', icon: 'table', title: 'Live Apps Health Sheet', desc: 'Monthly one-row-per-app sheet with crash, ANR, SDK and warning tracking.' },
-  { key: '11.5', slug: 'offboarding-checklist', cat: 'templates', icon: 'userminus', title: 'Offboarding Checklist', desc: 'Same-day access removal across GitHub, GitLab, stores, Firebase and every other system.' },
-  { key: '11.6', slug: 'onboarding-checklist', cat: 'templates', icon: 'userplus', title: 'Onboarding Checklist', desc: 'Access and walkthrough steps for a new team member.', checklist: true },
-  { key: '12', slug: 'references', cat: 'reference', icon: 'link', title: 'Official Reference Links', desc: 'Apple, Google Play, Firebase, React Native, Expo, GitHub and GitLab documentation.' },
+  { key: '1', slug: 'ground-rules', cat: 'foundations', icon: 'shield', title: 'Ground Rules', desc: 'The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.' },
+  { key: '2', slug: 'new-project-setup', cat: 'foundations', icon: 'rocket', title: 'Starting a New Project', desc: 'What to settle with the client in week one, the day-one technical setup, and our folder structure.' },
+  { key: '3', slug: 'repository-setup', cat: 'setup', icon: 'branch', title: 'Repository Setup and Ownership', desc: 'Who creates repos and how: private by default, team access, branch rules, GitLab, and removing people who leave.' },
+  { key: '4', slug: 'environment-variables', cat: 'setup', icon: 'key', title: 'Environment Variables (.env)', desc: 'What goes in .env, what never ships inside an app, and how we back the files up.' },
+  { key: '5', slug: 'firebase-setup', cat: 'setup', icon: 'flame', title: 'Firebase Setup', desc: 'Why we use it on almost every app, one project per environment, push, Crashlytics and Remote Config.' },
+  { key: '6', slug: 'store-accounts', cat: 'stores', icon: 'idcard', title: 'Store Developer Accounts', desc: 'Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.' },
+  { key: '7', slug: 'production-setup', cat: 'stores', icon: 'server', title: 'Getting Production Ready', desc: 'Backend, app configuration, signing keys and store listing material to sort out before launch.' },
+  { key: '8', slug: 'store-publishing', cat: 'stores', icon: 'upload', title: 'Publishing to the Stores', desc: 'Getting an app live on the App Store and Google Play, testing tracks, review and common rejections.' },
+  { key: '9', slug: 'live-app-monitoring', cat: 'after-launch', icon: 'activity', title: 'Catching Apple and Google Changes', desc: 'How live apps get hit by store changes, where the warnings show up, and the routine to catch them early.' },
+  { key: '10', slug: 'lead-responsibilities', cat: 'after-launch', icon: 'users', title: 'Other Things the Lead Owns', desc: 'Code quality, CI/CD, upgrades, the expiry calendar, security, documentation and client handover.' },
+  { key: '11.1', slug: 'project-registry-template', cat: 'templates', icon: 'file', title: 'Project Registry Template', desc: 'One file per project with every piece of key information in it.' },
+  { key: '11.2', slug: 'new-project-checklist', cat: 'templates', icon: 'check', title: 'New Project Checklist', desc: 'A tick-list for starting any new mobile project.', checklist: true },
+  { key: '11.3', slug: 'release-checklist', cat: 'templates', icon: 'clipboard', title: 'Release Checklist', desc: 'Before, during and after every store release.', checklist: true },
+  { key: '11.4', slug: 'live-apps-health-sheet', cat: 'templates', icon: 'table', title: 'Live Apps Health Sheet', desc: 'The monthly sheet for crash rates, SDK levels and open store warnings.' },
+  { key: '11.5', slug: 'offboarding-checklist', cat: 'templates', icon: 'userminus', title: 'Offboarding Checklist', desc: 'Mandatory, same day: removing a leaver from every system we use.' },
+  { key: '11.6', slug: 'onboarding-checklist', cat: 'templates', icon: 'userplus', title: 'Onboarding Checklist', desc: 'Access and walkthrough for someone joining the team.', checklist: true },
+  { key: '11.7', slug: 'repository-inventory', cat: 'templates', icon: 'branch', title: 'Repository Inventory', desc: 'The Repo Owner\'s list of every repo, its visibility and who has access.' },
+  { key: '12', slug: 'references', cat: 'reference', icon: 'link', title: 'Official Links', desc: 'Apple, Google Play, Firebase, React Native, Expo, GitHub and GitLab documentation.' },
 ];
 
 // ---- split README into sections ----
@@ -86,7 +87,7 @@ for (const line of lines) {
 }
 
 // ---- anchor map: GitHub slug -> target href (relative to articles/) ----
-const anchorMap = { '11-templates--checklists': '../index.html#templates', 'table-of-contents': '../index.html' };
+const anchorMap = { '11-templates-and-checklists': '../index.html#templates', 'table-of-contents': '../index.html' };
 for (const p of PAGES) {
   const s = sections[p.key];
   if (!s) throw new Error('missing section ' + p.key);
@@ -168,7 +169,7 @@ const topbar = (prefix) => `<header class="topbar"><div class="topbar-inner">
 ${THEME_BTN}
 </div></header>`;
 const footer = `<footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>`;
 
@@ -249,17 +250,17 @@ ${topbar('')}
 <section class="hero"><div class="hero-inner">
 <p class="eyebrow">Knowledge Transfer &middot; React Native</p>
 <h1>Mobile App Development Playbook</h1>
-<p class="hero-sub">How we set up, build, publish and look after mobile apps: from creating the repository on day one to catching Apple and Google policy changes on apps that are already live.</p>
+<p class="hero-sub">How we start, build, publish and look after our mobile apps, written down as my handover so whoever takes over doesn't have to start from zero.</p>
 <ul class="hero-meta">
 <li><span>Prepared by</span>Saad Bawany, React Native Lead</li>
-<li><span>For</span>Management &amp; the incoming Mobile Lead</li>
-<li><span>Version</span>v1.0 &middot; October 2026</li>
+<li><span>For</span>Management and the next mobile lead</li>
+<li><span>Version</span>v1.0 &middot; 19 October 2026</li>
 <li><span>Content</span>${PAGES.length} resources &middot; ~${totalMins} min</li>
 </ul>
 <div class="search"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="search" type="search" placeholder="Search resources, e.g. keystore, firebase, offboarding" aria-label="Search resources"></div>
 </div></section>
 <main class="home-main">
-<div class="callout-start"><strong>New here?</strong> Read <a href="articles/golden-rules.html">Golden Rules</a> first, then go through the sections in order. Each project should also have a filled-in <a href="articles/project-registry-template.html">Project Registry</a>.</div>
+<div class="callout-start"><strong>Start with the <a href="articles/ground-rules.html">Ground Rules</a>.</strong> Repos are always private, only the Repo Owner creates them, and anyone who leaves loses access on their last day. The rest can be read in order or as needed.</div>
 ${sectionsHtml}
 <p class="empty" id="empty" hidden>No resources match your search.</p>
 </main>

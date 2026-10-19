@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Store Developer Accounts | Mobile App Playbook</title>
-<meta name="description" content="Apple &amp; Google: individual vs organization accounts, limitations, D-U-N-S and step-by-step enrollment.">
+<meta name="description" content="Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -20,190 +20,186 @@
 <div class="hero-icon cat-stores"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/></svg></div>
 <div>
 <h1>Store Developer Accounts</h1>
-<p class="lede">Apple &amp; Google: individual vs organization accounts, limitations, D-U-N-S and step-by-step enrollment.</p>
+<p class="lede">Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.</p>
 <p class="meta"><span>Section 6</span><span>6 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#61-account-types-compared">6.1 Account types compared</a></li><li><a href="#62-prerequisite-for-both-d-u-n-s-number">6.2 Prerequisite for both: D-U-N-S Number</a></li><li><a href="#63-step-by-step-apple-developer-organization-account">6.3 Step-by-step: Apple Developer (Organization) account</a></li><li><a href="#64-step-by-step-google-play-console-organization-account">6.4 Step-by-step: Google Play Console (Organization) account</a></li><li><a href="#65-comparison-of-store-fees--key-timelines">6.5 Comparison of store fees &amp; key timelines</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#61-individual-vs-organization-accounts">6.1 Individual vs organization accounts</a></li><li><a href="#62-d-u-n-s-number-needed-for-both">6.2 D-U-N-S number (needed for both)</a></li><li><a href="#63-setting-up-the-apple-account-organization">6.3 Setting up the Apple account (organization)</a></li><li><a href="#64-setting-up-the-google-play-console-account-organization">6.4 Setting up the Google Play Console account (organization)</a></li><li><a href="#65-fees-and-timelines-at-a-glance">6.5 Fees and timelines at a glance</a></li></ol></details></nav>
 <main class="prose" id="content">
-<h2 id="61-account-types-compared"><a class="anchor" href="#61-account-types-compared" aria-hidden="true">#</a>6.1 Account types compared</h2>
-<h3 id="apple-developer-program"><a class="anchor" href="#apple-developer-program" aria-hidden="true">#</a>Apple Developer Program</h3>
+<h2 id="61-individual-vs-organization-accounts"><a class="anchor" href="#61-individual-vs-organization-accounts" aria-hidden="true">#</a>6.1 Individual vs organization accounts</h2>
+<p><strong>Apple Developer Program</strong></p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
-<th><strong>Individual</strong></th>
-<th><strong>Organization</strong></th>
-<th>Enterprise Program</th>
+<th>Individual</th>
+<th>Organization</th>
+<th>Enterprise</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Fee</td>
-<td>USD 99 / year</td>
-<td>USD 99 / year</td>
-<td>USD 299 / year</td>
+<td>USD 99 a year</td>
+<td>USD 99 a year</td>
+<td>USD 299 a year</td>
 </tr>
 <tr>
-<td>Seller name on App Store</td>
-<td><strong>Person&#39;s legal name</strong></td>
-<td><strong>Company legal name</strong></td>
-<td>— (no App Store)</td>
+<td>Name shown on the App Store</td>
+<td>The person&#39;s legal name</td>
+<td>The company&#39;s legal name</td>
+<td>Not on the App Store</td>
 </tr>
 <tr>
-<td>Requirements</td>
-<td>Apple Account with 2FA, government ID</td>
-<td>Legal entity, <strong>D-U-N-S Number</strong>, company website, company-domain email, signer with legal authority</td>
-<td>Larger organizations, strict eligibility</td>
+<td>What you need</td>
+<td>Apple Account with two-factor, government ID</td>
+<td>Registered company, D-U-N-S number, company website, company email, someone with authority to sign for the company</td>
+<td>Larger organizations with strict eligibility</td>
 </tr>
 <tr>
-<td>Team members</td>
-<td>Only the individual has developer program membership; can add App Store Connect users, but cannot manage a full developer team</td>
-<td><strong>Full team</strong> with roles (Admin, App Manager, Developer, Marketing, Finance…)</td>
+<td>Team</td>
+<td>Just that one person in the developer team; App Store Connect users can be added but there&#39;s no real team setup</td>
+<td>A full team with roles (Admin, App Manager, Developer, Marketing, Finance and so on)</td>
 <td>Team</td>
 </tr>
 <tr>
-<td>Who it&#39;s for</td>
+<td>Suitable for</td>
 <td>Freelancers, personal projects</td>
-<td><strong>Companies, client apps (recommended)</strong></td>
-<td><strong>Internal employee apps only</strong>. Cannot publish to the public App Store.</td>
+<td>Companies and client apps</td>
+<td>Internal employee apps only, can&#39;t publish publicly</td>
 </tr>
 <tr>
-<td>Limitation</td>
-<td>App appears under a person&#39;s name; if that person leaves, the account leaves with them</td>
-<td>Takes longer to set up (D-U-N-S + verification)</td>
-<td>Not for public distribution</td>
+<td>The catch</td>
+<td>The app sits under one person&#39;s name. If they leave, the account leaves with them.</td>
+<td>Takes longer to set up because of D-U-N-S and verification</td>
+<td>No public distribution</td>
 </tr>
 </tbody></table></div>
-<h3 id="google-play-console"><a class="anchor" href="#google-play-console" aria-hidden="true">#</a>Google Play Console</h3>
+<p><strong>Google Play Console</strong></p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th></th>
-<th><strong>Personal</strong></th>
-<th><strong>Organization</strong></th>
+<th>Personal</th>
+<th>Organization</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Fee</td>
-<td>USD 25, one-time</td>
-<td>USD 25, one-time</td>
+<td>USD 25, once</td>
+<td>USD 25, once</td>
 </tr>
 <tr>
-<td>Requirements</td>
-<td>Google account, legal name, address, ID verification, phone &amp; email verification</td>
-<td>Organization details, <strong>D-U-N-S Number</strong>, organization website, verified contact phone &amp; email, ID verification of the account owner</td>
+<td>What you need</td>
+<td>Google account, legal name, address, ID, phone and email verification</td>
+<td>Company details, D-U-N-S number, company website, verified contact phone and email, ID of the account owner</td>
 </tr>
 <tr>
-<td>Public developer info</td>
-<td>Personal name (and address/contact for monetizing apps) shown publicly</td>
-<td>Company name &amp; contact details shown</td>
+<td>Shown publicly</td>
+<td>The person&#39;s name (plus address and contact for apps that make money)</td>
+<td>The company name and contact details</td>
 </tr>
 <tr>
-<td><strong>New-app testing requirement</strong></td>
-<td><strong>Yes.</strong> Personal accounts created after Nov 2023 must run a <strong>closed test with at least 12 testers opted-in for 14 consecutive days</strong> before they can apply for production access.</td>
-<td><strong>No.</strong> Organization accounts can publish to production directly.</td>
+<td>Testing before first release</td>
+<td>Accounts created after November 2023 must run a closed test with at least 12 testers opted in for 14 days in a row before they can apply for production</td>
+<td>Not required, you can publish straight to production</td>
 </tr>
 <tr>
-<td>Some app categories (e.g. finance, health, government, VPN)</td>
-<td>May be restricted / require an organization account</td>
-<td>Allowed (subject to policy)</td>
+<td>Restricted categories (finance, health, VPN, government and others)</td>
+<td>May need an organization account</td>
+<td>Allowed, subject to policy</td>
 </tr>
 <tr>
-<td>Who it&#39;s for</td>
-<td>Hobbyists, individual developers</td>
-<td><strong>Companies, client apps (recommended)</strong></td>
+<td>Suitable for</td>
+<td>Individual developers</td>
+<td>Companies and client apps</td>
 </tr>
 </tbody></table></div>
-<blockquote>
-<p><strong>Recommendation:</strong> For the company and for every client, use <strong>Organization</strong> accounts on <strong>both</strong> stores. Individual/personal accounts tie the app to one person&#39;s identity and add the 14-day testing hurdle on Google Play.</p>
-<p>Apps <strong>can be transferred</strong> between accounts later on both stores (Apple: <em>App Transfer</em> in App Store Connect; Google: <em>App transfer request</em> in Play Console), but it is a slow manual process. Get it right from day one.</p>
-<p>Google has also announced <strong>Android developer identity verification</strong> for apps installed on certified Android devices (rolling out from late 2026). Play Console accounts that are already verified are largely covered, but keep the account&#39;s legal details accurate and watch the Play Console inbox.</p>
-</blockquote>
-<h2 id="62-prerequisite-for-both-d-u-n-s-number"><a class="anchor" href="#62-prerequisite-for-both-d-u-n-s-number" aria-hidden="true">#</a>6.2 Prerequisite for both: D-U-N-S Number</h2>
+<p>My recommendation is organization accounts on both stores, for us and for clients. A personal account ties the app to one person, and on Google Play it adds the 14-day testing step before you can launch.</p>
+<p>Apps can be moved between accounts later on both stores (App Transfer in App Store Connect, app transfer request in Play Console), but it&#39;s slow and manual. It&#39;s much easier to start on the right account.</p>
+<p>Google has also announced developer identity verification for apps installed on certified Android devices, rolling out from late 2026. Play Console accounts that are already verified are mostly covered, but keep the account&#39;s legal details correct and keep an eye on the Play Console inbox.</p>
+<h2 id="62-d-u-n-s-number-needed-for-both"><a class="anchor" href="#62-d-u-n-s-number-needed-for-both" aria-hidden="true">#</a>6.2 D-U-N-S number (needed for both)</h2>
 <ul>
-<li>A free, 9-digit identifier issued by <strong>Dun &amp; Bradstreet</strong>, used by Apple and Google to verify the company is a real legal entity.</li>
-<li>Check/request it via Apple&#39;s <strong>D-U-N-S lookup tool</strong> (developer.apple.com/enroll/duns-lookup). It can take <strong>up to ~5 business days</strong> (sometimes longer) to be issued, and Apple may need a further 1–2 days to receive it.</li>
-<li>The <strong>legal name and address must exactly match</strong> the company&#39;s registration documents and what you enter in Apple/Google forms. Mismatches are the #1 cause of rejection.</li>
+<li>A free nine-digit number from Dun &amp; Bradstreet that Apple and Google use to confirm the company is a real legal entity.</li>
+<li>Look it up or request it through Apple&#39;s D-U-N-S lookup tool. A new one can take around five business days, sometimes longer, and Apple may need another day or two to see it.</li>
+<li>The legal name and address must match the company registration documents exactly, and match what you type into the Apple and Google forms. A mismatch is the most common reason enrollment gets rejected.</li>
 </ul>
-<h2 id="63-step-by-step-apple-developer-organization-account"><a class="anchor" href="#63-step-by-step-apple-developer-organization-account" aria-hidden="true">#</a>6.3 Step-by-step: Apple Developer (Organization) account</h2>
+<h2 id="63-setting-up-the-apple-account-organization"><a class="anchor" href="#63-setting-up-the-apple-account-organization" aria-hidden="true">#</a>6.3 Setting up the Apple account (organization)</h2>
 <ol>
-<li><strong>Create a company-owned Apple Account</strong> using a shared, company-domain email, e.g. <code>appledev@company.com</code> (not a personal Gmail). Enable <strong>two-factor authentication</strong> with a <strong>company phone number</strong> that management controls.</li>
-<li>Confirm the company has a <strong>D-U-N-S Number</strong> (6.2).</li>
-<li>Make sure the company has a <strong>public website on the same domain</strong> as the email.</li>
-<li>Enroll at <strong>developer.apple.com/programs/enroll</strong>, preferably through the <strong>Apple Developer app</strong> (iPhone/iPad/Mac), which is the fastest route and supports in-app payment.</li>
-<li>Choose <strong>&quot;Company / Organization&quot;</strong>, enter the legal entity name, D-U-N-S, website, and the enrolling person&#39;s details. That person must have <strong>legal authority to bind the company</strong> (Apple may call to verify).</li>
-<li>Pay <strong>USD 99</strong>. Apple verifies (from a couple of days up to ~2 weeks).</li>
-<li>After approval, in <strong>App Store Connect → Business (Agreements, Tax &amp; Banking)</strong>: accept the <strong>Free Apps agreement</strong>, and if the app sells anything, complete the <strong>Paid Apps agreement</strong>, tax forms (e.g. W-8BEN-E for non-US companies) and bank account.</li>
-<li><strong>Users and Access</strong>: invite team members with least-privilege roles:<ul>
-<li><strong>Account Holder</strong>: the company account above, controlled by management. Only one per account; it&#39;s the only role that can accept agreements and renew membership.</li>
-<li><strong>Admin</strong>: Mobile Lead (+ one more management person).</li>
-<li><strong>App Manager / Developer</strong>: developers. Use &quot;Access to Certificates, Identifiers &amp; Profiles&quot; only where needed.</li>
-<li><strong>Marketing / Customer Support / Finance</strong>: as needed.</li>
+<li>Create a company Apple Account on a shared company email, like <code>appledev@company.com</code>. Turn on two-factor with a company phone number that management controls.</li>
+<li>Make sure the company has its D-U-N-S number (6.2) and a public website on the same domain as the email.</li>
+<li>Enroll at developer.apple.com/programs/enroll. The Apple Developer app on iPhone or Mac is usually the quickest way.</li>
+<li>Choose Company / Organization and enter the legal name, D-U-N-S number, website and the enrolling person&#39;s details. That person has to have authority to sign for the company, and Apple may call to confirm.</li>
+<li>Pay USD 99. Approval takes anywhere from a couple of days to about two weeks.</li>
+<li>In App Store Connect → Business, accept the Free Apps agreement. If the app sells anything, also complete the Paid Apps agreement, tax forms and bank details.</li>
+<li>In Users and Access, add people with only the access they need:<ul>
+<li><strong>Account Holder:</strong> the company account above, controlled by management. There&#39;s only one, and it&#39;s the only role that can accept agreements and renew the membership.</li>
+<li><strong>Admin:</strong> the mobile lead and one person from management.</li>
+<li><strong>App Manager / Developer:</strong> developers.</li>
+<li><strong>Marketing, Finance, Customer Support:</strong> as needed.</li>
 </ul>
 </li>
-<li>Create an <strong>App Store Connect API Key</strong> (Users and Access → Integrations) for CI/Fastlane/EAS. Store it in the vault.</li>
-<li>Turn on <strong>auto-renew</strong>. <strong>If membership lapses, apps are removed from the App Store.</strong></li>
-<li>Fill in the account details in the <strong>Project/Company Registry</strong>.</li>
+<li>Create an App Store Connect API key (Users and Access → Integrations) for CI, Fastlane or EAS, and save it in the vault.</li>
+<li>Turn on auto-renew. If the membership lapses, the apps are removed from the App Store.</li>
 </ol>
-<p><strong>Client-owned Apple account:</strong> the client enrolls (steps above) and invites our company email as <strong>Admin</strong> or <strong>App Manager</strong>. We never ask for the client&#39;s Apple password.</p>
-<h2 id="64-step-by-step-google-play-console-organization-account"><a class="anchor" href="#64-step-by-step-google-play-console-organization-account" aria-hidden="true">#</a>6.4 Step-by-step: Google Play Console (Organization) account</h2>
+<p>If the client owns the account, the client enrolls and invites our company email as Admin or App Manager. We never ask for a client&#39;s Apple password.</p>
+<h2 id="64-setting-up-the-google-play-console-account-organization"><a class="anchor" href="#64-setting-up-the-google-play-console-account-organization" aria-hidden="true">#</a>6.4 Setting up the Google Play Console account (organization)</h2>
 <ol>
-<li><strong>Create or use a company-owned Google account</strong>, e.g. <code>playconsole@company.com</code> (Google Workspace account on the company domain preferred). Enable 2-step verification with a company-controlled phone.</li>
-<li>Have the <strong>D-U-N-S Number</strong> and legal documents ready.</li>
-<li>Go to <strong>play.google.com/console/signup</strong> → choose <strong>&quot;An organization or business&quot;</strong>.</li>
-<li>Enter the organization name &amp; address (must match D-U-N-S), organization website, a <strong>contact email &amp; phone</strong> (verified by Google, shown to users), and the developer name shown on Google Play.</li>
-<li>Pay the <strong>USD 25</strong> one-time fee.</li>
-<li>Complete <strong>identity verification</strong> (documents for the organization and the account owner). Verification can take a few days.</li>
-<li><strong>Users and permissions</strong>: invite team members with specific permissions (Admin for leads; release/testing permissions for developers; finance/reporting as needed). Prefer <strong>per-app</strong> permissions for contractors.</li>
-<li>If selling: set up a <strong>Payments profile / merchant account</strong> (bank, tax).</li>
-<li>For CI automation (Fastlane/EAS Submit), create a <strong>Google Cloud service account</strong>, grant it access in Play Console → Users and permissions, and store its JSON key in the vault and CI secrets.</li>
-<li>Log in at least occasionally and keep the account active: Google may <strong>close inactive developer accounts</strong> that haven&#39;t published or logged in for an extended period.</li>
+<li>Use a company Google account, ideally on the company&#39;s Google Workspace domain, like <code>playconsole@company.com</code>. Turn on two-step verification with a company phone.</li>
+<li>Have the D-U-N-S number and company documents ready.</li>
+<li>Go to play.google.com/console/signup and choose &quot;An organization or business&quot;.</li>
+<li>Enter the company name and address (matching D-U-N-S), website, a contact email and phone (Google verifies these and shows them to users), and the developer name to show on Google Play.</li>
+<li>Pay the USD 25 fee.</li>
+<li>Complete identity verification for the company and the account owner. This takes a few days.</li>
+<li>In Users and permissions, invite people. Admin for leads, release permissions for developers. Give contractors access to specific apps only.</li>
+<li>If the app sells anything, set up the payments profile with bank and tax details.</li>
+<li>For CI uploads, create a Google Cloud service account, give it access in Play Console, and keep its JSON key in the vault and CI secrets.</li>
+<li>Log in now and then and keep the account active. Google can close developer accounts that haven&#39;t been used in a long time.</li>
 </ol>
-<p><strong>Client-owned Play account:</strong> the client creates it and invites our company Google account with Admin (or release) permissions for their apps.</p>
-<h2 id="65-comparison-of-store-fees--key-timelines"><a class="anchor" href="#65-comparison-of-store-fees--key-timelines" aria-hidden="true">#</a>6.5 Comparison of store fees &amp; key timelines</h2>
+<p>If the client owns the account, they create it and invite our company Google account with Admin or release access.</p>
+<h2 id="65-fees-and-timelines-at-a-glance"><a class="anchor" href="#65-fees-and-timelines-at-a-glance" aria-hidden="true">#</a>6.5 Fees and timelines at a glance</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Item</th>
+<th></th>
 <th>Apple</th>
 <th>Google</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Account fee</td>
-<td>USD 99 / year (renew!)</td>
+<td>USD 99 every year</td>
 <td>USD 25 once</td>
 </tr>
 <tr>
 <td>Account approval</td>
-<td>~2 days – 2 weeks (Org)</td>
-<td>~2–7 days (verification)</td>
+<td>A few days to two weeks</td>
+<td>Usually 2 to 7 days</td>
 </tr>
 <tr>
 <td>First app review</td>
-<td>Typically 24–48h, longer if rejected</td>
-<td>From hours to ~7 days for new apps/accounts</td>
+<td>Usually 1 to 2 days, longer if rejected</td>
+<td>A few hours up to about a week for new apps and accounts</td>
 </tr>
 <tr>
-<td>Personal-account extra step</td>
-<td>—</td>
-<td>12 testers × 14 days closed test</td>
+<td>Extra step for personal accounts</td>
+<td>None</td>
+<td>12 testers for 14 days</td>
 </tr>
 <tr>
 <td>Store commission</td>
-<td>15% (Small Business Program, &lt; USD 1M/year) or 30%</td>
-<td>15% on first USD 1M/year, then 30% (subscriptions 15%)</td>
+<td>15% under the Small Business Program (under USD 1M a year), otherwise 30%</td>
+<td>15% on the first USD 1M a year, then 30% (15% on subscriptions)</td>
 </tr>
 </tbody></table></div>
 
-<nav class="pager"><a class="pager-link prev" href="firebase-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Firebase Setup</span></a><a class="pager-link next" href="production-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Production Environment Setup</span></a></nav>
+<nav class="pager"><a class="pager-link prev" href="firebase-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Firebase Setup</span></a><a class="pager-link next" href="production-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Getting Production Ready</span></a></nav>
 </main>
 </div>
 <footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>
 <script src="../assets/app.js"></script>

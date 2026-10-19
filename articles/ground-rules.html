@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ground Rules | Mobile App Playbook</title>
+<meta name="description" content="The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+</head>
+<body class="article-page" data-cat="foundations">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-mark">RN</span><span>Mobile App Playbook</span></a>
+<button class="theme-toggle" type="button" aria-label="Toggle dark mode"><svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+</div></header>
+<div class="article-hero"><div class="article-hero-inner">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../index.html">All resources</a><span>/</span><a href="../index.html#foundations">Foundations</a></nav>
+<div class="hero-row">
+<div class="hero-icon cat-foundations"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+<div>
+<h1>Ground Rules</h1>
+<p class="lede">The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.</p>
+<p class="meta"><span>Section 1</span><span>1 min read</span></p>
+</div>
+</div>
+
+</div></div>
+<div class="layout no-toc">
+
+<main class="prose" id="content">
+<p>If someone only reads one page of this document, it should be this one.</p>
+<ol>
+<li><strong>The company owns everything.</strong> Every repo, store account, Firebase project, domain and third-party service is created from a company account on the company email domain. Never from someone&#39;s personal Gmail or personal GitHub, not even &quot;temporarily&quot;.</li>
+<li><strong>Every repo is private.</strong> No exceptions without written approval from management. Client code, our internal tools, documentation, all of it.</li>
+<li><strong>Only one person creates repos.</strong> We have a designated Repo Owner (Section 3.1). Developers don&#39;t create repos themselves; they ask the Repo Owner, who creates it as private, under the company organization, with the right access.</li>
+<li><strong>When someone leaves, their access goes on their last day.</strong> GitHub, GitLab, App Store Connect, Play Console, Firebase, the password manager, everything. Not next week. The <a href="offboarding-checklist.html">Offboarding Checklist</a> is mandatory.</li>
+<li><strong>Every important account has at least two company admins.</strong> If only one person can get into the Apple account and that person is on leave or has left, we&#39;re stuck.</li>
+<li><strong>Signing keys are backed up the day they&#39;re created.</strong> If we lose the Android upload key or the iOS signing assets, we can lose the ability to update the app. See <a href="production-setup.html#73-signing-keys">Signing Keys</a>.</li>
+<li><strong>No secrets in Git and no secrets inside the app.</strong> Anything bundled in a mobile app can be pulled out of the APK or IPA by anyone who downloads it.</li>
+<li><strong>Every project has a Project Registry.</strong> One file with all the key information about that project (<a href="project-registry-template.html">template</a>). If it&#39;s not in the registry, assume nobody else knows it.</li>
+<li><strong>Every store release has a Git tag.</strong> We should always be able to say exactly which code is running in production.</li>
+</ol>
+
+<nav class="pager"><span></span><a class="pager-link next" href="new-project-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Starting a New Project</span></a></nav>
+</main>
+</div>
+<footer class="site-footer"><div class="footer-inner">
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
+<p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
+</div></footer>
+<script src="../assets/app.js"></script>
+</body>
+</html>

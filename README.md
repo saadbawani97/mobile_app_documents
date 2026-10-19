@@ -1,95 +1,94 @@
-# Mobile App Development Playbook (React Native)
+# Mobile App Development Playbook
 
-**Knowledge Transfer document: project setup, repositories, store accounts, Firebase, environments, releases and post-launch monitoring**
+I've written this as my handover before leaving. It's everything I'd want the next mobile lead to know on their first day: how we start a project, how repos and accounts are set up, how an app goes live on both stores, and how we keep an eye on apps that are already live. Most of it comes from things that went wrong at some point, here or on projects I've seen elsewhere, so I'd ask that the rules in Section 1 are treated as rules and not suggestions.
 
 | | |
 |---|---|
-| **Prepared by** | Saad Bawany, React Native Lead |
-| **Prepared for** | Management and the incoming Mobile Lead / Mobile Team |
-| **Date** | 15 October 2026 |
-| **Status** | v1.0 (handover) |
+| Prepared by | Saad Bawany, React Native Lead |
+| For | Management and whoever takes over mobile |
+| Date | 19 October 2026 |
+| Version | 1.0 |
 
-> **How to use this document**
-> Sections 1–9 are the processes, in the order a project goes through them. Section 10 lists the remaining recurring responsibilities. Section 11 is a set of copy-paste templates and checklists.
-> Store policies change every year. Wherever a date or a number is mentioned (fees, API levels, Xcode versions), verify it against the official link before acting.
+A note on dates and numbers: Apple and Google change their requirements every year. Wherever I've mentioned a fee, an API level or an Xcode version, please check it against the official link in Section 12 before acting on it.
 
 ---
 
-## Table of Contents
+## Contents
 
-1. [Golden Rules (read this first)](#1-golden-rules-read-this-first)
-2. [New Project Setup: Kick-off Checklist](#2-new-project-setup-kick-off-checklist)
-3. [Repository Setup (GitHub & GitLab)](#3-repository-setup-github--gitlab)
-4. [Environment Variables (.env): what goes in, what never does, and backups](#4-environment-variables-env-what-goes-in-what-never-does-and-backups)
-5. [Firebase Setup for Mobile Apps](#5-firebase-setup-for-mobile-apps)
-6. [Store Developer Accounts: Apple & Google](#6-store-developer-accounts-apple--google)
-7. [Production Environment Setup (before go-live)](#7-production-environment-setup-before-go-live)
-8. [Publishing to the App Store & Google Play](#8-publishing-to-the-app-store--google-play)
-9. [Live Apps: Detecting Google/Apple Policy & Platform Changes](#9-live-apps-detecting-googleapple-policy--platform-changes)
-10. [Other Key Responsibilities of the Mobile Lead](#10-other-key-responsibilities-of-the-mobile-lead)
-11. [Templates & Checklists](#11-templates--checklists)
-12. [Official Reference Links](#12-official-reference-links)
-
----
-
-## 1. Golden Rules (read this first)
-
-These rules exist because breaking any one of them has, at some point in the industry, cost a company an app, a client or weeks of recovery work.
-
-1. **The company owns everything.** Every repository, store account, Firebase project, domain, email and third-party service is created from a **company-owned account** (company email on the company domain), never a personal one.
-2. **No single person is a single point of failure.** Every critical account has at least **two company admins**, and its credentials live in the company password manager.
-3. **Access is role-based and removed on the day someone leaves.** See the [Offboarding Checklist](#115-offboarding-checklist-same-day).
-4. **Signing keys are irreplaceable.** The Android keystore and iOS signing assets are backed up in two places the day they are created. Losing them means you may not be able to update the app.
-5. **Secrets never go into Git, and never into the mobile app.** A mobile app bundle can be decompiled; anything shipped inside it is public.
-6. **Every project has one Project Registry file** (template in [11.1](#111-project-registry-template)) holding all key information about that project. If it isn't in the registry, it doesn't exist.
-7. **Production is never released from a developer's laptop without a tag.** Every store build maps to a Git tag and a version number.
+1. [Ground Rules](#1-ground-rules)
+2. [Starting a New Project](#2-starting-a-new-project)
+3. [Repository Setup and Ownership](#3-repository-setup-and-ownership)
+4. [Environment Variables (.env)](#4-environment-variables-env)
+5. [Firebase Setup](#5-firebase-setup)
+6. [Store Developer Accounts (Apple and Google)](#6-store-developer-accounts-apple-and-google)
+7. [Getting Production Ready](#7-getting-production-ready)
+8. [Publishing to the App Store and Google Play](#8-publishing-to-the-app-store-and-google-play)
+9. [Live Apps: Catching Apple and Google Changes Early](#9-live-apps-catching-apple-and-google-changes-early)
+10. [Other Things the Mobile Lead Owns](#10-other-things-the-mobile-lead-owns)
+11. [Templates and Checklists](#11-templates-and-checklists)
+12. [Official Links](#12-official-links)
 
 ---
 
-## 2. New Project Setup: Kick-off Checklist
+## 1. Ground Rules
 
-Run this checklist on **day 1** of every new mobile project.
+If someone only reads one page of this document, it should be this one.
 
-### 2.1 Business & ownership decisions (before any code)
+1. **The company owns everything.** Every repo, store account, Firebase project, domain and third-party service is created from a company account on the company email domain. Never from someone's personal Gmail or personal GitHub, not even "temporarily".
+2. **Every repo is private.** No exceptions without written approval from management. Client code, our internal tools, documentation, all of it.
+3. **Only one person creates repos.** We have a designated Repo Owner (Section 3.1). Developers don't create repos themselves; they ask the Repo Owner, who creates it as private, under the company organization, with the right access.
+4. **When someone leaves, their access goes on their last day.** GitHub, GitLab, App Store Connect, Play Console, Firebase, the password manager, everything. Not next week. The [Offboarding Checklist](#115-offboarding-checklist) is mandatory.
+5. **Every important account has at least two company admins.** If only one person can get into the Apple account and that person is on leave or has left, we're stuck.
+6. **Signing keys are backed up the day they're created.** If we lose the Android upload key or the iOS signing assets, we can lose the ability to update the app. See [Signing Keys](#73-signing-keys).
+7. **No secrets in Git and no secrets inside the app.** Anything bundled in a mobile app can be pulled out of the APK or IPA by anyone who downloads it.
+8. **Every project has a Project Registry.** One file with all the key information about that project ([template](#111-project-registry-template)). If it's not in the registry, assume nobody else knows it.
+9. **Every store release has a Git tag.** We should always be able to say exactly which code is running in production.
 
-| # | Question | Why it matters |
-|---|----------|----------------|
-| 1 | **Whose store account will the app be published under: the company's or the client's?** | Decides who owns the app listing, reviews, revenue and user data. If it's the client's, they must invite our company account with the right role. Recommended for client work: **client's own organization account**, our company added as Admin/Developer. |
-| 2 | Who owns the source code, and where is it hosted after delivery? | Contract/IP clarity. Repo transfer may be required at handover. |
-| 3 | Who pays for third-party services (Firebase Blaze, Maps, SMS, Sentry, etc.)? | Billing must be on the owner's card/account, not an employee's. |
-| 4 | Target platforms & minimum OS versions | Affects library choices and testing matrix. |
-| 5 | Final **App name**, **Bundle ID / Application ID** | Bundle ID (`com.company.appname`) **cannot be changed** after the first store release. Decide once. |
-| 6 | Privacy policy URL, Terms URL, Support email/URL | Mandatory on both stores. Ask the client early. |
-| 7 | Are there in-app purchases / subscriptions? | Requires paid-app agreements, tax & banking setup on both stores (takes days). |
-| 8 | Login methods (Google, Apple, Facebook, Phone OTP) | If any third-party/social login is used on iOS, **Sign in with Apple** is generally required as well. |
+---
 
-### 2.2 Technical kick-off
+## 2. Starting a New Project
 
-- [ ] Create the repository from the **company organization** (Section 3).
-- [ ] Choose the stack: **React Native CLI** or **Expo (with EAS)**. Recommended default for new projects: **Expo + EAS Build/Submit/Update**, unless there is a strong native requirement. Both support the New Architecture (default since RN 0.76).
-- [ ] Use **TypeScript**, ESLint, Prettier, Husky + lint-staged from the first commit.
-- [ ] Set up **three environments**: `development`, `staging`, `production` (Section 4).
-- [ ] Create **separate Firebase projects** per environment (Section 5).
-- [ ] Register the Bundle ID / Application ID on Apple Developer and Play Console early (reserves the name, unlocks push/capabilities).
-- [ ] Generate the **Android upload keystore** and back it up immediately ([7.3](#73-signing-keys-the-most-critical-assets)).
-- [ ] Set up CI (GitHub Actions / GitLab CI) for lint + type-check + tests on every PR.
-- [ ] Set up internal distribution: **TestFlight** (iOS) and **Play Internal Testing** or **Firebase App Distribution** (Android).
-- [ ] Create the **Project Registry** file and fill in everything known so far ([11.1](#111-project-registry-template)).
-- [ ] Add the project to the company's master project index (one line per project, linking to its registry).
+### 2.1 Settle these before writing any code
 
-### 2.3 Recommended folder structure (React Native)
+Most of the painful problems I've seen on projects came from questions nobody asked at the start. These are the ones to sort out with the client and management in the first week.
+
+| Question | Why it matters |
+|---|---|
+| Whose store accounts will the app go out on, ours or the client's? | Whoever owns the account owns the app listing, reviews, revenue and user data. For client projects my recommendation is the client's own organization account, with our company account invited as Admin. |
+| Who owns the code, and where does it live after delivery? | Needs to be clear in the contract. We may have to transfer the repo at handover. |
+| Who pays for Firebase, Maps, SMS, Sentry and other services? | Billing should be on the owner's card, never an employee's personal card. |
+| App name and Bundle ID / Application ID | The Bundle ID (`com.company.appname`) can't be changed once the app is on the store. Decide it once and write it in the registry. |
+| Privacy policy URL, terms URL, support email | Both stores require them. Clients usually take a while to provide these, so ask early. |
+| Any in-app purchases or subscriptions? | Needs paid-app agreements, tax and bank details on both stores. That alone can take a week or more. |
+| Which login methods? | If the iOS app has Google or Facebook login, Apple will generally require Sign in with Apple as well. |
+| Minimum OS versions and devices | Affects library choices and how much testing we need. |
+
+### 2.2 Day-one technical setup
+
+- Ask the Repo Owner for a private repo under the company organization (Section 3).
+- Pick the stack. For most new projects I'd go with **Expo + EAS** (Build, Submit, Update) unless there's a real native requirement that rules it out. Plain React Native CLI is fine too. Both use the New Architecture by default now.
+- TypeScript, ESLint, Prettier and Husky from the very first commit. Adding them later is always more painful.
+- Three environments from the start: `development`, `staging`, `production` (Section 4).
+- A separate Firebase project for each environment (Section 5).
+- Register the Bundle ID / Application ID on the Apple Developer portal and in Play Console early. It reserves the ID and lets you turn on push and other capabilities.
+- Generate the Android upload keystore and back it up straight away ([Signing Keys](#73-signing-keys)).
+- Set up CI so every pull request runs lint, type-check and tests.
+- Set up test distribution: TestFlight for iOS, Play internal testing or Firebase App Distribution for Android.
+- Create the Project Registry and fill in what's known so far.
+
+### 2.3 Folder structure we use
 
 ```
 src/
   api/            # API clients, interceptors
-  assets/         # images, fonts, lottie
-  components/     # reusable UI components
+  assets/         # images, fonts, animations
+  components/     # shared UI components
   config/         # env access, constants, feature flags
   hooks/
   navigation/
-  screens/        # one folder per feature/screen
+  screens/        # one folder per feature
   services/       # firebase, analytics, push, storage
-  store/          # state management (Redux Toolkit / Zustand / React Query)
+  store/          # state (Redux Toolkit / Zustand / React Query)
   theme/          # colors, typography, spacing
   utils/
   i18n/
@@ -97,68 +96,78 @@ src/
 
 ---
 
-## 3. Repository Setup (GitHub & GitLab)
+## 3. Repository Setup and Ownership
 
-**Current company policy:** legacy projects live on **GitLab**; **all new projects are created on GitHub.**
+Older projects are on the company GitLab. All new projects go on the company GitHub organization.
 
-### 3.1 Non-negotiable rules
+### 3.1 Who Creates Repositories
 
-1. **Always create the repo inside the company GitHub Organization** (or company GitLab Group), **never** under a personal account and then "transferred later".
-2. Visibility: **Private** by default. Public only with management approval.
-3. Access is given through **Teams/Groups**, not to individuals one by one. This makes offboarding a one-click action.
-4. **When anyone leaves the company, they are removed from the Organization/Group on their last working day** (not just from the repo). Removing someone from the org removes their access to every repo at once.
-5. Freelancers/contractors are added as **Outside Collaborators** on specific repos only, with an end date recorded in the registry.
-6. **2FA is mandatory** for all organization members (enforce it in org settings).
+Creating repos is the job of one designated person, the **Repo Owner**. This should be the Mobile Lead or an engineering manager, and management should name a backup for when they're away. Nobody else creates repos, and the GitHub organization settings should enforce that (3.3), so it's not just a matter of trust.
 
-### 3.2 GitHub: step-by-step repository creation
+The reason is simple. When anyone can create a repo, you end up with repos under personal accounts, public repos by accident, and nobody who knows what exists or who has access. One owner fixes all of that.
 
-**One-time organization setup (done once by an Org Owner):**
+The Repo Owner is responsible for:
 
-1. Organization **Settings → Authentication security → Require two-factor authentication** for everyone.
-2. **Settings → Member privileges**:
-   - Base permissions: **No permission** (access only through teams).
-   - Repository creation: restrict to **Owners/Admins only**. This prevents random repos.
-   - Disable repository forking for private repos.
-   - Disable "Allow members to delete or transfer repositories".
-3. Create **Teams**, e.g. `mobile-leads` (Maintain/Admin), `mobile-devs` (Write), `qa` (Triage/Read), `clients-readonly` (Read).
-4. **Code security**: enable **Secret scanning + Push protection**, **Dependabot alerts** and **Dependabot security updates** for all new repos by default.
-5. At least **two Org Owners**, both company management, not just one developer.
+- Creating every new repo, **always private**, always under the company organization. Never under a personal account.
+- Giving access through teams only, and only to the people working on that project.
+- Setting up branch protection and the standard files (3.4) before handing the repo over.
+- Keeping the **Repository Inventory** up to date ([template](#117-repository-inventory)): every repo, its client, visibility, teams and the date it was created.
+- Doing a monthly access review: going through each repo's collaborators and teams and removing anyone who shouldn't be there.
+- Removing people who leave from the organization on their last working day (3.8).
+- Archiving repos for projects that have ended, rather than deleting them.
 
-**Creating a new repo (every project):**
+How a developer gets a repo: they send the Repo Owner the project name, client, and who needs access. The Repo Owner creates it the same day, adds it to the inventory and shares the link.
 
-1. Go to the **company organization** → **New repository**. Double-check the *Owner* dropdown shows the **organization**, not your username.
-2. **Name**, using the naming convention:
-   `<client-or-product>-<app>-<platform>` → e.g. `acme-delivery-mobile`, `acme-delivery-backend`, `acme-delivery-admin`
-   (lowercase, hyphen-separated, no spaces).
-3. **Description**: one line, e.g. *"Acme Delivery: React Native customer app (iOS/Android)."*
-4. **Visibility: Private.**
-5. Initialize with **README**, **.gitignore** (Node template, then add the React Native entries below), **no license** for client/proprietary work.
-6. **Settings → Collaborators and teams**: add `mobile-leads` (Admin/Maintain) and `mobile-devs` (Write). No individual additions except outside collaborators.
-7. **Settings → General**:
-   - Default branch: `main`.
-   - Enable **"Automatically delete head branches"** after merge.
-   - Allow **Squash merging** (recommended), disable merge commits if you want linear history.
-8. **Settings → Rules → Rulesets** (or Branch protection) for `main` and `develop`:
-   - Require a pull request before merging, **minimum 1 approval** (2 for `main` on large teams).
-   - Dismiss stale approvals when new commits are pushed.
-   - Require status checks to pass (lint, type-check, tests).
-   - Require conversation resolution.
-   - **Block force pushes** and **block deletion**.
-   - Restrict who can push directly: nobody. Everything via PR.
-9. Add these files in the first commit:
-   - `README.md`: project overview, setup steps, how to run, env setup, release steps.
-   - `.env.example`: all keys with dummy values (see Section 4).
-   - `.github/CODEOWNERS`, e.g. `* @company/mobile-leads`, so the leads are auto-requested as reviewers.
-   - `.github/pull_request_template.md`: what changed, screenshots, test steps, checklist.
-   - `.github/workflows/ci.yml`: lint, type-check, test.
-   - `.nvmrc` / `.node-version`: pin the Node version.
-   - `docs/PROJECT_REGISTRY.md` **or** a link to the registry in the password manager (never put secrets in the repo; the registry in the repo contains **references only**).
-10. Record the repo URL in the **Project Registry**.
+### 3.2 Rules for Every Repo
 
-**Recommended `.gitignore` additions for React Native:**
+- **Private, always.** A public repo needs written approval from management.
+- Created under the company organization (GitHub) or company group (GitLab). Never created on a personal account and "transferred later".
+- Access through teams, not by adding individuals one by one. That way removing someone is one click, not twenty.
+- Freelancers and contractors are added as outside collaborators on the specific repos they need, with an end date written in the inventory.
+- Two-factor authentication is required for everyone in the organization.
+
+### 3.3 One-Time GitHub Organization Settings
+
+These are done once by an organization owner. They are what actually enforce the rules above.
+
+1. **Settings → Authentication security:** require two-factor authentication for everyone.
+2. **Settings → Member privileges:**
+   - Base permissions: **No permission**. People only get access through teams.
+   - Repository creation: **disable for members**, so only owners (the Repo Owner and management) can create repos.
+   - Uncheck "Allow members to change repository visibilities", so nobody can flip a private repo to public.
+   - Disable forking of private repositories.
+   - Uncheck "Allow members to delete or transfer repositories".
+3. **Teams:** for example `mobile-leads` (Admin), `mobile-devs` (Write), `qa` (Read), `clients-readonly` (Read).
+4. **Code security:** turn on secret scanning with push protection, Dependabot alerts and Dependabot security updates for all new repos.
+5. At least two organization owners, both from management or leadership. Not just one developer.
+
+### 3.4 Creating a Repo, Step by Step
+
+1. In the company organization click **New repository**. Check the **Owner** dropdown shows the organization and not your own username. This is the most common mistake.
+2. Name it `<client>-<app>-<type>`, lowercase with hyphens. For example `acme-delivery-mobile`, `acme-delivery-backend`, `acme-delivery-admin`.
+3. Add a one-line description, e.g. "Acme Delivery customer app (React Native, iOS and Android)".
+4. Select **Private**.
+5. Add a README and a Node `.gitignore` (then add the React Native entries from 3.5). No license file for client or proprietary work.
+6. **Settings → Collaborators and teams:** add `mobile-leads` and `mobile-devs`. No individuals, apart from outside collaborators.
+7. **Settings → General:** default branch `main`, turn on "Automatically delete head branches", allow squash merging.
+8. **Settings → Rules → Rulesets** for `main` and `develop`:
+   - Pull request required, at least one approval.
+   - Dismiss old approvals when new commits are pushed.
+   - Status checks must pass (lint, type-check, tests).
+   - Block force pushes and branch deletion.
+9. Commit the standard files:
+   - `README.md` with how to set up, run and release the app.
+   - `.env.example` with every key and dummy values.
+   - `.github/CODEOWNERS`, e.g. `* @company/mobile-leads`, so leads are added as reviewers automatically.
+   - `.github/pull_request_template.md`.
+   - `.github/workflows/ci.yml` for lint, type-check and tests.
+   - `.nvmrc` with the Node version.
+10. Add the repo to the Repository Inventory and the Project Registry.
+
+### 3.5 What to Add to .gitignore
 
 ```gitignore
-# Environment & secrets
+# Environment files and secrets
 .env
 .env.*
 !.env.example
@@ -171,10 +180,8 @@ src/
 *.p12
 *.mobileprovision
 android/keystore.properties
-android/app/google-services.json        # if you choose not to commit it (see 5.4)
-ios/GoogleService-Info.plist            # same as above
 
-# Build outputs
+# Build output
 android/app/build/
 ios/build/
 ios/Pods/
@@ -183,526 +190,523 @@ ios/Pods/
 *.aab
 ```
 
-### 3.3 Branching & release strategy
+### 3.6 Branches and Releases
 
-| Branch | Purpose | Deploys to |
-|--------|---------|-----------|
-| `main` | Always equals what is live in the stores | Production (store builds) |
-| `develop` | Integration branch for the next release | Staging / internal testing |
-| `feature/<ticket>-<short-name>` | New work | — |
-| `release/x.y.z` | Stabilization before a store release | TestFlight / Play closed testing |
-| `hotfix/x.y.z` | Urgent production fix from `main` | Production |
-
-- Every production release is **tagged**: `v1.4.0` (and optionally `v1.4.0+42` with the build number).
-- Commit messages: **Conventional Commits** (`feat:`, `fix:`, `chore:`…) to make changelogs automatic.
-
-### 3.4 GitLab (legacy projects)
-
-The same principles apply:
-
-- Repos live under the **company Group** (use sub-groups per client, e.g. `company/acme/...`).
-- Give access at **Group level** with roles: *Maintainer* (leads), *Developer* (devs), *Reporter* (QA/clients).
-- **Settings → Repository → Protected branches**: `main` and `develop` → *Allowed to push: No one*, *Allowed to merge: Maintainers*.
-- **Settings → Merge requests**: require approvals, pipelines must succeed.
-- CI/CD variables (`Settings → CI/CD → Variables`): mark secrets as **Masked** and **Protected**.
-- **Offboarding:** remove the user from the **top-level group** (this removes access to all sub-groups/projects) and, if they had a company GitLab account, **block** it.
-- Plan: migrate actively maintained legacy projects to GitHub when convenient (GitHub has a built-in importer that keeps history, branches and tags). Archive the GitLab project afterwards (read-only) instead of deleting it.
-
----
-
-## 4. Environment Variables (.env): what goes in, what never does, and backups
-
-### 4.1 The most important fact
-
-> **Everything inside a mobile app is public.** `.env` values in React Native are compiled into the JavaScript bundle / native code. Anyone can extract them from the APK/IPA in minutes.
-> Therefore `.env` in a mobile app is for **configuration**, not for **secrets**.
-
-### 4.2 What SHOULD go in the app's `.env`
-
-| Put in `.env` | Example |
-|---------------|---------|
-| Environment name | `APP_ENV=production` |
-| API base URLs | `API_BASE_URL=https://api.example.com/v1` |
-| Web/socket URLs | `SOCKET_URL=wss://...` |
-| **Public/publishable** client keys | Stripe *publishable* key, Google Maps key (restricted by package name/bundle ID + SHA-1), Sentry DSN, OneSignal App ID, RevenueCat public key, Mixpanel token |
-| OAuth **client IDs** (not secrets) | Google Sign-In web/iOS client ID |
-| Feature flags / toggles | `ENABLE_ANALYTICS=true` |
-| App-level constants that differ per environment | `DEEP_LINK_SCHEME=myapp-staging` |
-
-### 4.3 What must NEVER go in the app (or in Git)
-
-| Never in the app / never committed | Where it belongs instead |
-|-----------------------------------|--------------------------|
-| Any **secret** key: Stripe secret key, payment gateway secrets, AWS secret keys, Twilio auth token, SendGrid key, OpenAI/LLM API keys | **Backend only.** The app calls our backend; the backend calls the third party. |
-| Database credentials, admin passwords | Backend / password manager |
-| Firebase **service account** JSON (Admin SDK) | Backend / CI secrets only |
-| Android keystore & passwords, iOS `.p12`, `.p8` keys | Password manager + CI secrets ([7.3](#73-signing-keys-the-most-critical-assets)) |
-| App Store Connect API key, Google Play service account JSON (used by Fastlane/EAS) | CI secrets + password manager |
-| Personal tokens of any developer | Nowhere. Use company/bot tokens. |
-
-> **Rule of thumb:** if a value would allow someone to **spend money, read other users' data, or impersonate the company**, it must not be in the app.
-
-### 4.4 Recommended setup
-
-- **React Native CLI:** `react-native-config` with `.env.development`, `.env.staging`, `.env.production`, selected per build scheme/flavor.
-- **Expo:** variables prefixed with `EXPO_PUBLIC_` are bundled into the app; store per-environment values in **EAS Environment Variables** (development / preview / production), using "secret" visibility for build-time-only values.
-- Commit **only** `.env.example` (all keys, dummy values, a comment explaining each one).
-- Access env values through a single `src/config/env.ts` file that validates them at startup (e.g. with `zod`). The app should fail loudly in dev if a key is missing.
-- Restrict every public key at the provider side (Google Cloud API key restrictions by package name + SHA-1 / bundle ID; Firebase App Check).
-
-### 4.5 Backing up `.env` files: yes, always
-
-`.env` files are not in Git, so **if they are only on a developer's laptop they will be lost** when that person leaves or the laptop dies.
-
-**Backup policy:**
-
-1. Every project has a vault/folder in the **company password manager** (e.g. 1Password, Bitwarden, or similar business plan) named after the project.
-2. Each environment's `.env` is stored there as a **Secure Note** or attached document: `acme-delivery / .env.production`, `.env.staging`, `.env.development`.
-3. Whenever a value changes, the person changing it **updates the vault in the same PR/day**. Add this to the PR template checklist.
-4. CI/CD secrets (GitHub Actions secrets / GitLab CI variables / EAS env) are a **copy** for automation, **not** the backup, because they can't be read back once saved.
-5. Access to the vault is through groups (Mobile Leads, Management), never shared via WhatsApp/Slack/email.
-6. If a password manager is not yet in place: at minimum, store an **encrypted** archive (e.g. password-protected 7z / age / GPG) on the company Google Drive in a management-owned folder, with the password held by management. **Getting a proper password manager is strongly recommended.**
-
----
-
-## 5. Firebase Setup for Mobile Apps
-
-### 5.1 Why Firebase is an essential part of almost every app
-
-| Firebase service | What it gives us | Why it matters |
-|------------------|------------------|----------------|
-| **Cloud Messaging (FCM)** | Push notifications on Android **and** iOS (via APNs) | Almost every app needs push. |
-| **Crashlytics** | Real-time crash & ANR reports with stack traces, affected users, OS/device | The #1 tool to know if a live app is broken, especially after a new iOS/Android OS release. |
-| **Analytics** | Users, sessions, retention, events, funnels | Business reporting; also powers Remote Config targeting. |
-| **Remote Config** | Change app behaviour without a store release | **Force/soft update** prompts, feature flags, kill switches, maintenance mode. |
-| **App Distribution** | Send test builds to QA/clients | Fast internal testing (alternative to TestFlight/Play testing tracks). |
-| **Performance Monitoring** | App start time, network latency, slow screens | Detect performance regressions. |
-| **App Check** | Ensures requests come from our genuine app | Protects Firebase/backend from abuse. |
-| Auth / Firestore / Storage (optional) | Backend-as-a-service | Used when the project doesn't have its own backend. |
-
-> **Note:** Firebase Dynamic Links has been **shut down (August 2025)**. Do not use it in new projects. Use native **Universal Links (iOS) / App Links (Android)** or a third-party deep-link service instead.
->
-> **Note:** Microsoft App Center (incl. CodePush) was retired in **March 2025**. For over-the-air JS updates use **Expo EAS Update** or a self-hosted alternative.
-
-### 5.2 Ownership & access
-
-- Create Firebase projects while logged in with the **company Google account** (e.g. `mobile@company.com` or the client's account if the client owns the app).
-- In **Project settings → Users and permissions** (IAM), ensure at least **two company Owners**. Developers get **Editor** or narrower roles.
-- Link billing (**Blaze plan**) to the **company/client billing account**, and set a **budget alert** in Google Cloud Billing.
-
-### 5.3 Step-by-step setup
-
-1. **Create one Firebase project per environment:**
-   `acme-delivery-dev`, `acme-delivery-staging`, `acme-delivery-prod`.
-   (Mixing test and production data in one project pollutes analytics and risks sending test pushes to real users.)
-2. In each project, **add an Android app** with the environment's application ID (e.g. `com.acme.delivery.staging` / `com.acme.delivery`).
-   - Add the **SHA-1 and SHA-256** fingerprints of: the debug keystore, the upload keystore, **and the Play App Signing key** (from *Play Console → Test and release → App integrity*). Missing the Play signing SHA is the most common cause of "Google Sign-In works in testing but fails in production".
-   - Download `google-services.json`.
-3. **Add an iOS app** with the matching bundle ID. Download `GoogleService-Info.plist`.
-4. Install **React Native Firebase** (`@react-native-firebase/app` + needed modules) or configure via the Expo config plugin.
-5. Place config files per environment (Android product flavors: `android/app/src/<flavor>/google-services.json`; iOS: one plist per scheme copied by a build phase script, or via Expo's `app.config.js` per profile).
-6. **Push notifications on iOS:**
-   - In Apple Developer → *Keys* → create an **APNs Auth Key (.p8)**. One key works for all apps in the team and **does not expire** (preferred over yearly `.p12` certificates).
-   - Note the **Key ID** and **Team ID**, upload the `.p8` to *Firebase → Project settings → Cloud Messaging → Apple app configuration*.
-   - **Back up the .p8 immediately**: Apple lets you download it **only once**.
-   - Enable *Push Notifications* and *Background Modes → Remote notifications* capabilities in Xcode.
-   - Android 13+: request the `POST_NOTIFICATIONS` runtime permission.
-7. **Crashlytics:** enable, add the Gradle plugin and the iOS dSYM upload build phase (otherwise iOS crashes appear unsymbolicated). Force a test crash in staging to verify.
-8. **Remote Config:** add at minimum these parameters on every project:
-   - `min_supported_version_android`, `min_supported_version_ios` → **force update** below this version.
-   - `latest_version_android`, `latest_version_ios` → **soft update** prompt.
-   - `maintenance_mode` (boolean) + `maintenance_message`.
-9. **Crashlytics alerts:** in *Project settings → Integrations / Alerts*, enable email alerts (new fatal issue, regressed issue, **velocity alert**) to a shared mobile team mailbox, not a personal email.
-10. **App Check:** enable with Play Integrity (Android) and App Attest/DeviceCheck (iOS) for production.
-11. Record all project IDs, console links and owners in the **Project Registry**.
-
-### 5.4 Should `google-services.json` / `GoogleService-Info.plist` be committed?
-
-These files contain **identifiers, not secrets** (Firebase security is enforced by Security Rules and App Check, not by hiding these files). Committing them in a **private** repo is acceptable and simplifies builds. If the repo is ever public, or company policy prefers it, keep them out of Git and inject them from CI secrets. **Either way, back them up in the project vault.** In addition:
-
-- Restrict the API key inside them in Google Cloud Console (Android apps by package + SHA-1, iOS apps by bundle ID).
-- Write proper **Firestore/Storage Security Rules**. Never ship with test-mode rules (`allow read, write: if true`).
-
----
-
-## 6. Store Developer Accounts: Apple & Google
-
-### 6.1 Account types compared
-
-#### Apple Developer Program
-
-| | **Individual** | **Organization** | Enterprise Program |
-|---|---|---|---|
-| Fee | USD 99 / year | USD 99 / year | USD 299 / year |
-| Seller name on App Store | **Person's legal name** | **Company legal name** | — (no App Store) |
-| Requirements | Apple Account with 2FA, government ID | Legal entity, **D-U-N-S Number**, company website, company-domain email, signer with legal authority | Larger organizations, strict eligibility |
-| Team members | Only the individual has developer program membership; can add App Store Connect users, but cannot manage a full developer team | **Full team** with roles (Admin, App Manager, Developer, Marketing, Finance…) | Team |
-| Who it's for | Freelancers, personal projects | **Companies, client apps (recommended)** | **Internal employee apps only**. Cannot publish to the public App Store. |
-| Limitation | App appears under a person's name; if that person leaves, the account leaves with them | Takes longer to set up (D-U-N-S + verification) | Not for public distribution |
-
-#### Google Play Console
-
-| | **Personal** | **Organization** |
+| Branch | What it's for | Goes to |
 |---|---|---|
-| Fee | USD 25, one-time | USD 25, one-time |
-| Requirements | Google account, legal name, address, ID verification, phone & email verification | Organization details, **D-U-N-S Number**, organization website, verified contact phone & email, ID verification of the account owner |
-| Public developer info | Personal name (and address/contact for monetizing apps) shown publicly | Company name & contact details shown |
-| **New-app testing requirement** | **Yes.** Personal accounts created after Nov 2023 must run a **closed test with at least 12 testers opted-in for 14 consecutive days** before they can apply for production access. | **No.** Organization accounts can publish to production directly. |
-| Some app categories (e.g. finance, health, government, VPN) | May be restricted / require an organization account | Allowed (subject to policy) |
-| Who it's for | Hobbyists, individual developers | **Companies, client apps (recommended)** |
+| `main` | Always matches what's live on the stores | Production |
+| `develop` | Work for the next release | Staging / internal testing |
+| `feature/<ticket>-<name>` | New work | Nothing, merged into develop |
+| `release/x.y.z` | Stabilising a release | TestFlight / Play closed testing |
+| `hotfix/x.y.z` | Urgent fix off `main` | Production |
 
-> **Recommendation:** For the company and for every client, use **Organization** accounts on **both** stores. Individual/personal accounts tie the app to one person's identity and add the 14-day testing hurdle on Google Play.
->
-> Apps **can be transferred** between accounts later on both stores (Apple: *App Transfer* in App Store Connect; Google: *App transfer request* in Play Console), but it is a slow manual process. Get it right from day one.
->
-> Google has also announced **Android developer identity verification** for apps installed on certified Android devices (rolling out from late 2026). Play Console accounts that are already verified are largely covered, but keep the account's legal details accurate and watch the Play Console inbox.
+Every production release gets a tag like `v1.4.0`. For commit messages we use Conventional Commits (`feat:`, `fix:`, `chore:`), which makes changelogs easy to generate.
 
-### 6.2 Prerequisite for both: D-U-N-S Number
+### 3.7 GitLab (Older Projects)
 
-- A free, 9-digit identifier issued by **Dun & Bradstreet**, used by Apple and Google to verify the company is a real legal entity.
-- Check/request it via Apple's **D-U-N-S lookup tool** (developer.apple.com/enroll/duns-lookup). It can take **up to ~5 business days** (sometimes longer) to be issued, and Apple may need a further 1–2 days to receive it.
-- The **legal name and address must exactly match** the company's registration documents and what you enter in Apple/Google forms. Mismatches are the #1 cause of rejection.
+The same rules apply on GitLab:
 
-### 6.3 Step-by-step: Apple Developer (Organization) account
+- Repos live under the company group, with a sub-group per client (`company/acme/...`).
+- Access is given at group level: Maintainer for leads, Developer for developers, Reporter for QA and clients.
+- **Settings → Repository → Protected branches:** nobody pushes directly to `main` or `develop`, only Maintainers can merge.
+- Secrets in **Settings → CI/CD → Variables** are marked Masked and Protected.
+- When a project becomes active again it's worth moving it to GitHub. GitHub's importer keeps the full history, branches and tags. Archive the GitLab project afterwards instead of deleting it.
 
-1. **Create a company-owned Apple Account** using a shared, company-domain email, e.g. `appledev@company.com` (not a personal Gmail). Enable **two-factor authentication** with a **company phone number** that management controls.
-2. Confirm the company has a **D-U-N-S Number** (6.2).
-3. Make sure the company has a **public website on the same domain** as the email.
-4. Enroll at **developer.apple.com/programs/enroll**, preferably through the **Apple Developer app** (iPhone/iPad/Mac), which is the fastest route and supports in-app payment.
-5. Choose **"Company / Organization"**, enter the legal entity name, D-U-N-S, website, and the enrolling person's details. That person must have **legal authority to bind the company** (Apple may call to verify).
-6. Pay **USD 99**. Apple verifies (from a couple of days up to ~2 weeks).
-7. After approval, in **App Store Connect → Business (Agreements, Tax & Banking)**: accept the **Free Apps agreement**, and if the app sells anything, complete the **Paid Apps agreement**, tax forms (e.g. W-8BEN-E for non-US companies) and bank account.
-8. **Users and Access**: invite team members with least-privilege roles:
-   - **Account Holder**: the company account above, controlled by management. Only one per account; it's the only role that can accept agreements and renew membership.
-   - **Admin**: Mobile Lead (+ one more management person).
-   - **App Manager / Developer**: developers. Use "Access to Certificates, Identifiers & Profiles" only where needed.
-   - **Marketing / Customer Support / Finance**: as needed.
-9. Create an **App Store Connect API Key** (Users and Access → Integrations) for CI/Fastlane/EAS. Store it in the vault.
-10. Turn on **auto-renew**. **If membership lapses, apps are removed from the App Store.**
-11. Fill in the account details in the **Project/Company Registry**.
+### 3.8 Removing People Who Leave
 
-**Client-owned Apple account:** the client enrolls (steps above) and invites our company email as **Admin** or **App Manager**. We never ask for the client's Apple password.
+This is mandatory and it happens on the person's last working day, not later. The Repo Owner removes them from the **GitHub organization** (not just individual repos, which leaves gaps) and from the **top-level GitLab group**. Then the rest of the [Offboarding Checklist](#115-offboarding-checklist) is completed and signed off with the date and the name of whoever did it.
 
-### 6.4 Step-by-step: Google Play Console (Organization) account
-
-1. **Create or use a company-owned Google account**, e.g. `playconsole@company.com` (Google Workspace account on the company domain preferred). Enable 2-step verification with a company-controlled phone.
-2. Have the **D-U-N-S Number** and legal documents ready.
-3. Go to **play.google.com/console/signup** → choose **"An organization or business"**.
-4. Enter the organization name & address (must match D-U-N-S), organization website, a **contact email & phone** (verified by Google, shown to users), and the developer name shown on Google Play.
-5. Pay the **USD 25** one-time fee.
-6. Complete **identity verification** (documents for the organization and the account owner). Verification can take a few days.
-7. **Users and permissions**: invite team members with specific permissions (Admin for leads; release/testing permissions for developers; finance/reporting as needed). Prefer **per-app** permissions for contractors.
-8. If selling: set up a **Payments profile / merchant account** (bank, tax).
-9. For CI automation (Fastlane/EAS Submit), create a **Google Cloud service account**, grant it access in Play Console → Users and permissions, and store its JSON key in the vault and CI secrets.
-10. Log in at least occasionally and keep the account active: Google may **close inactive developer accounts** that haven't published or logged in for an extended period.
-
-**Client-owned Play account:** the client creates it and invites our company Google account with Admin (or release) permissions for their apps.
-
-### 6.5 Comparison of store fees & key timelines
-
-| Item | Apple | Google |
-|------|-------|--------|
-| Account fee | USD 99 / year (renew!) | USD 25 once |
-| Account approval | ~2 days – 2 weeks (Org) | ~2–7 days (verification) |
-| First app review | Typically 24–48h, longer if rejected | From hours to ~7 days for new apps/accounts |
-| Personal-account extra step | — | 12 testers × 14 days closed test |
-| Store commission | 15% (Small Business Program, < USD 1M/year) or 30% | 15% on first USD 1M/year, then 30% (subscriptions 15%) |
+One thing people miss: if the person who left created deploy keys, personal access tokens or CI secrets, those need to be rotated as well. Removing the account doesn't revoke a token that was copied somewhere else.
 
 ---
 
-## 7. Production Environment Setup (before go-live)
+## 4. Environment Variables (.env)
 
-Start this **at least 2–3 weeks before** the planned launch date.
+### 4.1 The thing most people get wrong
 
-### 7.1 Backend & services
+Values in a React Native `.env` file end up compiled into the app. Anyone can unpack an APK or IPA and read them in a few minutes. So `.env` in a mobile app is for configuration, not for secrets. Real secrets belong on our backend.
 
-- [ ] Production API deployed, HTTPS only, with a domain owned by the company/client.
-- [ ] Production **Firebase project** (5.3) and all third-party services switched to **production/live keys** (payments, maps, SMS, email, analytics).
-- [ ] `.env.production` finalized, **backed up in the vault**.
-- [ ] Payment gateway in **live mode** and tested with a real small transaction.
-- [ ] Deep links: host `/.well-known/apple-app-site-association` (iOS Universal Links) and `/.well-known/assetlinks.json` (Android App Links, including the **Play App Signing** SHA-256) on the production domain.
-- [ ] Monitoring: Crashlytics (and/or Sentry) enabled, alerts going to a shared mailbox/Slack channel.
-- [ ] Remote Config: force/soft update values set for v1.0.
+### 4.2 What goes in the app's .env
+
+| Goes in .env | Example |
+|---|---|
+| Environment name | `APP_ENV=production` |
+| API and socket URLs | `API_BASE_URL=https://api.example.com/v1` |
+| Public or "publishable" keys | Stripe publishable key, Google Maps key (restricted to our package name and SHA-1 / bundle ID), Sentry DSN, OneSignal App ID |
+| OAuth client IDs | Google Sign-In client IDs (these are not secrets) |
+| Feature flags | `ENABLE_ANALYTICS=true` |
+| Per-environment values | `DEEP_LINK_SCHEME=myapp-staging` |
+
+### 4.3 What never goes in the app or in Git
+
+| Never in the app | Where it lives instead |
+|---|---|
+| Secret keys: Stripe secret key, payment gateway secrets, AWS keys, Twilio token, SendGrid key, AI/LLM API keys | On the backend. The app calls our server and our server calls the third party. |
+| Database credentials, admin passwords | Backend and password manager |
+| Firebase service account JSON | Backend or CI secrets only |
+| Android keystore and passwords, iOS .p12 and .p8 files | Password manager and CI secrets |
+| App Store Connect API key, Google Play service account JSON | Password manager and CI secrets |
+| Anyone's personal tokens | Nowhere. Use company or bot tokens. |
+
+A simple test: if a value would let someone spend our money, read other users' data or act as the company, it doesn't go in the app.
+
+### 4.4 How we set it up
+
+- React Native CLI: `react-native-config` with `.env.development`, `.env.staging` and `.env.production`, picked per build flavor / scheme.
+- Expo: anything prefixed `EXPO_PUBLIC_` is bundled into the app. Per-environment values go in EAS environment variables.
+- Only `.env.example` is committed, with every key, a dummy value and a short comment.
+- The app reads env values through one file (`src/config/env.ts`) that checks them at startup, so a missing key fails loudly in development instead of quietly in production.
+- Public keys are restricted on the provider side: Google Cloud API keys locked to our package name and SHA-1 or bundle ID, and Firebase App Check turned on.
+
+### 4.5 Backing up .env files
+
+Yes, they need a backup. Because `.env` files aren't in Git, if they only exist on one developer's laptop they disappear when that person leaves or the laptop dies. I've seen a team lose a day rebuilding production config from memory because of this.
+
+How we keep them safe:
+
+1. Every project has a vault in the company password manager (1Password, Bitwarden or similar business plan), named after the project.
+2. Each environment's `.env` is saved there as a secure note: `acme-delivery / .env.production`, `.env.staging`, `.env.development`.
+3. Whoever changes a value updates the vault the same day. This is a line in the pull request template.
+4. CI secrets (GitHub Actions, GitLab variables, EAS) are copies for automation, not the backup. You can't read them back once they're saved.
+5. Vault access is by group (mobile leads, management). Never share `.env` files over WhatsApp, Slack or email.
+
+If we don't have a password manager yet: at the very least, keep a password-protected archive on the company Google Drive in a folder management owns, with management holding the password. But honestly, a proper password manager is worth the cost and I'd strongly recommend getting one.
+
+---
+
+## 5. Firebase Setup
+
+### 5.1 Why we use Firebase on almost every app
+
+| Service | What it does for us |
+|---|---|
+| Cloud Messaging (FCM) | Push notifications on Android and iOS. Almost every app needs push. |
+| Crashlytics | Crash and ANR reports with stack traces, device and OS. This is how we find out a live app is broken, usually before the client does. |
+| Analytics | Users, retention, events and funnels for the business side. |
+| Remote Config | Change app behaviour without a release: force-update prompts, feature flags, maintenance mode. |
+| App Distribution | Send test builds to QA and the client quickly. |
+| Performance Monitoring | App start time, slow screens, network latency. |
+| App Check | Makes sure requests to Firebase and our backend come from our real app. |
+| Auth, Firestore, Storage | Only when the project doesn't have its own backend. |
+
+Two things that no longer exist and shouldn't be used: **Firebase Dynamic Links** was shut down in August 2025, so use native Universal Links and App Links instead. **App Center and CodePush** were retired in March 2025, so for over-the-air updates use Expo EAS Update or a self-hosted option.
+
+### 5.2 Ownership
+
+- Create Firebase projects while logged into the company Google account (or the client's, if they own the app).
+- In project settings, make sure there are at least two company Owners. Developers get Editor or less.
+- Billing (Blaze plan) goes on the company or client billing account, with a budget alert set in Google Cloud.
+
+### 5.3 Setting it up
+
+1. **One Firebase project per environment:** `acme-delivery-dev`, `acme-delivery-staging`, `acme-delivery-prod`. Mixing test and live data in one project messes up analytics and you risk sending test pushes to real users.
+2. **Add the Android app** with that environment's application ID. Add the SHA-1 and SHA-256 fingerprints of the debug key, the upload key **and the Play App Signing key** (from Play Console → App integrity). Forgetting the Play signing key is the usual reason Google Sign-In works in testing and breaks in production.
+3. **Add the iOS app** with the matching bundle ID.
+4. Install React Native Firebase (`@react-native-firebase/app` plus the modules you need), or use the Expo config plugin.
+5. Put `google-services.json` and `GoogleService-Info.plist` in place per environment (Android flavors, iOS schemes, or Expo `app.config.js` per profile).
+6. **Push on iOS:**
+   - Create an **APNs Auth Key (.p8)** under Apple Developer → Keys. One key covers every app in the team and it doesn't expire, so it's better than the old yearly .p12 certificates.
+   - Upload it to Firebase → Project settings → Cloud Messaging with the Key ID and Team ID.
+   - Back up the .p8 file straight away. Apple only lets you download it once.
+   - Turn on Push Notifications and Background Modes → Remote notifications in Xcode.
+   - On Android 13 and above, ask for the `POST_NOTIFICATIONS` permission.
+7. **Crashlytics:** add the Gradle plugin and the dSYM upload build phase on iOS, otherwise iOS crashes show up without readable stack traces. Trigger a test crash on staging to confirm it works.
+8. **Remote Config:** every app should have at least these keys:
+   - `min_supported_version_android` and `min_supported_version_ios` for force updates.
+   - `latest_version_android` and `latest_version_ios` for a soft "update available" prompt.
+   - `maintenance_mode` and `maintenance_message`.
+9. **Crashlytics alerts** (new issue, regressed issue, velocity alert) go to a shared team email, not someone's personal inbox.
+10. **App Check** on production with Play Integrity (Android) and App Attest (iOS).
+11. Write the project IDs, console links and owners in the Project Registry.
+
+### 5.4 Should the Firebase config files be committed?
+
+`google-services.json` and `GoogleService-Info.plist` contain identifiers, not secrets. Firebase is protected by security rules and App Check, not by hiding these files. Since our repos are private, committing them is fine and makes builds simpler. Either way, keep a copy in the project vault, restrict the API key inside them in Google Cloud Console, and never ship Firestore or Storage rules that allow everyone to read and write.
+
+---
+
+## 6. Store Developer Accounts (Apple and Google)
+
+### 6.1 Individual vs organization accounts
+
+**Apple Developer Program**
+
+| | Individual | Organization | Enterprise |
+|---|---|---|---|
+| Fee | USD 99 a year | USD 99 a year | USD 299 a year |
+| Name shown on the App Store | The person's legal name | The company's legal name | Not on the App Store |
+| What you need | Apple Account with two-factor, government ID | Registered company, D-U-N-S number, company website, company email, someone with authority to sign for the company | Larger organizations with strict eligibility |
+| Team | Just that one person in the developer team; App Store Connect users can be added but there's no real team setup | A full team with roles (Admin, App Manager, Developer, Marketing, Finance and so on) | Team |
+| Suitable for | Freelancers, personal projects | Companies and client apps | Internal employee apps only, can't publish publicly |
+| The catch | The app sits under one person's name. If they leave, the account leaves with them. | Takes longer to set up because of D-U-N-S and verification | No public distribution |
+
+**Google Play Console**
+
+| | Personal | Organization |
+|---|---|---|
+| Fee | USD 25, once | USD 25, once |
+| What you need | Google account, legal name, address, ID, phone and email verification | Company details, D-U-N-S number, company website, verified contact phone and email, ID of the account owner |
+| Shown publicly | The person's name (plus address and contact for apps that make money) | The company name and contact details |
+| Testing before first release | Accounts created after November 2023 must run a closed test with at least 12 testers opted in for 14 days in a row before they can apply for production | Not required, you can publish straight to production |
+| Restricted categories (finance, health, VPN, government and others) | May need an organization account | Allowed, subject to policy |
+| Suitable for | Individual developers | Companies and client apps |
+
+My recommendation is organization accounts on both stores, for us and for clients. A personal account ties the app to one person, and on Google Play it adds the 14-day testing step before you can launch.
+
+Apps can be moved between accounts later on both stores (App Transfer in App Store Connect, app transfer request in Play Console), but it's slow and manual. It's much easier to start on the right account.
+
+Google has also announced developer identity verification for apps installed on certified Android devices, rolling out from late 2026. Play Console accounts that are already verified are mostly covered, but keep the account's legal details correct and keep an eye on the Play Console inbox.
+
+### 6.2 D-U-N-S number (needed for both)
+
+- A free nine-digit number from Dun & Bradstreet that Apple and Google use to confirm the company is a real legal entity.
+- Look it up or request it through Apple's D-U-N-S lookup tool. A new one can take around five business days, sometimes longer, and Apple may need another day or two to see it.
+- The legal name and address must match the company registration documents exactly, and match what you type into the Apple and Google forms. A mismatch is the most common reason enrollment gets rejected.
+
+### 6.3 Setting up the Apple account (organization)
+
+1. Create a company Apple Account on a shared company email, like `appledev@company.com`. Turn on two-factor with a company phone number that management controls.
+2. Make sure the company has its D-U-N-S number (6.2) and a public website on the same domain as the email.
+3. Enroll at developer.apple.com/programs/enroll. The Apple Developer app on iPhone or Mac is usually the quickest way.
+4. Choose Company / Organization and enter the legal name, D-U-N-S number, website and the enrolling person's details. That person has to have authority to sign for the company, and Apple may call to confirm.
+5. Pay USD 99. Approval takes anywhere from a couple of days to about two weeks.
+6. In App Store Connect → Business, accept the Free Apps agreement. If the app sells anything, also complete the Paid Apps agreement, tax forms and bank details.
+7. In Users and Access, add people with only the access they need:
+   - **Account Holder:** the company account above, controlled by management. There's only one, and it's the only role that can accept agreements and renew the membership.
+   - **Admin:** the mobile lead and one person from management.
+   - **App Manager / Developer:** developers.
+   - **Marketing, Finance, Customer Support:** as needed.
+8. Create an App Store Connect API key (Users and Access → Integrations) for CI, Fastlane or EAS, and save it in the vault.
+9. Turn on auto-renew. If the membership lapses, the apps are removed from the App Store.
+
+If the client owns the account, the client enrolls and invites our company email as Admin or App Manager. We never ask for a client's Apple password.
+
+### 6.4 Setting up the Google Play Console account (organization)
+
+1. Use a company Google account, ideally on the company's Google Workspace domain, like `playconsole@company.com`. Turn on two-step verification with a company phone.
+2. Have the D-U-N-S number and company documents ready.
+3. Go to play.google.com/console/signup and choose "An organization or business".
+4. Enter the company name and address (matching D-U-N-S), website, a contact email and phone (Google verifies these and shows them to users), and the developer name to show on Google Play.
+5. Pay the USD 25 fee.
+6. Complete identity verification for the company and the account owner. This takes a few days.
+7. In Users and permissions, invite people. Admin for leads, release permissions for developers. Give contractors access to specific apps only.
+8. If the app sells anything, set up the payments profile with bank and tax details.
+9. For CI uploads, create a Google Cloud service account, give it access in Play Console, and keep its JSON key in the vault and CI secrets.
+10. Log in now and then and keep the account active. Google can close developer accounts that haven't been used in a long time.
+
+If the client owns the account, they create it and invite our company Google account with Admin or release access.
+
+### 6.5 Fees and timelines at a glance
+
+| | Apple | Google |
+|---|---|---|
+| Account fee | USD 99 every year | USD 25 once |
+| Account approval | A few days to two weeks | Usually 2 to 7 days |
+| First app review | Usually 1 to 2 days, longer if rejected | A few hours up to about a week for new apps and accounts |
+| Extra step for personal accounts | None | 12 testers for 14 days |
+| Store commission | 15% under the Small Business Program (under USD 1M a year), otherwise 30% | 15% on the first USD 1M a year, then 30% (15% on subscriptions) |
+
+---
+
+## 7. Getting Production Ready
+
+I'd start this two to three weeks before the planned launch. It always takes longer than expected, mostly because of waiting on the client for content and on the stores for review.
+
+### 7.1 Backend and services
+
+- Production API is deployed on HTTPS, on a domain owned by us or the client.
+- Production Firebase project is set up (Section 5), and every third-party service is switched to live keys: payments, maps, SMS, email.
+- `.env.production` is final and saved in the vault.
+- Payment gateway is in live mode and tested with a real small transaction.
+- Deep links: `/.well-known/apple-app-site-association` for iOS and `/.well-known/assetlinks.json` for Android are on the production domain. The Android file needs the Play App Signing SHA-256, not just the upload key.
+- Crashlytics (or Sentry) is on, with alerts going to the shared team email or Slack.
+- Remote Config has the force-update and soft-update values set for version 1.0.
 
 ### 7.2 App configuration
 
-- [ ] Final **app name, icon (all sizes), splash screen**.
-- [ ] Final **Bundle ID / Application ID** (cannot change after release).
-- [ ] **Version strategy:** `versionName`/`CFBundleShortVersionString` = `1.0.0` (semantic), `versionCode`/`CFBundleVersion` = integer build number that **always increases**.
-- [ ] Release build settings:
-  - Android: **R8/ProGuard** minification enabled (with tested keep-rules), **Hermes** on, `android:debuggable=false`, cleartext traffic disabled, **AAB** output.
-  - iOS: Release scheme, dSYM upload to Crashlytics/Sentry, `NSAppTransportSecurity` without global exceptions.
-  - Remove `console.log` in production (babel plugin `transform-remove-console`), no dev menus or test endpoints.
-- [ ] **Permissions audit:** request only what's used. Every iOS permission has a clear, specific usage description string (vague strings are a common rejection reason).
-- [ ] **iOS Privacy Manifest** (`PrivacyInfo.xcprivacy`) present and covering "required reason" APIs; third-party SDKs up to date with their own manifests.
-- [ ] **Target SDK** meets the current Google Play requirement (9.2).
-- [ ] **Account deletion:** if users can create an account, they must be able to **delete it from inside the app** (Apple) and via a **web link** (Google Play). Both are mandatory.
-- [ ] **Sign in with Apple** implemented if other social logins exist on iOS.
-- [ ] Test the **release build** (not debug) on real low-end Android and older iPhone devices.
+- Final app name, icon in all sizes, splash screen.
+- Final Bundle ID / Application ID. This can't change after release.
+- Versions: the version name (`1.0.0`) follows semantic versioning, and the build number (`versionCode` / `CFBundleVersion`) always goes up.
+- Release settings:
+  - Android: R8 / ProGuard on and tested, Hermes on, not debuggable, no cleartext HTTP, building an AAB.
+  - iOS: Release configuration, dSYMs uploading to Crashlytics or Sentry, no blanket App Transport Security exceptions.
+  - No `console.log` output, dev menus or test endpoints in the production build.
+- Permissions: only ask for what the app actually uses. Every iOS permission needs a clear, specific explanation string. Vague ones get rejected.
+- iOS privacy manifest (`PrivacyInfo.xcprivacy`) is included, and third-party SDKs are on versions that include theirs.
+- Android target SDK meets the current Google Play requirement (Section 9.2).
+- Account deletion: if users can sign up, they must be able to delete their account from inside the app (Apple) and through a web link (Google Play). Both are required.
+- Sign in with Apple is there if the iOS app has other social logins.
+- Test the actual release build, not a debug build, on a cheap Android phone and an older iPhone.
 
-### 7.3 Signing keys: the most critical assets
+### 7.3 Signing Keys
 
-#### Android
+These are the most important files in the whole project. Lose them and you may not be able to update the app.
 
-- Use **Play App Signing** (mandatory for new apps): Google holds the **app signing key**; we hold the **upload key**.
-- Generate the **upload keystore** once per app:
+**Android**
+
+- Play App Signing is mandatory for new apps. Google keeps the app signing key, and we keep the upload key.
+- Create the upload keystore once per app:
   ```bash
   keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
     -alias acme-delivery-upload -keyalg RSA -keysize 2048 -validity 10000
   ```
-- **Back up immediately** to the project vault: the `.keystore` file, **store password, key alias, key password**, and SHA-1/SHA-256 fingerprints.
-- Keep `keystore.properties` out of Git; CI reads the keystore from secrets (base64-encoded).
-- If the upload key is lost/compromised, the Account Owner can request an **upload key reset** in Play Console (possible only because Play App Signing is used, and it takes time). Without a backup, every release is blocked until then.
+- Back it up to the project vault immediately: the `.keystore` file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints.
+- `keystore.properties` stays out of Git. CI gets the keystore from secrets.
+- If the upload key is lost, the account owner can ask Google for an upload key reset. It's possible because of Play App Signing, but it takes time and blocks releases until it's done. A backup avoids all of that.
 
-#### iOS
+**iOS**
 
-- Prefer **automatic signing** for development and **EAS / Fastlane match** for CI so certificates are shared and reproducible, not stuck on one Mac.
-- Assets to back up in the vault: **Distribution certificate (.p12 + password)**, **APNs Auth Key (.p8, Key ID)**, **App Store Connect API Key (.p8, Key ID, Issuer ID)**.
-- Distribution certificates & provisioning profiles **expire after 1 year**. Put renewal dates in the calendar (Section 10.4).
+- Automatic signing is fine for development. For CI use EAS or Fastlane match, so certificates aren't stuck on one person's Mac.
+- Back up to the vault: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).
+- Distribution certificates and provisioning profiles expire after a year. Put the dates on the shared calendar (Section 10.4).
 
-### 7.4 Store listing assets & information (prepare in advance)
+### 7.4 Store listing: what to prepare
 
-| Item | Apple App Store | Google Play |
-|------|-----------------|-------------|
-| App name | max 30 chars | max 30 chars |
-| Subtitle / short description | Subtitle 30 chars | Short description 80 chars |
-| Description | up to 4000 chars | up to 4000 chars |
-| Keywords | 100 chars | — (from description) |
+| | App Store | Google Play |
+|---|---|---|
+| App name | Up to 30 characters | Up to 30 characters |
+| Subtitle / short description | Subtitle, 30 characters | Short description, 80 characters |
+| Full description | Up to 4000 characters | Up to 4000 characters |
+| Keywords | 100 characters | Not used (taken from the description) |
 | Icon | 1024×1024 PNG, no transparency | 512×512 PNG |
-| Screenshots | iPhone 6.9"/6.5" required, iPad if supported | Phone min 2 (recommended 4–8); tablets if supported |
-| Feature graphic | — | 1024×500 required |
+| Screenshots | iPhone 6.9" or 6.5" required, iPad if the app supports it | At least 2 phone screenshots (4 to 8 is better), tablet if supported |
+| Feature graphic | Not needed | 1024×500, required |
 | Privacy policy URL | Required | Required |
-| Support URL / email | Required | Email required |
-| Privacy declaration | **App Privacy "nutrition labels"** | **Data safety form** |
-| Age rating | Age rating questionnaire | IARC content rating questionnaire |
-| Review/demo account | **Required** if app has login (with any OTP bypass explained) | Required in *App access* if login needed |
-| Other forms | Export compliance (encryption) | Target audience, ads declaration, news/government/financial declarations, etc. |
+| Support | Support URL required | Support email required |
+| Privacy form | App Privacy questions | Data safety form |
+| Age rating | Age rating questions | IARC content rating questions |
+| Reviewer login | Required if the app has login (explain any OTP bypass) | Required under App access if there's a login |
+| Other | Export compliance (encryption) | Target audience, ads, and other declarations |
 
 ---
 
-## 8. Publishing to the App Store & Google Play
+## 8. Publishing to the App Store and Google Play
 
-### 8.1 Apple App Store: release process
+### 8.1 App Store
 
-1. **Register the Bundle ID** in *Certificates, Identifiers & Profiles → Identifiers*, enable needed capabilities (Push, Sign in with Apple, Associated Domains…).
-2. **Create the app record** in *App Store Connect → Apps → +*: platform, name, primary language, bundle ID, SKU (internal, e.g. `acme-delivery-ios`).
-3. **Build & upload:**
-   - Bump version/build number.
-   - Xcode → *Product → Archive* → *Distribute App → App Store Connect*, **or** `eas build -p ios --profile production` + `eas submit`, **or** Fastlane `gym` + `pilot`.
-   - The build must use the **minimum Xcode/SDK Apple currently requires** (from April 2026: Xcode 26 / iOS 26 SDK).
-4. **TestFlight:** build processes in ~10–30 min. Internal testers (up to 100 team users) get it immediately; **external testers** need a short beta review first. Do full QA on TestFlight.
-5. **Fill in the version page:** screenshots, description, keywords, support/marketing URLs, promotional text, "What's New".
-6. **App Privacy**: complete the privacy questionnaire (must match what the app and SDKs actually collect).
-7. **App Review Information:** demo username/password, contact details, notes for the reviewer (explain non-obvious features, OTP bypass, hardware needed, etc.).
-8. **Age rating**, **pricing & availability** (countries), **export compliance**.
-9. Choose release option: **Manual release** (recommended, so we control launch time), automatic, or **phased release over 7 days** (recommended for updates).
-10. **Submit for Review.** Typical review time: 24–48 hours.
-11. **If rejected:** read the message in **Resolution Center**, fix, reply or resubmit. If the rejection is unclear, reply asking for clarification or request a call; you can appeal to the App Review Board.
-12. After approval: release, verify the live listing, **tag the commit** (`v1.0.0`) and update the Project Registry.
+1. Register the Bundle ID under Certificates, Identifiers & Profiles and turn on the capabilities you need (Push, Sign in with Apple, Associated Domains).
+2. Create the app in App Store Connect → Apps → +, with the name, language, bundle ID and an internal SKU like `acme-delivery-ios`.
+3. Build and upload. Bump the version and build number, then either archive in Xcode and upload to App Store Connect, or use `eas build -p ios --profile production` followed by `eas submit`, or Fastlane. The build has to use the Xcode version Apple currently requires (Xcode 26 / iOS 26 SDK since April 2026).
+4. TestFlight: the build processes in 10 to 30 minutes. Internal testers (up to 100 team members) get it right away. External testers need a short beta review first. Do the full QA pass here.
+5. Fill in the version page: screenshots, description, keywords, support URL, What's New.
+6. Complete App Privacy. It has to match what the app and its SDKs actually collect.
+7. App Review Information: a working demo login, contact details and notes for the reviewer (anything non-obvious, an OTP bypass, special hardware).
+8. Age rating, pricing and countries, export compliance.
+9. Choose how to release. For a first launch I'd choose manual release, so we pick the launch time. For updates, phased release over 7 days is safer.
+10. Submit for review. It's usually done in a day or two.
+11. If it's rejected, read the message in the Resolution Center, fix it and resubmit, or reply asking for clarification. If you really believe the reviewer got it wrong, you can appeal.
+12. Once it's live, check the listing, tag the release in Git (`v1.0.0`) and update the Project Registry.
 
-**Most common Apple rejection reasons:** crashes/bugs found during review (Guideline 2.1), missing demo account, incomplete metadata or placeholder content, vague permission strings, no in-app account deletion, missing Sign in with Apple, external payment links for digital goods (outside allowed regions/entitlements), "minimum functionality" (app is just a website wrapper).
+**Why Apple usually rejects apps:** crashes or bugs found during review, no demo login, unfinished content or placeholder text, vague permission explanations, no in-app account deletion, social login without Sign in with Apple, payment links for digital goods outside Apple's rules, and apps that are basically just a website in a wrapper.
 
-### 8.2 Google Play: release process
+### 8.2 Google Play
 
-1. **Create app** in Play Console: app name, default language, app or game, free or paid (**free → paid is not possible later**), accept declarations.
-2. **Set up your app** (dashboard tasks), all mandatory:
-   - Privacy policy · App access (demo login) · Ads declaration · Content rating (IARC) · Target audience & content · **Data safety** · Government/financial/health declarations if applicable · News app declaration · **Account deletion URL** if accounts exist.
-3. **Store listing:** short & full description, icon, feature graphic, screenshots, category, contact details.
-4. **Build & upload an AAB:**
-   - Bump `versionCode` (must always increase) and `versionName`.
-   - `cd android && ./gradlew bundleRelease`, **or** `eas build -p android --profile production`, **or** Fastlane `gradle` + `supply`.
-   - Enroll in **Play App Signing** on first upload (default).
-5. **Testing tracks (in order):**
-   - **Internal testing** (up to 100 testers, available within minutes, no review) → QA.
-   - **Closed testing** → client UAT. **Personal accounts:** 12+ testers opted-in for 14 consecutive days before production access can be requested.
-   - **Open testing** (optional public beta).
-6. Check the **Pre-launch report** (automated tests on real devices: crashes, accessibility, security warnings) and fix critical issues.
-7. **Production release:** create release → select the AAB → release notes → choose **staged rollout** (e.g. 10% → 25% → 50% → 100%) for updates.
-8. **Send for review.** New apps/new accounts can take several days; updates are often hours to ~2 days. Use **Managed publishing** if you want to control the exact go-live moment after approval.
-9. **If rejected / policy issue:** see *Policy status* and the **Inbox** in Play Console, fix and resubmit, or **appeal** if you believe it's incorrect.
-10. After going live: verify the listing, **tag the commit**, update the Project Registry.
+1. Create the app in Play Console: name, language, app or game, free or paid. **A free app can't be changed to paid later.**
+2. Finish every task under "Set up your app": privacy policy, app access (demo login), ads, content rating, target audience, Data safety, any government, financial or health declarations, and the account deletion URL if the app has accounts.
+3. Store listing: descriptions, icon, feature graphic, screenshots, category, contact details.
+4. Build and upload an AAB. Bump `versionCode` (it must always go up) and `versionName`, then run `cd android && ./gradlew bundleRelease`, or `eas build -p android --profile production`, or Fastlane. Play App Signing is set up on the first upload.
+5. Testing tracks, in this order:
+   - Internal testing: up to 100 testers, available in minutes, no review. Used for QA.
+   - Closed testing: for client UAT. On a personal account this is where the 12 testers for 14 days happens.
+   - Open testing: optional public beta.
+6. Check the pre-launch report (Google runs the app on real devices) and fix anything serious.
+7. Production: create a release, pick the AAB, add release notes. For updates use a staged rollout, for example 10%, then 25%, 50% and 100%.
+8. Send for review. New apps and new accounts can take several days, updates usually hours to two days. Use managed publishing if you want to choose the exact go-live moment after approval.
+9. If it's rejected or there's a policy issue, look at Policy status and the Play Console inbox, fix it and resubmit, or appeal if it's wrong.
+10. Once it's live, check the listing, tag the release and update the Project Registry.
 
-### 8.3 Every update: release checklist
+### 8.3 Every release after that
 
-See [11.3 Release Checklist](#113-release-checklist-every-store-release).
+Follow the [Release Checklist](#113-release-checklist).
 
 ---
 
-## 9. Live Apps: Detecting Google/Apple Policy & Platform Changes
+## 9. Live Apps: Catching Apple and Google Changes Early
 
-Apple and Google change their platforms **every year**: new OS versions, new SDK requirements, new privacy rules and new policies. A live app that isn't maintained will eventually be **rejected on its next update, hidden from new users, or removed**. The job is to find out **before** users or clients do.
+Apple and Google change something every year: new OS versions, new SDK minimums, new privacy rules, new policies. An app that nobody looks after will eventually get its next update rejected, become hidden from new users, or get removed. Nobody from Apple or Google is going to call us about it. The warnings come by email to whoever's email is on the account, and they come with deadlines. So most of this job is making sure those emails go somewhere that people actually read, and having a routine.
 
-### 9.1 How an app gets "hit"
+### 9.1 How a live app gets hit
 
-| Type of change | Typical effect on a live app |
-|----------------|------------------------------|
-| **New Google Play target API requirement** (every year, deadline usually 31 August) | Updates are **blocked** until the app targets the new API level; apps targeting too-old API levels become **unavailable to new users** on newer Android devices. |
-| **New Xcode/iOS SDK minimum** (every spring) | **New builds can't be uploaded** until rebuilt with the new Xcode/SDK. |
-| **New OS release** (iOS every September, Android yearly) | Crashes, UI/layout breaks (e.g. Android edge-to-edge enforcement), permission behaviour changes, deprecated APIs. |
-| **New store policy** (privacy, permissions, payments, account deletion, data safety, age ratings…) | Policy warning email with a deadline → app **removed or updates rejected** if not fixed. |
-| **Third-party SDK becomes non-compliant or deprecated** (Google Play SDK Index, Facebook SDK, ads SDKs, Firebase services) | Policy violation or broken functionality (e.g. Dynamic Links shutdown). |
-| **Expiry of certificates/keys/memberships** | Push stops (old .p12 certs), CI can't sign, Apple membership lapse removes apps. |
-| **Backend/API dependency changes** (Google Maps pricing, social login API versions) | Silent feature breakage. |
+| What changes | What happens to the app |
+|---|---|
+| Google Play raises the target API level (every year, usually by 31 August) | Updates are blocked until the app targets the new level. Apps that fall too far behind stop showing to new users on newer phones. |
+| Apple raises the minimum Xcode / iOS SDK (every spring) | We can't upload a new build until it's rebuilt with the new Xcode. |
+| A new iOS or Android version comes out (iOS every September, Android every year) | Crashes, broken layouts (for example Android's edge-to-edge changes), different permission behaviour. |
+| A store policy changes (privacy, permissions, payments, account deletion, data safety) | A warning email with a deadline. If it isn't fixed, updates get rejected or the app is removed. |
+| A third-party SDK becomes outdated or is shut down | A policy warning or a feature that just stops working (Dynamic Links is a recent example). |
+| A certificate, key or membership expires | Push stops working, CI can't sign, or the Apple apps get removed if the membership lapses. |
+| An external service changes (Maps pricing, social login API versions) | A feature breaks without any warning from the stores. |
 
-### 9.2 Current platform requirements (verify every quarter)
+### 9.2 Current requirements (check every quarter)
 
-| Platform | Requirement (as of Oct 2026) | Where to verify |
-|----------|------------------------------|-----------------|
-| Google Play | New apps & updates must target **Android 16 (API 36)** from 31 Aug 2026 (+ the yearly bump each August). Apps targeting Android 15+ must support **16 KB memory page sizes** (keep RN & native libs updated). | developer.android.com/google/play/requirements/target-sdk |
-| Apple | Uploads must be built with **Xcode 26 / iOS 26 SDK** or later (from April 2026). Privacy manifests required for apps and listed third-party SDKs. | developer.apple.com/news/upcoming-requirements |
-| Both | In-app account deletion, accurate privacy labels / Data safety form, only necessary permissions. | Store policy pages |
+| Platform | Requirement as of October 2026 | Where to check |
+|---|---|---|
+| Google Play | New apps and updates must target Android 16 (API 36) from 31 August 2026, and this moves up every August. Apps targeting Android 15 or higher must support 16 KB memory pages, which mostly means keeping React Native and native libraries up to date. | developer.android.com/google/play/requirements/target-sdk |
+| Apple | Uploads must be built with Xcode 26 / iOS 26 SDK or later (since April 2026). Privacy manifests are required for the app and for listed third-party SDKs. | developer.apple.com/news/upcoming-requirements |
+| Both | Account deletion inside the app, accurate privacy labels and Data safety form, only the permissions the app needs. | Store policy pages |
 
-### 9.3 Detection channels: who watches what
+### 9.3 Where the warnings show up
 
-Make sure **notification emails from both stores go to a shared company mailbox** (e.g. `mobile-alerts@company.com`) that more than one person reads, **not** to a personal inbox. This is the single most important step.
+The single most important step: **make sure all emails from both stores go to a shared company inbox** (something like `mobile-alerts@company.com`) that more than one person reads. Not to one person's inbox.
 
 **Google Play Console**
-- **Inbox** (bell icon) and the account owner's **email**: policy warnings, deadlines and new requirements are announced here first.
-- **Policy status** page (*Policy and programs → Policy status*): shows any app with violations/warnings and deadlines.
-- **Dashboard warnings** per app: e.g. "Your app must target API level XX by …".
-- **Android vitals**: crash rate & ANR rate vs. the "bad behaviour" thresholds (exceeding them reduces store visibility).
-- **Pre-launch report** on every upload.
-- **SDK Index / SDK console warnings**: Play shows warnings if an included SDK version is outdated or policy-violating.
+- The inbox (bell icon) and the account owner's email. New requirements and policy warnings show up here first.
+- Policy status page (Policy and programs → Policy status): any app with a warning, and its deadline.
+- Warnings on each app's dashboard, like "Your app must target API level XX by...".
+- Android vitals: crash rate and ANR rate. Going over Google's limits lowers how visible the app is on the store.
+- The pre-launch report on every upload.
+- SDK warnings, when Play flags an SDK version as outdated or against policy.
 
-**App Store Connect / Apple**
-- Account Holder & Admin **emails** and the **App Store Connect app** notifications.
-- **Apple Developer News & "Upcoming requirements"** page: all new SDK/Xcode/policy deadlines are published here.
-- **App Review Guidelines change log** (updated after WWDC each June and occasionally during the year).
-- **Resolution Center** messages and **App Store Connect → Apps → (app) → App Store / Ratings & Reviews**.
-- **Xcode Organizer → Crashes / Energy / Hangs** and **App Analytics** for live-app health.
-- **Developer program membership status** (renewal date).
+**App Store Connect and Apple**
+- Emails to the Account Holder and Admins, and notifications in the App Store Connect app.
+- Apple Developer News and the "Upcoming requirements" page, where every new deadline is announced.
+- App Review Guidelines updates, usually after WWDC in June.
+- Resolution Center messages and Ratings & Reviews for each app.
+- Xcode Organizer for crashes and hangs, and App Analytics.
+- The membership renewal date.
 
 **Our own monitoring**
-- **Firebase Crashlytics** velocity & new-issue alerts (to shared mailbox/Slack). A spike right after an iOS/Android release usually means the new OS broke something.
-- **Store reviews**: sudden 1-star reviews mentioning "crash after update" or a specific device/OS.
-- **Dependabot / `npm audit`** on every repo, plus React Native release notes.
-- **OS beta testing:** every June (WWDC, iOS beta) and with each Android beta, install the beta on a test device and smoke-test all live apps **before** the public release in September.
+- Crashlytics alerts going to the shared inbox or Slack. A spike right after a new iOS or Android release almost always means the new OS broke something.
+- Store reviews. A sudden run of one-star reviews saying "crashes after update" is a strong signal.
+- Dependabot and `npm audit` on every repo.
+- OS betas: every June when the iOS beta comes out, and with each Android beta, install it on a test phone and go through each live app before the public release in September.
 
-### 9.4 Recurring monitoring routine
+### 9.4 Monitoring routine
 
-| Frequency | Task | Owner |
-|-----------|------|-------|
-| **Daily** (5 min) | Scan shared mailbox for store emails; check Crashlytics alerts | Mobile Lead / on-duty dev |
-| **Weekly** | Play Console Inbox + Policy status; App Store Connect messages; review new store ratings | Mobile Lead |
-| **Monthly** | Fill the **Live Apps Health Sheet** ([11.4](#114-live-apps-health-sheet)) for every live app: crash-free %, ANR %, target SDK, last release date, pending warnings | Mobile Lead |
-| **Quarterly** | Read Apple "Upcoming requirements" + Android "Target API" + Play policy updates; plan updates for affected apps; check certificate/profile/membership expiry dates | Mobile Lead |
-| **June (WWDC)** | Test all live apps on iOS beta; read new App Review Guidelines | Mobile Team |
-| **Before 31 Aug** | All live Android apps updated to the new target API level | Mobile Team |
-| **September** | Verify all live apps on the new public iOS/Android release; watch Crashlytics closely | Mobile Team |
-| **Yearly** | Upgrade React Native / Expo SDK on each maintained app (staying max ~1 year behind); renew Apple memberships | Mobile Lead |
+| How often | What | Who |
+|---|---|---|
+| Daily, about 5 minutes | Check the shared inbox for store emails and look at Crashlytics alerts | Mobile lead or whoever is on duty |
+| Weekly | Play Console inbox and Policy status, App Store Connect messages, new reviews | Mobile lead |
+| Monthly | Update the [Live Apps Health Sheet](#114-live-apps-health-sheet) for every live app: crash-free rate, ANR rate, target SDK, last release, open warnings | Mobile lead |
+| Quarterly | Read Apple's upcoming requirements, Android's target API page and Play policy updates. Plan updates for affected apps. Check certificate, profile and membership expiry dates. | Mobile lead |
+| June (WWDC) | Test every live app on the iOS beta and read the updated review guidelines | Mobile team |
+| Before 31 August | Every live Android app updated to the new target API level | Mobile team |
+| September | Check every live app on the new iOS and Android release and watch Crashlytics closely | Mobile team |
+| Yearly | Upgrade React Native or the Expo SDK on each maintained app (not more than about a year behind) and renew Apple memberships | Mobile lead |
 
-### 9.5 When an issue is found
+### 9.5 When something comes up
 
-1. Log it in the **Live Apps Health Sheet** with the deadline.
-2. Inform **management & the client** (if client-owned) with: what changed, deadline, impact if ignored, estimated effort.
-3. Plan the fix release well before the deadline (store reviews can be slow near deadlines).
-4. After the fix is live, confirm the warning disappears from Play Console / Apple and close the item.
-5. If a deadline is impossible to meet, Google Play often lets you **request an extension** from the warning in Play Console (usually a few months). Use it early, not on the last day.
+1. Add it to the Live Apps Health Sheet with its deadline.
+2. Tell management, and the client if it's their app: what changed, the deadline, what happens if we ignore it, and roughly how long the fix takes.
+3. Plan the fix release well before the deadline. Reviews get slow when everyone is rushing for the same deadline.
+4. Once the fix is live, confirm the warning is gone from Play Console or App Store Connect and close it in the sheet.
+5. If we really can't make a Google deadline, Play Console often lets you request an extension from the warning itself, usually a few months. Ask early, not on the last day.
 
 ---
 
-## 10. Other Key Responsibilities of the Mobile Lead
+## 10. Other Things the Mobile Lead Owns
 
-### 10.1 Code quality & standards
-- TypeScript strict mode; ESLint + Prettier; Husky pre-commit (lint-staged) and pre-push (type-check).
-- **Mandatory code review** on all PRs (rulesets enforce this).
-- Shared component library / theme so apps look consistent and are faster to build.
-- Unit tests for business logic (Jest), component tests (React Native Testing Library); E2E (Maestro or Detox) for critical flows (login, payment, checkout).
+### 10.1 Code quality
+
+- TypeScript in strict mode, ESLint and Prettier, Husky running lint on commit and type-check on push.
+- Every pull request is reviewed before merging. The branch rules enforce this.
+- A shared component library and theme, so apps look consistent and new screens are faster to build.
+- Jest for business logic, React Native Testing Library for components, and Maestro or Detox for the critical flows (login, payment, checkout).
 
 ### 10.2 CI/CD
-- PR pipeline: lint → type-check → tests.
-- Release pipeline: build signed AAB/IPA and upload to internal testing / TestFlight automatically (**GitHub Actions + Fastlane**, or **EAS Build + EAS Submit**).
-- All signing material lives in CI secrets **and** the vault, never on one person's machine.
 
-### 10.3 Dependency & React Native upgrades
-- Use the **React Native Upgrade Helper** for CLI projects; for Expo, upgrade one SDK at a time.
-- Keep each maintained app **no more than 1–2 RN versions behind**. Old versions eventually fail new store requirements (target API, Xcode SDK, 16 KB pages).
-- Prefer well-maintained libraries compatible with the **New Architecture**. Check the React Native Directory before adding a dependency.
-- Run `npm audit` / Dependabot regularly; patch critical vulnerabilities.
+- On every pull request: lint, type-check, tests.
+- On release: build a signed AAB and IPA and upload to internal testing and TestFlight automatically, with GitHub Actions and Fastlane, or EAS Build and EAS Submit.
+- Signing files live in CI secrets and in the vault, never only on someone's laptop.
 
-### 10.4 Expiry & renewal calendar (shared company calendar)
+### 10.3 Keeping dependencies and React Native up to date
 
-| Item | Validity | Consequence if missed |
-|------|----------|-----------------------|
-| Apple Developer Program membership | 1 year | **Apps removed from App Store**, no new builds |
-| iOS Distribution certificate | 1 year | Can't sign new builds (live apps keep working) |
-| iOS provisioning profiles | 1 year | Can't build/distribute (Enterprise: installed apps stop) |
-| APNs .p12 push certificate (if used instead of .p8) | 1 year | **Push notifications stop** |
-| Domain names (API, deep links, privacy policy) | Per registrar | App breaks, deep links fail, store listing invalid |
-| SSL certificates (if not auto-renewed) | Varies | API calls fail |
-| Third-party SaaS subscriptions (Maps, SMS, Sentry, RevenueCat…) | Varies | Features break |
-| Google Play target API deadline | Yearly (Aug) | Updates blocked |
+- React Native CLI projects: use the React Native Upgrade Helper. Expo projects: upgrade one SDK version at a time.
+- Keep every maintained app within one or two React Native versions of the latest. Apps that fall far behind eventually fail the store requirements (target API, Xcode, 16 KB pages) and the upgrade becomes a big project.
+- Before adding a library, check it's maintained and supports the New Architecture (React Native Directory is useful for this).
+- Fix critical vulnerabilities flagged by `npm audit` or Dependabot.
+
+### 10.4 Expiry calendar
+
+These go on a shared company calendar with reminders a month ahead.
+
+| What | Lasts | If we miss it |
+|---|---|---|
+| Apple Developer Program membership | 1 year | Apps removed from the App Store, no new builds |
+| iOS distribution certificate | 1 year | Can't sign new builds (live apps keep working) |
+| iOS provisioning profiles | 1 year | Can't build or distribute |
+| APNs .p12 push certificate (if used instead of a .p8 key) | 1 year | Push notifications stop |
+| Domains (API, deep links, privacy policy) | Depends on registrar | App breaks, deep links fail, store listing invalid |
+| SSL certificates (if not auto-renewing) | Varies | API calls fail |
+| Paid services (Maps, SMS, Sentry and so on) | Varies | Features stop working |
+| Google Play target API deadline | Every August | Updates blocked |
 
 ### 10.5 Security
-- Store auth tokens in **Keychain/Keystore** (`react-native-keychain` / `expo-secure-store`), **not** AsyncStorage.
-- HTTPS everywhere; consider **SSL pinning** for banking/fintech apps.
-- Obfuscation (R8) for Android; no secrets in the bundle (Section 4).
-- Firebase Security Rules reviewed before launch; App Check enabled.
-- Root/jailbreak detection only where business requires (fintech).
 
-### 10.6 Versioning, release notes & communication
-- Semantic versioning (`MAJOR.MINOR.PATCH`), build numbers always increase.
-- Maintain a `CHANGELOG.md` per repo (auto-generated from Conventional Commits).
-- Inform client/management before each production release with release notes and the planned rollout.
+- Store login tokens in the Keychain / Keystore (`react-native-keychain` or `expo-secure-store`), not AsyncStorage.
+- HTTPS everywhere. For banking or fintech apps, think about SSL pinning.
+- R8 obfuscation on Android, and no secrets in the app (Section 4).
+- Review Firebase security rules before launch and turn on App Check.
+- Root and jailbreak detection only where the business actually needs it (fintech, for example).
 
-### 10.7 Documentation & handover
-- Every repo's README must allow a **new developer to run the app within one hour**: prerequisites, Node/Java/Xcode versions, env setup, how to build each flavor/scheme, how to release.
-- Keep the **Project Registry** up to date after every change in accounts, keys, owners or URLs.
-- Record architecture decisions in `docs/adr/` (short Architecture Decision Records).
+### 10.6 Versions and release notes
 
-### 10.8 Team & process
-- Estimation includes **store review time + buffer** (at least 1 week for first release).
-- Device lab: maintain at least one low-end Android, one recent Android, one older iPhone, one recent iPhone (+ iPad if supported).
-- Onboarding/offboarding checklists followed **every time** ([11.5](#115-offboarding-checklist-same-day)).
+- Semantic versions (`MAJOR.MINOR.PATCH`), build numbers always go up.
+- A `CHANGELOG.md` in each repo, generated from commit messages.
+- Before every production release, send management and the client the release notes and the rollout plan.
 
-### 10.9 Client handover (when a project ends)
-- Transfer repo (or provide a full archive with history) as per contract.
-- Transfer app to the client's store accounts if it was published under ours (Apple *App Transfer*, Google *App transfer*).
-- Hand over: Project Registry, keystore + passwords, `.env` files, Firebase project ownership, all third-party accounts, documentation, and remove our access afterwards if the contract says so.
+### 10.7 Documentation
+
+- A repo's README should let a new developer run the app within an hour: required Node, Java and Xcode versions, env setup, how to build each environment, how to release.
+- Update the Project Registry whenever an account, key, owner or URL changes.
+- For bigger technical decisions, write a short note in `docs/adr/` explaining what was decided and why.
+
+### 10.8 Team
+
+- Estimates should include store review time plus a buffer. At least a week for the first release.
+- Keep a small set of test devices: a cheap Android, a recent Android, an older iPhone, a recent iPhone, and an iPad if any app supports tablets.
+- Use the onboarding and offboarding checklists every single time someone joins or leaves.
+
+### 10.9 Handing a project over to a client
+
+- Transfer the repo, or give a full archive with history, as the contract says.
+- If the app was published on our store accounts, transfer it to the client's (App Transfer on Apple, app transfer on Google).
+- Hand over the Project Registry, keystore and passwords, `.env` files, Firebase ownership, every third-party account and the documentation. Then remove our own access if the contract says so.
 
 ---
 
-## 11. Templates & Checklists
+## 11. Templates and Checklists
 
-### 11.1 Project Registry template
+### 11.1 Project Registry Template
 
-> One per project. Keep the **filled copy in the company password manager** (it references secrets). A copy **without secrets** may live in the repo at `docs/PROJECT_REGISTRY.md`.
+One per project. The filled-in copy goes in the company password manager because it points to secrets. A copy without any secrets can also live in the repo as `docs/PROJECT_REGISTRY.md`.
 
 ```markdown
 # Project Registry: <Project Name>
 
 ## General
-- Client / Product owner:
-- Project start date:            Go-live date:
-- Mobile Lead:                   Backend Lead:          PM:
+- Client / product owner:
+- Start date:                    Go-live date:
+- Mobile lead:                   Backend lead:          PM:
 - Status: In development | Live | Maintenance | Archived
-- Contract notes (code ownership, support period):
+- Contract notes (who owns the code, support period):
 
-## Identity
+## App identity
 - App name (iOS / Android):
 - iOS Bundle ID:                 Android Application ID:
 - Staging IDs (if different):
 - Current live version (iOS / Android):
-- Min OS supported (iOS / Android):     Target SDK (Android):
+- Minimum OS (iOS / Android):    Android target SDK:
 
 ## Repositories
-- Mobile repo URL (GitHub/GitLab):
+- Mobile repo URL:
 - Backend repo URL:              Admin panel repo URL:
+- Visibility (must be Private):  Created by (Repo Owner):
 - Default branch / release branch:
 
-## Store Accounts
+## Store accounts
 - Apple: account owner (company / client), Team ID, Account Holder email:
-- App Store Connect app ID / Apple ID:  SKU:
-- App Store listing URL:
-- Google Play: developer account owner, Account owner email, Developer ID:
-- Play Console app link / package:
-- Play Store listing URL:
-- Who from our team has access (role):
+- App Store Connect app ID:      SKU:
+- App Store link:
+- Google Play: account owner, owner email, developer ID:
+- Play Console package name:
+- Play Store link:
+- Our team members with access (and role):
 
 ## Firebase / Google Cloud
 - Dev project ID:        Staging project ID:        Prod project ID:
 - Owners (emails):
-- Billing account & budget alert:
+- Billing account and budget alert:
 - Services used: FCM / Crashlytics / Analytics / Remote Config / Auth / Firestore / ...
 
 ## Environments
@@ -712,163 +716,177 @@ Make sure **notification emails from both stores go to a shared company mailbox*
 | staging | | | |
 | production | | | |
 
-## Signing & Keys (stored in vault; list the vault item names here, NOT the values)
-- Android upload keystore: vault item ____ (alias, passwords, SHA-1/SHA-256)
-- Play App Signing SHA-1/SHA-256:
-- iOS Distribution cert (.p12): vault item ____, expires on ____
-- Provisioning profiles: expire on ____
-- APNs Auth Key (.p8): Key ID ____, vault item ____
+## Signing and keys (write the vault item names here, never the values)
+- Android upload keystore: vault item ____ (alias, passwords, SHA-1 / SHA-256)
+- Play App Signing SHA-1 / SHA-256:
+- iOS distribution certificate (.p12): vault item ____, expires ____
+- Provisioning profiles: expire ____
+- APNs key (.p8): Key ID ____, vault item ____
 - App Store Connect API key: Key ID ____, Issuer ID ____, vault item ____
 - Google Play service account JSON: vault item ____
 
-## Third-party Services
-| Service | Purpose | Account owner email | Plan/billing | Vault item | Renewal date |
-|---------|---------|---------------------|--------------|------------|--------------|
+## Third-party services
+| Service | Used for | Account owner email | Plan / billing | Vault item | Renewal date |
+|---------|----------|---------------------|----------------|------------|--------------|
 | Google Maps | | | | | |
 | Sentry | | | | | |
 | Payment gateway | | | | | |
-| SMS/OTP | | | | | |
+| SMS / OTP | | | | | |
 
-## Domains & URLs
+## Domains and URLs
 - API domain:            Deep link domain:
-- Privacy policy URL:    Terms URL:     Support URL/email:
-- Domain registrar & renewal date:
+- Privacy policy URL:    Terms URL:     Support URL / email:
+- Domain registrar and renewal date:
 
-## Store Review
-- Demo account for reviewers (vault item):
-- Notes for reviewer:
+## Store review
+- Demo login for reviewers (vault item):
+- Notes for reviewers:
 
-## Release History
+## Release history
 | Version | Build | Platform | Release date | Notes |
 |---------|-------|----------|--------------|-------|
 
-## Known Issues / Warnings / Deadlines
-| Date found | Source (Play/Apple/Crashlytics) | Issue | Deadline | Status |
-|------------|----------------------------------|-------|----------|--------|
+## Open warnings and deadlines
+| Date found | Source (Play / Apple / Crashlytics) | Issue | Deadline | Status |
+|------------|--------------------------------------|-------|----------|--------|
 ```
 
-### 11.2 New Project Checklist (short version)
+### 11.2 New Project Checklist
 
 ```markdown
-- [ ] Ownership decided (company vs client store accounts)
-- [ ] Bundle ID / Application ID finalized
-- [ ] Repo created in company GitHub org, private, teams added, rulesets on
-- [ ] README, .env.example, CODEOWNERS, PR template, CI workflow committed
-- [ ] dev/staging/prod environments configured
-- [ ] .env files stored in the password-manager vault
-- [ ] Firebase dev/staging/prod projects created by company account (2+ owners)
-- [ ] APNs .p8 key created & backed up
-- [ ] Android upload keystore generated & backed up (file + passwords)
-- [ ] App IDs registered on Apple Developer & Play Console
-- [ ] TestFlight / Internal testing / App Distribution set up
-- [ ] Crashlytics + alerts to shared mailbox
+- [ ] Decided whose store accounts the app goes on (ours or the client's)
+- [ ] Bundle ID / Application ID decided and written in the registry
+- [ ] Repo requested from the Repo Owner and created as private under the company org
+- [ ] Teams added and branch rules turned on
+- [ ] README, .env.example, CODEOWNERS, PR template and CI workflow committed
+- [ ] development, staging and production environments set up
+- [ ] .env files saved in the password manager vault
+- [ ] Firebase dev, staging and prod projects created on the company account with 2+ owners
+- [ ] APNs .p8 key created and backed up
+- [ ] Android upload keystore created and backed up (file and passwords)
+- [ ] App IDs registered on Apple Developer and Play Console
+- [ ] TestFlight, Play internal testing or App Distribution set up
+- [ ] Crashlytics on, with alerts going to the shared inbox
 - [ ] Remote Config force-update keys added
-- [ ] Project Registry created and linked in the master index
+- [ ] Project Registry created and repo added to the Repository Inventory
 ```
 
-### 11.3 Release Checklist (every store release)
+### 11.3 Release Checklist
 
 ```markdown
-Pre-release
-- [ ] Release branch created from develop; version & build numbers bumped
-- [ ] Correct .env (production) and production Firebase config used
-- [ ] No console logs / dev menus / test endpoints in release build
-- [ ] Release build tested on real devices (low-end Android, older iPhone)
-- [ ] Critical flows tested: signup/login, payments, push, deep links, account deletion
+Before release
+- [ ] Release branch created from develop, version and build numbers bumped
+- [ ] Production .env and production Firebase config in use
+- [ ] No console logs, dev menus or test endpoints in the release build
+- [ ] Release build tested on real devices (cheap Android, older iPhone)
+- [ ] Signup and login, payments, push, deep links and account deletion all tested
 - [ ] Crashlytics receiving events from the release build
-- [ ] Target SDK / Xcode version meets current store requirements
-- [ ] Privacy labels / Data safety updated if new data or SDK added
-- [ ] Store screenshots & "What's New" updated
-- [ ] Demo account for reviewers working
+- [ ] Target SDK and Xcode version meet the current store requirements
+- [ ] Privacy labels and Data safety updated if new data or SDKs were added
+- [ ] Store screenshots and What's New updated
+- [ ] Reviewer demo login works
 
 Release
-- [ ] Uploaded to TestFlight + Play internal track; QA sign-off
-- [ ] Client/management sign-off
-- [ ] Submitted for review (iOS manual/phased release; Android staged rollout)
+- [ ] Uploaded to TestFlight and Play internal testing, QA signed off
+- [ ] Client or management signed off
+- [ ] Submitted for review (iOS manual or phased release, Android staged rollout)
 
-Post-release
-- [ ] Merged release → main, tagged vX.Y.Z, merged back to develop
-- [ ] Monitored Crashlytics & reviews for 48–72h before increasing rollout
-- [ ] Remote Config "latest version" updated (and min version if forcing update)
-- [ ] Project Registry release history updated
+After release
+- [ ] Release merged to main, tagged vX.Y.Z, merged back into develop
+- [ ] Crashlytics and reviews watched for 2 to 3 days before widening the rollout
+- [ ] Remote Config latest version updated (and minimum version if forcing an update)
+- [ ] Release history in the Project Registry updated
 ```
 
 ### 11.4 Live Apps Health Sheet
 
-Maintain as a shared spreadsheet, one row per app per platform, reviewed monthly.
+A shared spreadsheet with one row per app per platform, updated every month.
 
-| App | Platform | Account owner | Live version | Last release | Target SDK / Xcode | Crash-free users % | ANR % (Android) | Open store warnings + deadline | RN / Expo version | Next action | Owner |
-|-----|----------|---------------|--------------|--------------|--------------------|--------------------|-----------------|-------------------------------|-------------------|-------------|-------|
-| Acme Delivery | Android | Client | 2.3.1 | 2026-08-10 | API 36 | 99.6% | 0.2% | None | 0.8x | — | — |
+| App | Platform | Account owner | Live version | Last release | Target SDK / Xcode | Crash-free users | ANR rate (Android) | Open warnings and deadline | RN / Expo version | Next step | Owner |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| Acme Delivery | Android | Client | 2.3.1 | 2026-08-10 | API 36 | 99.6% | 0.2% | None | 0.8x | None | |
 
-Healthy targets: **crash-free users ≥ 99.5%**, Android **user-perceived crash rate < 1.09%** and **ANR rate < 0.47%** (Google's "bad behaviour" thresholds).
+What healthy looks like: crash-free users at 99.5% or more. On Android, a user-perceived crash rate under 1.09% and an ANR rate under 0.47%. Those are the levels where Google starts treating the app as badly behaved.
 
-### 11.5 Offboarding Checklist (same day)
+### 11.5 Offboarding Checklist
 
-When **any** developer, QA, designer or contractor leaves, complete this **on their last working day**, and record it with date and who did it.
+**This is mandatory.** When any developer, QA, designer or contractor leaves, it's done on their last working day. Write down the date and who did each step.
 
-| # | System | Action |
-|---|--------|--------|
-| 1 | **GitHub** | Remove from the **Organization** (not just repos). Check Outside Collaborators on all repos. Revoke any deploy keys/PATs they created; transfer any repos they own personally that belong to company work. |
-| 2 | **GitLab** | Remove from the **top-level Group**; block their company GitLab user if applicable. |
-| 3 | **App Store Connect / Apple Developer** | Remove the user from *Users and Access*. If they had access to certificates, consider revoking/re-issuing certificates and the App Store Connect API key they used. |
-| 4 | **Google Play Console** | Remove from *Users and permissions*. |
-| 5 | **Firebase / Google Cloud** | Remove from IAM on every project. Rotate any service-account keys they downloaded. |
-| 6 | **Expo / EAS** | Remove from the Expo organization. |
-| 7 | **CI/CD** | Rotate tokens/secrets they had personal access to. |
-| 8 | **Password manager** | Remove from vaults; **rotate passwords of shared accounts** they knew (store accounts, third-party dashboards). |
-| 9 | **Third-party dashboards** | Sentry, payment gateways, Maps, SMS, analytics, App Distribution, etc. |
-| 10 | **Communication** | Slack/Teams/Email, Jira/Trello/ClickUp, Google Drive shares. |
-| 11 | **Devices** | Collect test devices; remove their devices from the Apple device list if needed. |
-| 12 | **Knowledge** | Collect KT documents, update Project Registries with anything only they knew; reassign their open PRs/tickets. |
+| # | Where | What to do |
+|---|---|---|
+| 1 | GitHub | Remove them from the organization, not just from repos. Check outside collaborators on every repo. Revoke deploy keys and tokens they created. If they have company work on a personal account, move it to the org. |
+| 2 | GitLab | Remove them from the top-level group. Block their company GitLab user if they had one. |
+| 3 | App Store Connect / Apple Developer | Remove them from Users and Access. If they had access to certificates, consider revoking and reissuing certificates and the API key they used. |
+| 4 | Google Play Console | Remove them from Users and permissions. |
+| 5 | Firebase / Google Cloud | Remove them from every project. Rotate any service account keys they downloaded. |
+| 6 | Expo / EAS | Remove them from the Expo organization. |
+| 7 | CI/CD | Rotate any tokens or secrets they had access to. |
+| 8 | Password manager | Remove them from every vault and change the passwords of shared accounts they knew. |
+| 9 | Other dashboards | Sentry, payment gateways, Maps, SMS, analytics, App Distribution and so on. |
+| 10 | Communication | Slack or Teams, email, Jira / Trello / ClickUp, Google Drive shares. |
+| 11 | Devices | Collect test devices, and remove their devices from the Apple device list if needed. |
+| 12 | Knowledge | Get a handover from them, add anything only they knew to the Project Registries, and reassign their open pull requests and tickets. |
 
-### 11.6 Onboarding Checklist (new team member)
+Sign-off: ______________________ (Repo Owner) Date: __________
+
+### 11.6 Onboarding Checklist
 
 ```markdown
-- [ ] Company email created; 2FA enabled
-- [ ] Added to GitHub org team (and GitLab group if working on legacy projects)
-- [ ] Added to required store accounts with the least-privilege role
-- [ ] Added to Firebase projects (Editor/Viewer as needed)
-- [ ] Access to the relevant password-manager vaults
-- [ ] Walkthrough of this playbook + the relevant Project Registries
-- [ ] Able to run each assigned app locally within day 1–2
+- [ ] Company email created, two-factor turned on
+- [ ] Added to the right GitHub team (and GitLab group for older projects)
+- [ ] Added to the store accounts they need, with the lowest role that works
+- [ ] Added to the Firebase projects they need (Editor or Viewer)
+- [ ] Given access to the right password manager vaults
+- [ ] Walked through this playbook and the Project Registries for their projects
+- [ ] Can run each assigned app locally within their first day or two
 ```
+
+### 11.7 Repository Inventory
+
+Kept by the Repo Owner, as a shared sheet. One row per repo. Reviewed every month during the access review.
+
+| Repo | Platform (GitHub / GitLab) | Client / project | Visibility | Teams with access | Outside collaborators (until) | Created by | Created on | Status | Last access review |
+|---|---|---|---|---|---|---|---|---|---|
+| acme-delivery-mobile | GitHub | Acme Delivery | Private | mobile-leads, mobile-devs | None | Repo Owner | 2026-03-02 | Active | 2026-10-01 |
+
+Any repo showing anything other than Private gets fixed or explained to management the same day.
 
 ---
 
-## 12. Official Reference Links
+## 12. Official Links
 
 **Apple**
-- Apple Developer Program enrollment: https://developer.apple.com/programs/enroll/
-- D-U-N-S Number lookup: https://developer.apple.com/enroll/duns-lookup/
+- Developer Program enrollment: https://developer.apple.com/programs/enroll/
+- D-U-N-S lookup: https://developer.apple.com/enroll/duns-lookup/
 - Upcoming requirements: https://developer.apple.com/news/upcoming-requirements/
 - App Review Guidelines: https://developer.apple.com/app-store/review/guidelines/
-- App Store Connect Help: https://developer.apple.com/help/app-store-connect/
+- App Store Connect help: https://developer.apple.com/help/app-store-connect/
 - Privacy manifest files: https://developer.apple.com/documentation/bundleresources/privacy-manifest-files
 - Account deletion requirement: https://developer.apple.com/support/offering-account-deletion-in-your-app/
 
 **Google**
 - Play Console sign-up: https://play.google.com/console/signup
-- Play Console Help: https://support.google.com/googleplay/android-developer/
+- Play Console help: https://support.google.com/googleplay/android-developer/
 - Target API level requirements: https://developer.android.com/google/play/requirements/target-sdk
-- Testing requirements for new personal accounts: https://support.google.com/googleplay/android-developer/answer/14151465
+- Testing requirement for new personal accounts: https://support.google.com/googleplay/android-developer/answer/14151465
 - Play App Signing: https://support.google.com/googleplay/android-developer/answer/9842756
 - Developer Program Policy: https://play.google/developer-content-policy/
 - Android vitals: https://developer.android.com/topic/performance/vitals
 
-**Firebase / React Native**
+**Firebase and React Native**
 - Firebase console: https://console.firebase.google.com/
 - React Native Firebase: https://rnfirebase.io/
 - React Native docs: https://reactnative.dev/
-- React Native Upgrade Helper: https://react-native-community.github.io/upgrade-helper/
-- Expo / EAS docs: https://docs.expo.dev/
+- Upgrade Helper: https://react-native-community.github.io/upgrade-helper/
+- Expo and EAS docs: https://docs.expo.dev/
 - React Native Directory: https://reactnative.directory/
 
-**GitHub / GitLab**
+**GitHub and GitLab**
 - GitHub rulesets: https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets
-- GitHub organization security: https://docs.github.com/organizations
+- Restricting repository creation in an organization: https://docs.github.com/organizations/managing-organization-settings/restricting-repository-creation-in-your-organization
+- Removing a member from an organization: https://docs.github.com/organizations/managing-membership-in-your-organization/removing-a-member-from-your-organization
 - GitLab protected branches: https://docs.gitlab.com/user/project/repository/branches/protected/
 
 ---
 
-*Document owner after handover: the incoming Mobile Lead. Review and update this playbook at least every 6 months, and whenever Apple or Google announce a new requirement.*
+Whoever takes over mobile now owns this document. Please go through it at least every six months, and whenever Apple or Google announce something new.

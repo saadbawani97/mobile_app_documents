@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Repository Setup (GitHub &amp; GitLab) | Mobile App Playbook</title>
-<meta name="description" content="Creating repos from the company org, teams, branch rulesets, .gitignore, branching strategy and GitLab rules.">
+<title>Repository Setup and Ownership | Mobile App Playbook</title>
+<meta name="description" content="Who creates repos and how: private by default, team access, branch rules, GitLab, and removing people who leave.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -19,80 +19,84 @@
 <div class="hero-row">
 <div class="hero-icon cat-setup"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></div>
 <div>
-<h1>Repository Setup (GitHub &amp; GitLab)</h1>
-<p class="lede">Creating repos from the company org, teams, branch rulesets, .gitignore, branching strategy and GitLab rules.</p>
-<p class="meta"><span>Section 3</span><span>4 min read</span></p>
+<h1>Repository Setup and Ownership</h1>
+<p class="lede">Who creates repos and how: private by default, team access, branch rules, GitLab, and removing people who leave.</p>
+<p class="meta"><span>Section 3</span><span>5 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#31-non-negotiable-rules">3.1 Non-negotiable rules</a></li><li><a href="#32-github-step-by-step-repository-creation">3.2 GitHub: step-by-step repository creation</a></li><li><a href="#33-branching--release-strategy">3.3 Branching &amp; release strategy</a></li><li><a href="#34-gitlab-legacy-projects">3.4 GitLab (legacy projects)</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#31-who-creates-repositories">3.1 Who Creates Repositories</a></li><li><a href="#32-rules-for-every-repo">3.2 Rules for Every Repo</a></li><li><a href="#33-one-time-github-organization-settings">3.3 One-Time GitHub Organization Settings</a></li><li><a href="#34-creating-a-repo-step-by-step">3.4 Creating a Repo, Step by Step</a></li><li><a href="#35-what-to-add-to-gitignore">3.5 What to Add to .gitignore</a></li><li><a href="#36-branches-and-releases">3.6 Branches and Releases</a></li><li><a href="#37-gitlab-older-projects">3.7 GitLab (Older Projects)</a></li><li><a href="#38-removing-people-who-leave">3.8 Removing People Who Leave</a></li></ol></details></nav>
 <main class="prose" id="content">
-<p><strong>Current company policy:</strong> legacy projects live on <strong>GitLab</strong>; <strong>all new projects are created on GitHub.</strong></p>
-<h2 id="31-non-negotiable-rules"><a class="anchor" href="#31-non-negotiable-rules" aria-hidden="true">#</a>3.1 Non-negotiable rules</h2>
+<p>Older projects are on the company GitLab. All new projects go on the company GitHub organization.</p>
+<h2 id="31-who-creates-repositories"><a class="anchor" href="#31-who-creates-repositories" aria-hidden="true">#</a>3.1 Who Creates Repositories</h2>
+<p>Creating repos is the job of one designated person, the <strong>Repo Owner</strong>. This should be the Mobile Lead or an engineering manager, and management should name a backup for when they&#39;re away. Nobody else creates repos, and the GitHub organization settings should enforce that (3.3), so it&#39;s not just a matter of trust.</p>
+<p>The reason is simple. When anyone can create a repo, you end up with repos under personal accounts, public repos by accident, and nobody who knows what exists or who has access. One owner fixes all of that.</p>
+<p>The Repo Owner is responsible for:</p>
+<ul>
+<li>Creating every new repo, <strong>always private</strong>, always under the company organization. Never under a personal account.</li>
+<li>Giving access through teams only, and only to the people working on that project.</li>
+<li>Setting up branch protection and the standard files (3.4) before handing the repo over.</li>
+<li>Keeping the <strong>Repository Inventory</strong> up to date (<a href="repository-inventory.html">template</a>): every repo, its client, visibility, teams and the date it was created.</li>
+<li>Doing a monthly access review: going through each repo&#39;s collaborators and teams and removing anyone who shouldn&#39;t be there.</li>
+<li>Removing people who leave from the organization on their last working day (3.8).</li>
+<li>Archiving repos for projects that have ended, rather than deleting them.</li>
+</ul>
+<p>How a developer gets a repo: they send the Repo Owner the project name, client, and who needs access. The Repo Owner creates it the same day, adds it to the inventory and shares the link.</p>
+<h2 id="32-rules-for-every-repo"><a class="anchor" href="#32-rules-for-every-repo" aria-hidden="true">#</a>3.2 Rules for Every Repo</h2>
+<ul>
+<li><strong>Private, always.</strong> A public repo needs written approval from management.</li>
+<li>Created under the company organization (GitHub) or company group (GitLab). Never created on a personal account and &quot;transferred later&quot;.</li>
+<li>Access through teams, not by adding individuals one by one. That way removing someone is one click, not twenty.</li>
+<li>Freelancers and contractors are added as outside collaborators on the specific repos they need, with an end date written in the inventory.</li>
+<li>Two-factor authentication is required for everyone in the organization.</li>
+</ul>
+<h2 id="33-one-time-github-organization-settings"><a class="anchor" href="#33-one-time-github-organization-settings" aria-hidden="true">#</a>3.3 One-Time GitHub Organization Settings</h2>
+<p>These are done once by an organization owner. They are what actually enforce the rules above.</p>
 <ol>
-<li><strong>Always create the repo inside the company GitHub Organization</strong> (or company GitLab Group), <strong>never</strong> under a personal account and then &quot;transferred later&quot;.</li>
-<li>Visibility: <strong>Private</strong> by default. Public only with management approval.</li>
-<li>Access is given through <strong>Teams/Groups</strong>, not to individuals one by one. This makes offboarding a one-click action.</li>
-<li><strong>When anyone leaves the company, they are removed from the Organization/Group on their last working day</strong> (not just from the repo). Removing someone from the org removes their access to every repo at once.</li>
-<li>Freelancers/contractors are added as <strong>Outside Collaborators</strong> on specific repos only, with an end date recorded in the registry.</li>
-<li><strong>2FA is mandatory</strong> for all organization members (enforce it in org settings).</li>
+<li><strong>Settings → Authentication security:</strong> require two-factor authentication for everyone.</li>
+<li><strong>Settings → Member privileges:</strong><ul>
+<li>Base permissions: <strong>No permission</strong>. People only get access through teams.</li>
+<li>Repository creation: <strong>disable for members</strong>, so only owners (the Repo Owner and management) can create repos.</li>
+<li>Uncheck &quot;Allow members to change repository visibilities&quot;, so nobody can flip a private repo to public.</li>
+<li>Disable forking of private repositories.</li>
+<li>Uncheck &quot;Allow members to delete or transfer repositories&quot;.</li>
+</ul>
+</li>
+<li><strong>Teams:</strong> for example <code>mobile-leads</code> (Admin), <code>mobile-devs</code> (Write), <code>qa</code> (Read), <code>clients-readonly</code> (Read).</li>
+<li><strong>Code security:</strong> turn on secret scanning with push protection, Dependabot alerts and Dependabot security updates for all new repos.</li>
+<li>At least two organization owners, both from management or leadership. Not just one developer.</li>
 </ol>
-<h2 id="32-github-step-by-step-repository-creation"><a class="anchor" href="#32-github-step-by-step-repository-creation" aria-hidden="true">#</a>3.2 GitHub: step-by-step repository creation</h2>
-<p><strong>One-time organization setup (done once by an Org Owner):</strong></p>
+<h2 id="34-creating-a-repo-step-by-step"><a class="anchor" href="#34-creating-a-repo-step-by-step" aria-hidden="true">#</a>3.4 Creating a Repo, Step by Step</h2>
 <ol>
-<li>Organization <strong>Settings → Authentication security → Require two-factor authentication</strong> for everyone.</li>
-<li><strong>Settings → Member privileges</strong>:<ul>
-<li>Base permissions: <strong>No permission</strong> (access only through teams).</li>
-<li>Repository creation: restrict to <strong>Owners/Admins only</strong>. This prevents random repos.</li>
-<li>Disable repository forking for private repos.</li>
-<li>Disable &quot;Allow members to delete or transfer repositories&quot;.</li>
+<li>In the company organization click <strong>New repository</strong>. Check the <strong>Owner</strong> dropdown shows the organization and not your own username. This is the most common mistake.</li>
+<li>Name it <code>&lt;client&gt;-&lt;app&gt;-&lt;type&gt;</code>, lowercase with hyphens. For example <code>acme-delivery-mobile</code>, <code>acme-delivery-backend</code>, <code>acme-delivery-admin</code>.</li>
+<li>Add a one-line description, e.g. &quot;Acme Delivery customer app (React Native, iOS and Android)&quot;.</li>
+<li>Select <strong>Private</strong>.</li>
+<li>Add a README and a Node <code>.gitignore</code> (then add the React Native entries from 3.5). No license file for client or proprietary work.</li>
+<li><strong>Settings → Collaborators and teams:</strong> add <code>mobile-leads</code> and <code>mobile-devs</code>. No individuals, apart from outside collaborators.</li>
+<li><strong>Settings → General:</strong> default branch <code>main</code>, turn on &quot;Automatically delete head branches&quot;, allow squash merging.</li>
+<li><strong>Settings → Rules → Rulesets</strong> for <code>main</code> and <code>develop</code>:<ul>
+<li>Pull request required, at least one approval.</li>
+<li>Dismiss old approvals when new commits are pushed.</li>
+<li>Status checks must pass (lint, type-check, tests).</li>
+<li>Block force pushes and branch deletion.</li>
 </ul>
 </li>
-<li>Create <strong>Teams</strong>, e.g. <code>mobile-leads</code> (Maintain/Admin), <code>mobile-devs</code> (Write), <code>qa</code> (Triage/Read), <code>clients-readonly</code> (Read).</li>
-<li><strong>Code security</strong>: enable <strong>Secret scanning + Push protection</strong>, <strong>Dependabot alerts</strong> and <strong>Dependabot security updates</strong> for all new repos by default.</li>
-<li>At least <strong>two Org Owners</strong>, both company management, not just one developer.</li>
+<li>Commit the standard files:<ul>
+<li><code>README.md</code> with how to set up, run and release the app.</li>
+<li><code>.env.example</code> with every key and dummy values.</li>
+<li><code>.github/CODEOWNERS</code>, e.g. <code>* @company/mobile-leads</code>, so leads are added as reviewers automatically.</li>
+<li><code>.github/pull_request_template.md</code>.</li>
+<li><code>.github/workflows/ci.yml</code> for lint, type-check and tests.</li>
+<li><code>.nvmrc</code> with the Node version.</li>
+</ul>
+</li>
+<li>Add the repo to the Repository Inventory and the Project Registry.</li>
 </ol>
-<p><strong>Creating a new repo (every project):</strong></p>
-<ol>
-<li>Go to the <strong>company organization</strong> → <strong>New repository</strong>. Double-check the <em>Owner</em> dropdown shows the <strong>organization</strong>, not your username.</li>
-<li><strong>Name</strong>, using the naming convention:
-<code>&lt;client-or-product&gt;-&lt;app&gt;-&lt;platform&gt;</code> → e.g. <code>acme-delivery-mobile</code>, <code>acme-delivery-backend</code>, <code>acme-delivery-admin</code>
-(lowercase, hyphen-separated, no spaces).</li>
-<li><strong>Description</strong>: one line, e.g. <em>&quot;Acme Delivery: React Native customer app (iOS/Android).&quot;</em></li>
-<li><strong>Visibility: Private.</strong></li>
-<li>Initialize with <strong>README</strong>, <strong>.gitignore</strong> (Node template, then add the React Native entries below), <strong>no license</strong> for client/proprietary work.</li>
-<li><strong>Settings → Collaborators and teams</strong>: add <code>mobile-leads</code> (Admin/Maintain) and <code>mobile-devs</code> (Write). No individual additions except outside collaborators.</li>
-<li><strong>Settings → General</strong>:<ul>
-<li>Default branch: <code>main</code>.</li>
-<li>Enable <strong>&quot;Automatically delete head branches&quot;</strong> after merge.</li>
-<li>Allow <strong>Squash merging</strong> (recommended), disable merge commits if you want linear history.</li>
-</ul>
-</li>
-<li><strong>Settings → Rules → Rulesets</strong> (or Branch protection) for <code>main</code> and <code>develop</code>:<ul>
-<li>Require a pull request before merging, <strong>minimum 1 approval</strong> (2 for <code>main</code> on large teams).</li>
-<li>Dismiss stale approvals when new commits are pushed.</li>
-<li>Require status checks to pass (lint, type-check, tests).</li>
-<li>Require conversation resolution.</li>
-<li><strong>Block force pushes</strong> and <strong>block deletion</strong>.</li>
-<li>Restrict who can push directly: nobody. Everything via PR.</li>
-</ul>
-</li>
-<li>Add these files in the first commit:<ul>
-<li><code>README.md</code>: project overview, setup steps, how to run, env setup, release steps.</li>
-<li><code>.env.example</code>: all keys with dummy values (see Section 4).</li>
-<li><code>.github/CODEOWNERS</code>, e.g. <code>* @company/mobile-leads</code>, so the leads are auto-requested as reviewers.</li>
-<li><code>.github/pull_request_template.md</code>: what changed, screenshots, test steps, checklist.</li>
-<li><code>.github/workflows/ci.yml</code>: lint, type-check, test.</li>
-<li><code>.nvmrc</code> / <code>.node-version</code>: pin the Node version.</li>
-<li><code>docs/PROJECT_REGISTRY.md</code> <strong>or</strong> a link to the registry in the password manager (never put secrets in the repo; the registry in the repo contains <strong>references only</strong>).</li>
-</ul>
-</li>
-<li>Record the repo URL in the <strong>Project Registry</strong>.</li>
-</ol>
-<p><strong>Recommended <code>.gitignore</code> additions for React Native:</strong></p>
-<pre><code class="language-gitignore"># Environment &amp; secrets
+<h2 id="35-what-to-add-to-gitignore"><a class="anchor" href="#35-what-to-add-to-gitignore" aria-hidden="true">#</a>3.5 What to Add to .gitignore</h2>
+<pre><code class="language-gitignore"># Environment files and secrets
 .env
 .env.*
 !.env.example
@@ -105,10 +109,8 @@
 *.p12
 *.mobileprovision
 android/keystore.properties
-android/app/google-services.json        # if you choose not to commit it (see 5.4)
-ios/GoogleService-Info.plist            # same as above
 
-# Build outputs
+# Build output
 android/app/build/
 ios/build/
 ios/Pods/
@@ -116,62 +118,60 @@ ios/Pods/
 *.apk
 *.aab
 </code></pre>
-<h2 id="33-branching--release-strategy"><a class="anchor" href="#33-branching--release-strategy" aria-hidden="true">#</a>3.3 Branching &amp; release strategy</h2>
+<h2 id="36-branches-and-releases"><a class="anchor" href="#36-branches-and-releases" aria-hidden="true">#</a>3.6 Branches and Releases</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Branch</th>
-<th>Purpose</th>
-<th>Deploys to</th>
+<th>What it&#39;s for</th>
+<th>Goes to</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>main</code></td>
-<td>Always equals what is live in the stores</td>
-<td>Production (store builds)</td>
+<td>Always matches what&#39;s live on the stores</td>
+<td>Production</td>
 </tr>
 <tr>
 <td><code>develop</code></td>
-<td>Integration branch for the next release</td>
+<td>Work for the next release</td>
 <td>Staging / internal testing</td>
 </tr>
 <tr>
-<td><code>feature/&lt;ticket&gt;-&lt;short-name&gt;</code></td>
+<td><code>feature/&lt;ticket&gt;-&lt;name&gt;</code></td>
 <td>New work</td>
-<td>—</td>
+<td>Nothing, merged into develop</td>
 </tr>
 <tr>
 <td><code>release/x.y.z</code></td>
-<td>Stabilization before a store release</td>
+<td>Stabilising a release</td>
 <td>TestFlight / Play closed testing</td>
 </tr>
 <tr>
 <td><code>hotfix/x.y.z</code></td>
-<td>Urgent production fix from <code>main</code></td>
+<td>Urgent fix off <code>main</code></td>
 <td>Production</td>
 </tr>
 </tbody></table></div>
+<p>Every production release gets a tag like <code>v1.4.0</code>. For commit messages we use Conventional Commits (<code>feat:</code>, <code>fix:</code>, <code>chore:</code>), which makes changelogs easy to generate.</p>
+<h2 id="37-gitlab-older-projects"><a class="anchor" href="#37-gitlab-older-projects" aria-hidden="true">#</a>3.7 GitLab (Older Projects)</h2>
+<p>The same rules apply on GitLab:</p>
 <ul>
-<li>Every production release is <strong>tagged</strong>: <code>v1.4.0</code> (and optionally <code>v1.4.0+42</code> with the build number).</li>
-<li>Commit messages: <strong>Conventional Commits</strong> (<code>feat:</code>, <code>fix:</code>, <code>chore:</code>…) to make changelogs automatic.</li>
+<li>Repos live under the company group, with a sub-group per client (<code>company/acme/...</code>).</li>
+<li>Access is given at group level: Maintainer for leads, Developer for developers, Reporter for QA and clients.</li>
+<li><strong>Settings → Repository → Protected branches:</strong> nobody pushes directly to <code>main</code> or <code>develop</code>, only Maintainers can merge.</li>
+<li>Secrets in <strong>Settings → CI/CD → Variables</strong> are marked Masked and Protected.</li>
+<li>When a project becomes active again it&#39;s worth moving it to GitHub. GitHub&#39;s importer keeps the full history, branches and tags. Archive the GitLab project afterwards instead of deleting it.</li>
 </ul>
-<h2 id="34-gitlab-legacy-projects"><a class="anchor" href="#34-gitlab-legacy-projects" aria-hidden="true">#</a>3.4 GitLab (legacy projects)</h2>
-<p>The same principles apply:</p>
-<ul>
-<li>Repos live under the <strong>company Group</strong> (use sub-groups per client, e.g. <code>company/acme/...</code>).</li>
-<li>Give access at <strong>Group level</strong> with roles: <em>Maintainer</em> (leads), <em>Developer</em> (devs), <em>Reporter</em> (QA/clients).</li>
-<li><strong>Settings → Repository → Protected branches</strong>: <code>main</code> and <code>develop</code> → <em>Allowed to push: No one</em>, <em>Allowed to merge: Maintainers</em>.</li>
-<li><strong>Settings → Merge requests</strong>: require approvals, pipelines must succeed.</li>
-<li>CI/CD variables (<code>Settings → CI/CD → Variables</code>): mark secrets as <strong>Masked</strong> and <strong>Protected</strong>.</li>
-<li><strong>Offboarding:</strong> remove the user from the <strong>top-level group</strong> (this removes access to all sub-groups/projects) and, if they had a company GitLab account, <strong>block</strong> it.</li>
-<li>Plan: migrate actively maintained legacy projects to GitHub when convenient (GitHub has a built-in importer that keeps history, branches and tags). Archive the GitLab project afterwards (read-only) instead of deleting it.</li>
-</ul>
+<h2 id="38-removing-people-who-leave"><a class="anchor" href="#38-removing-people-who-leave" aria-hidden="true">#</a>3.8 Removing People Who Leave</h2>
+<p>This is mandatory and it happens on the person&#39;s last working day, not later. The Repo Owner removes them from the <strong>GitHub organization</strong> (not just individual repos, which leaves gaps) and from the <strong>top-level GitLab group</strong>. Then the rest of the <a href="offboarding-checklist.html">Offboarding Checklist</a> is completed and signed off with the date and the name of whoever did it.</p>
+<p>One thing people miss: if the person who left created deploy keys, personal access tokens or CI secrets, those need to be rotated as well. Removing the account doesn&#39;t revoke a token that was copied somewhere else.</p>
 
-<nav class="pager"><a class="pager-link prev" href="new-project-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">New Project Setup</span></a><a class="pager-link next" href="environment-variables.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Environment Variables (.env)</span></a></nav>
+<nav class="pager"><a class="pager-link prev" href="new-project-setup.html"><span class="pager-dir">&larr; Previous</span><span class="pager-title">Starting a New Project</span></a><a class="pager-link next" href="environment-variables.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Environment Variables (.env)</span></a></nav>
 </main>
 </div>
 <footer class="site-footer"><div class="footer-inner">
-<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; October 2026</p>
+<p>Prepared by <strong>Saad Bawany</strong>, React Native Lead &middot; v1.0 &middot; 19 October 2026</p>
 <p class="muted">Store policies change every year. Verify dates and numbers against the official links before acting, and review this playbook at least every six months.</p>
 </div></footer>
 <script src="../assets/app.js"></script>
