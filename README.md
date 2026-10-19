@@ -5,7 +5,6 @@ I've written this as my handover before leaving. It's everything I'd want the ne
 | | |
 |---|---|
 | Prepared by | Saad Bawany, React Native Lead |
-| For | Management and whoever takes over mobile |
 | Date | 19 October 2026 |
 | Version | 1.0 |
 
@@ -34,15 +33,30 @@ A note on dates and numbers: Apple and Google change their requirements every ye
 
 If someone only reads one page of this document, it should be this one.
 
+### 1.1 Company and Accounts
+
 1. **The company owns everything.** Every repo, store account, Firebase project, domain and third-party service is created from a company account on the company email domain. Never from someone's personal Gmail or personal GitHub, not even "temporarily".
 2. **Every repo is private.** No exceptions without written approval from management. Client code, our internal tools, documentation, all of it.
 3. **Only one person creates repos.** We have a designated Repo Owner (Section 3.1). Developers don't create repos themselves; they ask the Repo Owner, who creates it as private, under the company organization, with the right access.
-4. **When someone leaves, their access goes on their last day.** GitHub, GitLab, App Store Connect, Play Console, Firebase, the password manager, everything. Not next week. The [Offboarding Checklist](#115-offboarding-checklist) is mandatory.
+4. **When someone leaves, their access goes on their last day.** GitHub, GitLab, App Store Connect, Play Console, Firebase, the password manager, everything. Not next week. The [Offboarding Checklist](#114-offboarding-checklist) is mandatory.
 5. **Every important account has at least two company admins.** If only one person can get into the Apple account and that person is on leave or has left, we're stuck.
-6. **Signing keys are backed up the day they're created.** If we lose the Android upload key or the iOS signing assets, we can lose the ability to update the app. See [Signing Keys](#73-signing-keys).
+6. **Signing keys are backed up in at least two places, the day they're created.** One copy in the company password manager, and a second encrypted copy that management keeps. If we lose the Android upload key or the iOS signing files, we can lose the ability to update the app. See [Signing Keys](#73-signing-keys).
 7. **No secrets in Git and no secrets inside the app.** Anything bundled in a mobile app can be pulled out of the APK or IPA by anyone who downloads it.
 8. **Every project has a Project Registry.** One file with all the key information about that project ([template](#111-project-registry-template)). If it's not in the registry, assume nobody else knows it.
 9. **Every store release has a Git tag.** We should always be able to say exactly which code is running in production.
+
+### 1.2 Every Team Member
+
+These apply to every developer, QA and designer on the team, including contractors.
+
+1. **Push your code every day.** Each person is responsible for pushing their work to the repo before they log off, even if it isn't finished (push it to your feature branch). If a laptop dies or someone leaves suddenly, we should lose one day of work at most, not weeks.
+2. **On client calls, use your first name or your job title only.** Don't share your full name, personal phone number, personal email or social media profiles with clients.
+3. **Talk to clients only through company channels.** Company email and the project's Slack or Teams channel. No personal WhatsApp or personal email with clients.
+4. **Don't commit to deadlines, scope or cost on a call.** Note down what the client asked for and pass it to the lead or PM, who will get back to them.
+5. **Anything a client shares with you goes in the project vault.** Logins, keys, certificates. Not in chat, not in a notes app, not only on your laptop.
+6. **Client code stays on company accounts and company devices.** Don't copy it to a personal GitHub or personal drive, and don't paste it into AI tools the company hasn't approved.
+7. **Work on a branch and open a pull request.** Nobody pushes straight to `main` or `develop`.
+8. **If something is going to be late, tell the lead the same day.** Hearing about a delay early lets us manage the client. Hearing about it on the deadline doesn't.
 
 ---
 
@@ -111,7 +125,7 @@ The Repo Owner is responsible for:
 - Creating every new repo, **always private**, always under the company organization. Never under a personal account.
 - Giving access through teams only, and only to the people working on that project.
 - Setting up branch protection and the standard files (3.4) before handing the repo over.
-- Keeping the **Repository Inventory** up to date ([template](#117-repository-inventory)): every repo, its client, visibility, teams and the date it was created.
+- Keeping the **Repository Inventory** up to date ([template](#116-repository-inventory)): every repo, its client, visibility, teams and the date it was created.
 - Doing a monthly access review: going through each repo's collaborators and teams and removing anyone who shouldn't be there.
 - Removing people who leave from the organization on their last working day (3.8).
 - Archiving repos for projects that have ended, rather than deleting them.
@@ -214,7 +228,7 @@ The same rules apply on GitLab:
 
 ### 3.8 Removing People Who Leave
 
-This is mandatory and it happens on the person's last working day, not later. The Repo Owner removes them from the **GitHub organization** (not just individual repos, which leaves gaps) and from the **top-level GitLab group**. Then the rest of the [Offboarding Checklist](#115-offboarding-checklist) is completed and signed off with the date and the name of whoever did it.
+This is mandatory and it happens on the person's last working day, not later. The Repo Owner removes them from the **GitHub organization** (not just individual repos, which leaves gaps) and from the **top-level GitLab group**. Then the rest of the [Offboarding Checklist](#114-offboarding-checklist) is completed and signed off with the date and the name of whoever did it.
 
 One thing people miss: if the person who left created deploy keys, personal access tokens or CI secrets, those need to be rotated as well. Removing the account doesn't revoke a token that was copied somewhere else.
 
@@ -381,7 +395,34 @@ Google has also announced developer identity verification for apps installed on 
 
 If the client owns the account, the client enrolls and invites our company email as Admin or App Manager. We never ask for a client's Apple password.
 
-### 6.4 Setting up the Google Play Console account (organization)
+### 6.4 When the Client's Apple Account Is Individual
+
+This comes up a lot with smaller clients. On an individual account, only the client can get into Certificates, Identifiers & Profiles. They can add us to App Store Connect, but they can't add us to the developer team, so we can't create the certificate and profiles ourselves. The way we handle it is one planned call with the client where we get everything we need in one go.
+
+**Before the call**
+
+- Tell the client what the call is for and that it takes about 30 minutes. They need their Apple login and the phone that gets their two-factor codes.
+- On our Mac, create a certificate signing request: Keychain Access → Certificate Assistant → Request a Certificate From a Certificate Authority → Saved to disk.
+- Have the Bundle ID decided.
+
+**On the call** (the client shares their screen and does the clicking; we guide them)
+
+1. **Add our company email in App Store Connect** under Users and Access, as Admin or App Manager. This lets us manage TestFlight, the listing and submissions from then on.
+2. **Create an App Store Connect API key** (Users and Access → Integrations) with Admin or App Manager access, if their account offers it. The client downloads the `.p8` and shares it with us securely, along with the Key ID and Issuer ID. This is the most useful thing to get, because with it EAS or Fastlane can create certificates and profiles and upload builds without another call.
+3. **Register the App ID** (Bundle ID) and turn on the capabilities the app needs (Push Notifications, Sign in with Apple, Associated Domains).
+4. **Create an Apple Distribution certificate** using our signing request. The client downloads the `.cer` and sends it to us. We install it on our Mac and export it as a `.p12` with a password.
+5. **Create an App Store provisioning profile** for the App ID with that certificate, and download it.
+6. **Create an APNs key (.p8)** if the app uses push. It can only be downloaded once, so make sure it's saved during the call.
+7. Note down the **Team ID**.
+
+**After the call**
+
+- Everything goes in the project vault and management's encrypted copy, and gets listed in the Project Registry.
+- Put the certificate and profile expiry dates in the calendar. They expire after a year, and without the API key that means another call with the client.
+- The client's password and two-factor codes stay with the client. We never ask for them or store them.
+- If the client is a business, suggest they move to an organization account. It removes this whole problem and puts the app under the company's name instead of a person's.
+
+### 6.5 Setting up the Google Play Console account (organization)
 
 1. Use a company Google account, ideally on the company's Google Workspace domain, like `playconsole@company.com`. Turn on two-step verification with a company phone.
 2. Have the D-U-N-S number and company documents ready.
@@ -396,7 +437,7 @@ If the client owns the account, the client enrolls and invites our company email
 
 If the client owns the account, they create it and invite our company Google account with Admin or release access.
 
-### 6.5 Fees and timelines at a glance
+### 6.6 Fees and timelines at a glance
 
 | | Apple | Google |
 |---|---|---|
@@ -450,14 +491,18 @@ These are the most important files in the whole project. Lose them and you may n
   keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
     -alias acme-delivery-upload -keyalg RSA -keysize 2048 -validity 10000
   ```
-- Back it up to the project vault immediately: the `.keystore` file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints.
+- Back it up in **two places** straight away:
+  1. The project vault in the company password manager.
+  2. A second encrypted copy kept by management: a password-protected archive in a management-owned folder on the company Google Drive, or an encrypted USB drive.
+
+  Each copy needs the `.keystore` file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints. A copy in CI secrets doesn't count as a backup, because you can't download it again.
 - `keystore.properties` stays out of Git. CI gets the keystore from secrets.
 - If the upload key is lost, the account owner can ask Google for an upload key reset. It's possible because of Play App Signing, but it takes time and blocks releases until it's done. A backup avoids all of that.
 
 **iOS**
 
 - Automatic signing is fine for development. For CI use EAS or Fastlane match, so certificates aren't stuck on one person's Mac.
-- Back up to the vault: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).
+- Back up the same way, in the vault and in management's encrypted copy: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).
 - Distribution certificates and provisioning profiles expire after a year. Put the dates on the shared calendar (Section 10.4).
 
 ### 7.4 Store listing: what to prepare
@@ -545,29 +590,34 @@ Apple and Google change something every year: new OS versions, new SDK minimums,
 | Apple | Uploads must be built with Xcode 26 / iOS 26 SDK or later (since April 2026). Privacy manifests are required for the app and for listed third-party SDKs. | developer.apple.com/news/upcoming-requirements |
 | Both | Account deletion inside the app, accurate privacy labels and Data safety form, only the permissions the app needs. | Store policy pages |
 
-### 9.3 Where the warnings show up
+### 9.3 How we actually keep track
 
-The single most important step: **make sure all emails from both stores go to a shared company inbox** (something like `mobile-alerts@company.com`) that more than one person reads. Not to one person's inbox.
+This is how I kept on top of our live apps, and it depends on how much access we have to the store account.
 
-**Google Play Console**
-- The inbox (bell icon) and the account owner's email. New requirements and policy warnings show up here first.
-- Policy status page (Policy and programs → Policy status): any app with a warning, and its deadline.
-- Warnings on each app's dashboard, like "Your app must target API level XX by...".
-- Android vitals: crash rate and ANR rate. Going over Google's limits lowers how visible the app is on the store.
-- The pre-launch report on every upload.
-- SDK warnings, when Play flags an SDK version as outdated or against policy.
+**Apps on our accounts, or where the client gave us full access.** Apple and Google send every warning, policy change and new requirement by email to the account's admins. Those emails come to our company email, and that's how we'd hear about a problem first. It's also why store accounts must always be on a company email that more than one person reads, never on one person's personal inbox. When an email like that comes in, someone opens the store console the same day and checks what it's about and when the deadline is.
 
-**App Store Connect and Apple**
-- Emails to the Account Holder and Admins, and notifications in the App Store Connect app.
-- Apple Developer News and the "Upcoming requirements" page, where every new deadline is announced.
-- App Review Guidelines updates, usually after WWDC in June.
-- Resolution Center messages and Ratings & Reviews for each app.
-- Xcode Organizer for crashes and hangs, and App Analytics.
-- The membership renewal date.
+**Apps where the client gave us limited access.** Here the store emails go to the client, because they're the account holder and we only have a developer or app manager role. Clients often don't notice them, or don't realise they matter. So for these apps we logged into Play Console and App Store Connect ourselves from time to time and went through the notifications and warnings by hand. I'd also ask these clients, at the start of the project, to forward us any email they get from Apple or Google about the app.
 
-**Our own monitoring**
-- Crashlytics alerts going to the shared inbox or Slack. A spike right after a new iOS or Android release almost always means the new OS broke something.
-- Store reviews. A sudden run of one-star reviews saying "crashes after update" is a strong signal.
+**What to check when you log in**
+
+On Google Play Console:
+- The inbox (bell icon at the top). New requirements and policy warnings show up here.
+- Policy status (Policy and programs → Policy status): any app with a warning, and its deadline.
+- The app's dashboard, for messages like "Your app must target API level XX by...".
+- Android vitals: crash rate and ANR rate. Google lowers the app's visibility on the store if the user-perceived crash rate goes over about 1.09% or the ANR rate over about 0.47%.
+- The pre-launch report on the latest upload, and any SDK warnings.
+
+On App Store Connect:
+- Notifications and any messages in the Resolution Center.
+- Ratings & Reviews for each app.
+- The agreements banner at the top. A pending agreement can block updates.
+- The membership renewal date, if it's an account we manage.
+
+And on Apple's side in general, the Developer News and "Upcoming requirements" pages, where every new deadline is announced.
+
+**Our own signals**
+- Crashlytics alerts going to the company email or Slack. A spike right after a new iOS or Android release almost always means the new OS broke something. We aim for 99.5% crash-free users or better.
+- Store reviews. A run of one-star reviews saying "crashes after update" is a strong signal.
 - Dependabot and `npm audit` on every repo.
 - OS betas: every June when the iOS beta comes out, and with each Android beta, install it on a test phone and go through each live app before the public release in September.
 
@@ -575,9 +625,9 @@ The single most important step: **make sure all emails from both stores go to a 
 
 | How often | What | Who |
 |---|---|---|
-| Daily, about 5 minutes | Check the shared inbox for store emails and look at Crashlytics alerts | Mobile lead or whoever is on duty |
-| Weekly | Play Console inbox and Policy status, App Store Connect messages, new reviews | Mobile lead |
-| Monthly | Update the [Live Apps Health Sheet](#114-live-apps-health-sheet) for every live app: crash-free rate, ANR rate, target SDK, last release, open warnings | Mobile lead |
+| Daily, about 5 minutes | Check the company email for anything from Apple or Google, and look at Crashlytics alerts | Mobile lead or whoever is on duty |
+| Every couple of weeks | Log into the client accounts where we have limited access and go through the notifications, Policy status and reviews (9.3) | Mobile lead |
+| Monthly | Go through every live app: crash-free rate, ANR rate, target SDK, last release date, and any open warnings. Note anything open in that project's registry. | Mobile lead |
 | Quarterly | Read Apple's upcoming requirements, Android's target API page and Play policy updates. Plan updates for affected apps. Check certificate, profile and membership expiry dates. | Mobile lead |
 | June (WWDC) | Test every live app on the iOS beta and read the updated review guidelines | Mobile team |
 | Before 31 August | Every live Android app updated to the new target API level | Mobile team |
@@ -586,7 +636,7 @@ The single most important step: **make sure all emails from both stores go to a 
 
 ### 9.5 When something comes up
 
-1. Add it to the Live Apps Health Sheet with its deadline.
+1. Write it in the "Open warnings and deadlines" table in that project's registry, with the deadline.
 2. Tell management, and the client if it's their app: what changed, the deadline, what happens if we ignore it, and roughly how long the fix takes.
 3. Plan the fix release well before the deadline. Reviews get slow when everyone is rushing for the same deadline.
 4. Once the fix is live, confirm the warning is gone from Play Console or App Store Connect and close it in the sheet.
@@ -798,17 +848,7 @@ After release
 - [ ] Release history in the Project Registry updated
 ```
 
-### 11.4 Live Apps Health Sheet
-
-A shared spreadsheet with one row per app per platform, updated every month.
-
-| App | Platform | Account owner | Live version | Last release | Target SDK / Xcode | Crash-free users | ANR rate (Android) | Open warnings and deadline | RN / Expo version | Next step | Owner |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| Acme Delivery | Android | Client | 2.3.1 | 2026-08-10 | API 36 | 99.6% | 0.2% | None | 0.8x | None | |
-
-What healthy looks like: crash-free users at 99.5% or more. On Android, a user-perceived crash rate under 1.09% and an ANR rate under 0.47%. Those are the levels where Google starts treating the app as badly behaved.
-
-### 11.5 Offboarding Checklist
+### 11.4 Offboarding Checklist
 
 **This is mandatory.** When any developer, QA, designer or contractor leaves, it's done on their last working day. Write down the date and who did each step.
 
@@ -825,11 +865,11 @@ What healthy looks like: crash-free users at 99.5% or more. On Android, a user-p
 | 9 | Other dashboards | Sentry, payment gateways, Maps, SMS, analytics, App Distribution and so on. |
 | 10 | Communication | Slack or Teams, email, Jira / Trello / ClickUp, Google Drive shares. |
 | 11 | Devices | Collect test devices, and remove their devices from the Apple device list if needed. |
-| 12 | Knowledge | Get a handover from them, add anything only they knew to the Project Registries, and reassign their open pull requests and tickets. |
+| 12 | Code and knowledge | Before access is removed, confirm all their code is pushed and their branches are on the remote. Get a handover from them, add anything only they knew to the Project Registries, and reassign their open pull requests and tickets. |
 
 Sign-off: ______________________ (Repo Owner) Date: __________
 
-### 11.6 Onboarding Checklist
+### 11.5 Onboarding Checklist
 
 ```markdown
 - [ ] Company email created, two-factor turned on
@@ -841,7 +881,7 @@ Sign-off: ______________________ (Repo Owner) Date: __________
 - [ ] Can run each assigned app locally within their first day or two
 ```
 
-### 11.7 Repository Inventory
+### 11.6 Repository Inventory
 
 Kept by the Repo Owner, as a shared sheet. One row per repo. Reviewed every month during the access review.
 

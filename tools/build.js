@@ -44,12 +44,12 @@ const CATEGORIES = [
 
 // key = section number in README; title = display title
 const PAGES = [
-  { key: '1', slug: 'ground-rules', cat: 'foundations', icon: 'shield', title: 'Ground Rules', desc: 'The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.' },
+  { key: '1', slug: 'ground-rules', cat: 'foundations', icon: 'shield', title: 'Ground Rules', desc: 'Rules for the company and for every team member: private repos, one Repo Owner, same-day offboarding, daily pushes and how we deal with clients.' },
   { key: '2', slug: 'new-project-setup', cat: 'foundations', icon: 'rocket', title: 'Starting a New Project', desc: 'What to settle with the client in week one, the day-one technical setup, and our folder structure.' },
   { key: '3', slug: 'repository-setup', cat: 'setup', icon: 'branch', title: 'Repository Setup and Ownership', desc: 'Who creates repos and how: private by default, team access, branch rules, GitLab, and removing people who leave.' },
   { key: '4', slug: 'environment-variables', cat: 'setup', icon: 'key', title: 'Environment Variables (.env)', desc: 'What goes in .env, what never ships inside an app, and how we back the files up.' },
   { key: '5', slug: 'firebase-setup', cat: 'setup', icon: 'flame', title: 'Firebase Setup', desc: 'Why we use it on almost every app, one project per environment, push, Crashlytics and Remote Config.' },
-  { key: '6', slug: 'store-accounts', cat: 'stores', icon: 'idcard', title: 'Store Developer Accounts', desc: 'Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.' },
+  { key: '6', slug: 'store-accounts', cat: 'stores', icon: 'idcard', title: 'Store Developer Accounts', desc: 'Individual vs organization accounts, D-U-N-S, setting them up, and getting certificates when a client has an individual Apple account.' },
   { key: '7', slug: 'production-setup', cat: 'stores', icon: 'server', title: 'Getting Production Ready', desc: 'Backend, app configuration, signing keys and store listing material to sort out before launch.' },
   { key: '8', slug: 'store-publishing', cat: 'stores', icon: 'upload', title: 'Publishing to the Stores', desc: 'Getting an app live on the App Store and Google Play, testing tracks, review and common rejections.' },
   { key: '9', slug: 'live-app-monitoring', cat: 'after-launch', icon: 'activity', title: 'Catching Apple and Google Changes', desc: 'How live apps get hit by store changes, where the warnings show up, and the routine to catch them early.' },
@@ -57,10 +57,9 @@ const PAGES = [
   { key: '11.1', slug: 'project-registry-template', cat: 'templates', icon: 'file', title: 'Project Registry Template', desc: 'One file per project with every piece of key information in it.' },
   { key: '11.2', slug: 'new-project-checklist', cat: 'templates', icon: 'check', title: 'New Project Checklist', desc: 'A tick-list for starting any new mobile project.', checklist: true },
   { key: '11.3', slug: 'release-checklist', cat: 'templates', icon: 'clipboard', title: 'Release Checklist', desc: 'Before, during and after every store release.', checklist: true },
-  { key: '11.4', slug: 'live-apps-health-sheet', cat: 'templates', icon: 'table', title: 'Live Apps Health Sheet', desc: 'The monthly sheet for crash rates, SDK levels and open store warnings.' },
-  { key: '11.5', slug: 'offboarding-checklist', cat: 'templates', icon: 'userminus', title: 'Offboarding Checklist', desc: 'Mandatory, same day: removing a leaver from every system we use.' },
-  { key: '11.6', slug: 'onboarding-checklist', cat: 'templates', icon: 'userplus', title: 'Onboarding Checklist', desc: 'Access and walkthrough for someone joining the team.', checklist: true },
-  { key: '11.7', slug: 'repository-inventory', cat: 'templates', icon: 'branch', title: 'Repository Inventory', desc: 'The Repo Owner\'s list of every repo, its visibility and who has access.' },
+  { key: '11.4', slug: 'offboarding-checklist', cat: 'templates', icon: 'userminus', title: 'Offboarding Checklist', desc: 'Mandatory, same day: removing a leaver from every system we use.' },
+  { key: '11.5', slug: 'onboarding-checklist', cat: 'templates', icon: 'userplus', title: 'Onboarding Checklist', desc: 'Access and walkthrough for someone joining the team.', checklist: true },
+  { key: '11.6', slug: 'repository-inventory', cat: 'templates', icon: 'branch', title: 'Repository Inventory', desc: 'The Repo Owner\'s list of every repo, its visibility and who has access.' },
   { key: '12', slug: 'references', cat: 'reference', icon: 'link', title: 'Official Links', desc: 'Apple, Google Play, Firebase, React Native, Expo, GitHub and GitLab documentation.' },
 ];
 
@@ -253,7 +252,6 @@ ${topbar('')}
 <p class="hero-sub">How we start, build, publish and look after our mobile apps, written down as my handover so whoever takes over doesn't have to start from zero.</p>
 <ul class="hero-meta">
 <li><span>Prepared by</span>Saad Bawany, React Native Lead</li>
-<li><span>For</span>Management and the next mobile lead</li>
 <li><span>Version</span>v1.0 &middot; 19 October 2026</li>
 <li><span>Content</span>${PAGES.length} resources &middot; ~${totalMins} min</li>
 </ul>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Store Developer Accounts | Mobile App Playbook</title>
-<meta name="description" content="Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.">
+<meta name="description" content="Individual vs organization accounts, D-U-N-S, setting them up, and getting certificates when a client has an individual Apple account.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -20,14 +20,14 @@
 <div class="hero-icon cat-stores"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h2M15 12h2M7 16h10"/></svg></div>
 <div>
 <h1>Store Developer Accounts</h1>
-<p class="lede">Apple and Google accounts: individual vs organization, the limits of each, D-U-N-S, and how to set them up.</p>
-<p class="meta"><span>Section 6</span><span>6 min read</span></p>
+<p class="lede">Individual vs organization accounts, D-U-N-S, setting them up, and getting certificates when a client has an individual Apple account.</p>
+<p class="meta"><span>Section 6</span><span>8 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#61-individual-vs-organization-accounts">6.1 Individual vs organization accounts</a></li><li><a href="#62-d-u-n-s-number-needed-for-both">6.2 D-U-N-S number (needed for both)</a></li><li><a href="#63-setting-up-the-apple-account-organization">6.3 Setting up the Apple account (organization)</a></li><li><a href="#64-setting-up-the-google-play-console-account-organization">6.4 Setting up the Google Play Console account (organization)</a></li><li><a href="#65-fees-and-timelines-at-a-glance">6.5 Fees and timelines at a glance</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#61-individual-vs-organization-accounts">6.1 Individual vs organization accounts</a></li><li><a href="#62-d-u-n-s-number-needed-for-both">6.2 D-U-N-S number (needed for both)</a></li><li><a href="#63-setting-up-the-apple-account-organization">6.3 Setting up the Apple account (organization)</a></li><li><a href="#64-when-the-clients-apple-account-is-individual">6.4 When the Client&#39;s Apple Account Is Individual</a></li><li><a href="#65-setting-up-the-google-play-console-account-organization">6.5 Setting up the Google Play Console account (organization)</a></li><li><a href="#66-fees-and-timelines-at-a-glance">6.6 Fees and timelines at a glance</a></li></ol></details></nav>
 <main class="prose" id="content">
 <h2 id="61-individual-vs-organization-accounts"><a class="anchor" href="#61-individual-vs-organization-accounts" aria-hidden="true">#</a>6.1 Individual vs organization accounts</h2>
 <p><strong>Apple Developer Program</strong></p>
@@ -145,7 +145,32 @@
 <li>Turn on auto-renew. If the membership lapses, the apps are removed from the App Store.</li>
 </ol>
 <p>If the client owns the account, the client enrolls and invites our company email as Admin or App Manager. We never ask for a client&#39;s Apple password.</p>
-<h2 id="64-setting-up-the-google-play-console-account-organization"><a class="anchor" href="#64-setting-up-the-google-play-console-account-organization" aria-hidden="true">#</a>6.4 Setting up the Google Play Console account (organization)</h2>
+<h2 id="64-when-the-clients-apple-account-is-individual"><a class="anchor" href="#64-when-the-clients-apple-account-is-individual" aria-hidden="true">#</a>6.4 When the Client&#39;s Apple Account Is Individual</h2>
+<p>This comes up a lot with smaller clients. On an individual account, only the client can get into Certificates, Identifiers &amp; Profiles. They can add us to App Store Connect, but they can&#39;t add us to the developer team, so we can&#39;t create the certificate and profiles ourselves. The way we handle it is one planned call with the client where we get everything we need in one go.</p>
+<p><strong>Before the call</strong></p>
+<ul>
+<li>Tell the client what the call is for and that it takes about 30 minutes. They need their Apple login and the phone that gets their two-factor codes.</li>
+<li>On our Mac, create a certificate signing request: Keychain Access → Certificate Assistant → Request a Certificate From a Certificate Authority → Saved to disk.</li>
+<li>Have the Bundle ID decided.</li>
+</ul>
+<p><strong>On the call</strong> (the client shares their screen and does the clicking; we guide them)</p>
+<ol>
+<li><strong>Add our company email in App Store Connect</strong> under Users and Access, as Admin or App Manager. This lets us manage TestFlight, the listing and submissions from then on.</li>
+<li><strong>Create an App Store Connect API key</strong> (Users and Access → Integrations) with Admin or App Manager access, if their account offers it. The client downloads the <code>.p8</code> and shares it with us securely, along with the Key ID and Issuer ID. This is the most useful thing to get, because with it EAS or Fastlane can create certificates and profiles and upload builds without another call.</li>
+<li><strong>Register the App ID</strong> (Bundle ID) and turn on the capabilities the app needs (Push Notifications, Sign in with Apple, Associated Domains).</li>
+<li><strong>Create an Apple Distribution certificate</strong> using our signing request. The client downloads the <code>.cer</code> and sends it to us. We install it on our Mac and export it as a <code>.p12</code> with a password.</li>
+<li><strong>Create an App Store provisioning profile</strong> for the App ID with that certificate, and download it.</li>
+<li><strong>Create an APNs key (.p8)</strong> if the app uses push. It can only be downloaded once, so make sure it&#39;s saved during the call.</li>
+<li>Note down the <strong>Team ID</strong>.</li>
+</ol>
+<p><strong>After the call</strong></p>
+<ul>
+<li>Everything goes in the project vault and management&#39;s encrypted copy, and gets listed in the Project Registry.</li>
+<li>Put the certificate and profile expiry dates in the calendar. They expire after a year, and without the API key that means another call with the client.</li>
+<li>The client&#39;s password and two-factor codes stay with the client. We never ask for them or store them.</li>
+<li>If the client is a business, suggest they move to an organization account. It removes this whole problem and puts the app under the company&#39;s name instead of a person&#39;s.</li>
+</ul>
+<h2 id="65-setting-up-the-google-play-console-account-organization"><a class="anchor" href="#65-setting-up-the-google-play-console-account-organization" aria-hidden="true">#</a>6.5 Setting up the Google Play Console account (organization)</h2>
 <ol>
 <li>Use a company Google account, ideally on the company&#39;s Google Workspace domain, like <code>playconsole@company.com</code>. Turn on two-step verification with a company phone.</li>
 <li>Have the D-U-N-S number and company documents ready.</li>
@@ -159,7 +184,7 @@
 <li>Log in now and then and keep the account active. Google can close developer accounts that haven&#39;t been used in a long time.</li>
 </ol>
 <p>If the client owns the account, they create it and invite our company Google account with Admin or release access.</p>
-<h2 id="65-fees-and-timelines-at-a-glance"><a class="anchor" href="#65-fees-and-timelines-at-a-glance" aria-hidden="true">#</a>6.5 Fees and timelines at a glance</h2>
+<h2 id="66-fees-and-timelines-at-a-glance"><a class="anchor" href="#66-fees-and-timelines-at-a-glance" aria-hidden="true">#</a>6.6 Fees and timelines at a glance</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>

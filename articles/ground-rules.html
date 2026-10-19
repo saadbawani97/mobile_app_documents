@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ground Rules | Mobile App Playbook</title>
-<meta name="description" content="The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.">
+<meta name="description" content="Rules for the company and for every team member: private repos, one Repo Owner, same-day offboarding, daily pushes and how we deal with clients.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 <script>try{var t=localStorage.getItem('playbook-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -20,26 +20,39 @@
 <div class="hero-icon cat-foundations"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
 <div>
 <h1>Ground Rules</h1>
-<p class="lede">The rules I would not bend: company owns everything, repos are private, one Repo Owner, and leavers lose access on their last day.</p>
-<p class="meta"><span>Section 1</span><span>1 min read</span></p>
+<p class="lede">Rules for the company and for every team member: private repos, one Repo Owner, same-day offboarding, daily pushes and how we deal with clients.</p>
+<p class="meta"><span>Section 1</span><span>3 min read</span></p>
 </div>
 </div>
 
 </div></div>
-<div class="layout no-toc">
-
+<div class="layout">
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#11-company-and-accounts">1.1 Company and Accounts</a></li><li><a href="#12-every-team-member">1.2 Every Team Member</a></li></ol></details></nav>
 <main class="prose" id="content">
 <p>If someone only reads one page of this document, it should be this one.</p>
+<h2 id="11-company-and-accounts"><a class="anchor" href="#11-company-and-accounts" aria-hidden="true">#</a>1.1 Company and Accounts</h2>
 <ol>
 <li><strong>The company owns everything.</strong> Every repo, store account, Firebase project, domain and third-party service is created from a company account on the company email domain. Never from someone&#39;s personal Gmail or personal GitHub, not even &quot;temporarily&quot;.</li>
 <li><strong>Every repo is private.</strong> No exceptions without written approval from management. Client code, our internal tools, documentation, all of it.</li>
 <li><strong>Only one person creates repos.</strong> We have a designated Repo Owner (Section 3.1). Developers don&#39;t create repos themselves; they ask the Repo Owner, who creates it as private, under the company organization, with the right access.</li>
 <li><strong>When someone leaves, their access goes on their last day.</strong> GitHub, GitLab, App Store Connect, Play Console, Firebase, the password manager, everything. Not next week. The <a href="offboarding-checklist.html">Offboarding Checklist</a> is mandatory.</li>
 <li><strong>Every important account has at least two company admins.</strong> If only one person can get into the Apple account and that person is on leave or has left, we&#39;re stuck.</li>
-<li><strong>Signing keys are backed up the day they&#39;re created.</strong> If we lose the Android upload key or the iOS signing assets, we can lose the ability to update the app. See <a href="production-setup.html#73-signing-keys">Signing Keys</a>.</li>
+<li><strong>Signing keys are backed up in at least two places, the day they&#39;re created.</strong> One copy in the company password manager, and a second encrypted copy that management keeps. If we lose the Android upload key or the iOS signing files, we can lose the ability to update the app. See <a href="production-setup.html#73-signing-keys">Signing Keys</a>.</li>
 <li><strong>No secrets in Git and no secrets inside the app.</strong> Anything bundled in a mobile app can be pulled out of the APK or IPA by anyone who downloads it.</li>
 <li><strong>Every project has a Project Registry.</strong> One file with all the key information about that project (<a href="project-registry-template.html">template</a>). If it&#39;s not in the registry, assume nobody else knows it.</li>
 <li><strong>Every store release has a Git tag.</strong> We should always be able to say exactly which code is running in production.</li>
+</ol>
+<h2 id="12-every-team-member"><a class="anchor" href="#12-every-team-member" aria-hidden="true">#</a>1.2 Every Team Member</h2>
+<p>These apply to every developer, QA and designer on the team, including contractors.</p>
+<ol>
+<li><strong>Push your code every day.</strong> Each person is responsible for pushing their work to the repo before they log off, even if it isn&#39;t finished (push it to your feature branch). If a laptop dies or someone leaves suddenly, we should lose one day of work at most, not weeks.</li>
+<li><strong>On client calls, use your first name or your job title only.</strong> Don&#39;t share your full name, personal phone number, personal email or social media profiles with clients.</li>
+<li><strong>Talk to clients only through company channels.</strong> Company email and the project&#39;s Slack or Teams channel. No personal WhatsApp or personal email with clients.</li>
+<li><strong>Don&#39;t commit to deadlines, scope or cost on a call.</strong> Note down what the client asked for and pass it to the lead or PM, who will get back to them.</li>
+<li><strong>Anything a client shares with you goes in the project vault.</strong> Logins, keys, certificates. Not in chat, not in a notes app, not only on your laptop.</li>
+<li><strong>Client code stays on company accounts and company devices.</strong> Don&#39;t copy it to a personal GitHub or personal drive, and don&#39;t paste it into AI tools the company hasn&#39;t approved.</li>
+<li><strong>Work on a branch and open a pull request.</strong> Nobody pushes straight to <code>main</code> or <code>develop</code>.</li>
+<li><strong>If something is going to be late, tell the lead the same day.</strong> Hearing about a delay early lets us manage the client. Hearing about it on the deadline doesn&#39;t.</li>
 </ol>
 
 <nav class="pager"><span></span><a class="pager-link next" href="new-project-setup.html"><span class="pager-dir">Next &rarr;</span><span class="pager-title">Starting a New Project</span></a></nav>

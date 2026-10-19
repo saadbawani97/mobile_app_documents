@@ -21,13 +21,13 @@
 <div>
 <h1>Catching Apple and Google Changes</h1>
 <p class="lede">How live apps get hit by store changes, where the warnings show up, and the routine to catch them early.</p>
-<p class="meta"><span>Section 9</span><span>5 min read</span></p>
+<p class="meta"><span>Section 9</span><span>6 min read</span></p>
 </div>
 </div>
 
 </div></div>
 <div class="layout">
-<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#91-how-a-live-app-gets-hit">9.1 How a live app gets hit</a></li><li><a href="#92-current-requirements-check-every-quarter">9.2 Current requirements (check every quarter)</a></li><li><a href="#93-where-the-warnings-show-up">9.3 Where the warnings show up</a></li><li><a href="#94-monitoring-routine">9.4 Monitoring routine</a></li><li><a href="#95-when-something-comes-up">9.5 When something comes up</a></li></ol></details></nav>
+<nav class="toc" aria-label="On this page"><details open><summary>On this page</summary><ol><li><a href="#91-how-a-live-app-gets-hit">9.1 How a live app gets hit</a></li><li><a href="#92-current-requirements-check-every-quarter">9.2 Current requirements (check every quarter)</a></li><li><a href="#93-how-we-actually-keep-track">9.3 How we actually keep track</a></li><li><a href="#94-monitoring-routine">9.4 Monitoring routine</a></li><li><a href="#95-when-something-comes-up">9.5 When something comes up</a></li></ol></details></nav>
 <main class="prose" id="content">
 <p>Apple and Google change something every year: new OS versions, new SDK minimums, new privacy rules, new policies. An app that nobody looks after will eventually get its next update rejected, become hidden from new users, or get removed. Nobody from Apple or Google is going to call us about it. The warnings come by email to whoever&#39;s email is on the account, and they come with deadlines. So most of this job is making sure those emails go somewhere that people actually read, and having a routine.</p>
 <h2 id="91-how-a-live-app-gets-hit"><a class="anchor" href="#91-how-a-live-app-gets-hit" aria-hidden="true">#</a>9.1 How a live app gets hit</h2>
@@ -92,30 +92,31 @@
 <td>Store policy pages</td>
 </tr>
 </tbody></table></div>
-<h2 id="93-where-the-warnings-show-up"><a class="anchor" href="#93-where-the-warnings-show-up" aria-hidden="true">#</a>9.3 Where the warnings show up</h2>
-<p>The single most important step: <strong>make sure all emails from both stores go to a shared company inbox</strong> (something like <code>mobile-alerts@company.com</code>) that more than one person reads. Not to one person&#39;s inbox.</p>
-<p><strong>Google Play Console</strong></p>
+<h2 id="93-how-we-actually-keep-track"><a class="anchor" href="#93-how-we-actually-keep-track" aria-hidden="true">#</a>9.3 How we actually keep track</h2>
+<p>This is how I kept on top of our live apps, and it depends on how much access we have to the store account.</p>
+<p><strong>Apps on our accounts, or where the client gave us full access.</strong> Apple and Google send every warning, policy change and new requirement by email to the account&#39;s admins. Those emails come to our company email, and that&#39;s how we&#39;d hear about a problem first. It&#39;s also why store accounts must always be on a company email that more than one person reads, never on one person&#39;s personal inbox. When an email like that comes in, someone opens the store console the same day and checks what it&#39;s about and when the deadline is.</p>
+<p><strong>Apps where the client gave us limited access.</strong> Here the store emails go to the client, because they&#39;re the account holder and we only have a developer or app manager role. Clients often don&#39;t notice them, or don&#39;t realise they matter. So for these apps we logged into Play Console and App Store Connect ourselves from time to time and went through the notifications and warnings by hand. I&#39;d also ask these clients, at the start of the project, to forward us any email they get from Apple or Google about the app.</p>
+<p><strong>What to check when you log in</strong></p>
+<p>On Google Play Console:</p>
 <ul>
-<li>The inbox (bell icon) and the account owner&#39;s email. New requirements and policy warnings show up here first.</li>
-<li>Policy status page (Policy and programs → Policy status): any app with a warning, and its deadline.</li>
-<li>Warnings on each app&#39;s dashboard, like &quot;Your app must target API level XX by...&quot;.</li>
-<li>Android vitals: crash rate and ANR rate. Going over Google&#39;s limits lowers how visible the app is on the store.</li>
-<li>The pre-launch report on every upload.</li>
-<li>SDK warnings, when Play flags an SDK version as outdated or against policy.</li>
+<li>The inbox (bell icon at the top). New requirements and policy warnings show up here.</li>
+<li>Policy status (Policy and programs → Policy status): any app with a warning, and its deadline.</li>
+<li>The app&#39;s dashboard, for messages like &quot;Your app must target API level XX by...&quot;.</li>
+<li>Android vitals: crash rate and ANR rate. Google lowers the app&#39;s visibility on the store if the user-perceived crash rate goes over about 1.09% or the ANR rate over about 0.47%.</li>
+<li>The pre-launch report on the latest upload, and any SDK warnings.</li>
 </ul>
-<p><strong>App Store Connect and Apple</strong></p>
+<p>On App Store Connect:</p>
 <ul>
-<li>Emails to the Account Holder and Admins, and notifications in the App Store Connect app.</li>
-<li>Apple Developer News and the &quot;Upcoming requirements&quot; page, where every new deadline is announced.</li>
-<li>App Review Guidelines updates, usually after WWDC in June.</li>
-<li>Resolution Center messages and Ratings &amp; Reviews for each app.</li>
-<li>Xcode Organizer for crashes and hangs, and App Analytics.</li>
-<li>The membership renewal date.</li>
+<li>Notifications and any messages in the Resolution Center.</li>
+<li>Ratings &amp; Reviews for each app.</li>
+<li>The agreements banner at the top. A pending agreement can block updates.</li>
+<li>The membership renewal date, if it&#39;s an account we manage.</li>
 </ul>
-<p><strong>Our own monitoring</strong></p>
+<p>And on Apple&#39;s side in general, the Developer News and &quot;Upcoming requirements&quot; pages, where every new deadline is announced.</p>
+<p><strong>Our own signals</strong></p>
 <ul>
-<li>Crashlytics alerts going to the shared inbox or Slack. A spike right after a new iOS or Android release almost always means the new OS broke something.</li>
-<li>Store reviews. A sudden run of one-star reviews saying &quot;crashes after update&quot; is a strong signal.</li>
+<li>Crashlytics alerts going to the company email or Slack. A spike right after a new iOS or Android release almost always means the new OS broke something. We aim for 99.5% crash-free users or better.</li>
+<li>Store reviews. A run of one-star reviews saying &quot;crashes after update&quot; is a strong signal.</li>
 <li>Dependabot and <code>npm audit</code> on every repo.</li>
 <li>OS betas: every June when the iOS beta comes out, and with each Android beta, install it on a test phone and go through each live app before the public release in September.</li>
 </ul>
@@ -130,17 +131,17 @@
 </thead>
 <tbody><tr>
 <td>Daily, about 5 minutes</td>
-<td>Check the shared inbox for store emails and look at Crashlytics alerts</td>
+<td>Check the company email for anything from Apple or Google, and look at Crashlytics alerts</td>
 <td>Mobile lead or whoever is on duty</td>
 </tr>
 <tr>
-<td>Weekly</td>
-<td>Play Console inbox and Policy status, App Store Connect messages, new reviews</td>
+<td>Every couple of weeks</td>
+<td>Log into the client accounts where we have limited access and go through the notifications, Policy status and reviews (9.3)</td>
 <td>Mobile lead</td>
 </tr>
 <tr>
 <td>Monthly</td>
-<td>Update the <a href="live-apps-health-sheet.html">Live Apps Health Sheet</a> for every live app: crash-free rate, ANR rate, target SDK, last release, open warnings</td>
+<td>Go through every live app: crash-free rate, ANR rate, target SDK, last release date, and any open warnings. Note anything open in that project&#39;s registry.</td>
 <td>Mobile lead</td>
 </tr>
 <tr>
@@ -171,7 +172,7 @@
 </tbody></table></div>
 <h2 id="95-when-something-comes-up"><a class="anchor" href="#95-when-something-comes-up" aria-hidden="true">#</a>9.5 When something comes up</h2>
 <ol>
-<li>Add it to the Live Apps Health Sheet with its deadline.</li>
+<li>Write it in the &quot;Open warnings and deadlines&quot; table in that project&#39;s registry, with the deadline.</li>
 <li>Tell management, and the client if it&#39;s their app: what changed, the deadline, what happens if we ignore it, and roughly how long the fix takes.</li>
 <li>Plan the fix release well before the deadline. Reviews get slow when everyone is rushing for the same deadline.</li>
 <li>Once the fix is live, confirm the warning is gone from Play Console or App Store Connect and close it in the sheet.</li>

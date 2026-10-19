@@ -62,19 +62,29 @@
 <p>These are the most important files in the whole project. Lose them and you may not be able to update the app.</p>
 <p><strong>Android</strong></p>
 <ul>
-<li>Play App Signing is mandatory for new apps. Google keeps the app signing key, and we keep the upload key.</li>
-<li>Create the upload keystore once per app:<pre><code class="language-bash">keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
+<li><p>Play App Signing is mandatory for new apps. Google keeps the app signing key, and we keep the upload key.</p>
+</li>
+<li><p>Create the upload keystore once per app:</p>
+<pre><code class="language-bash">keytool -genkeypair -v -storetype PKCS12 -keystore acme-delivery-upload.keystore \
   -alias acme-delivery-upload -keyalg RSA -keysize 2048 -validity 10000
 </code></pre>
 </li>
-<li>Back it up to the project vault immediately: the <code>.keystore</code> file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints.</li>
-<li><code>keystore.properties</code> stays out of Git. CI gets the keystore from secrets.</li>
-<li>If the upload key is lost, the account owner can ask Google for an upload key reset. It&#39;s possible because of Play App Signing, but it takes time and blocks releases until it&#39;s done. A backup avoids all of that.</li>
+<li><p>Back it up in <strong>two places</strong> straight away:</p>
+<ol>
+<li>The project vault in the company password manager.</li>
+<li>A second encrypted copy kept by management: a password-protected archive in a management-owned folder on the company Google Drive, or an encrypted USB drive.</li>
+</ol>
+<p>Each copy needs the <code>.keystore</code> file, the store password, the key alias, the key password and the SHA-1 and SHA-256 fingerprints. A copy in CI secrets doesn&#39;t count as a backup, because you can&#39;t download it again.</p>
+</li>
+<li><p><code>keystore.properties</code> stays out of Git. CI gets the keystore from secrets.</p>
+</li>
+<li><p>If the upload key is lost, the account owner can ask Google for an upload key reset. It&#39;s possible because of Play App Signing, but it takes time and blocks releases until it&#39;s done. A backup avoids all of that.</p>
+</li>
 </ul>
 <p><strong>iOS</strong></p>
 <ul>
 <li>Automatic signing is fine for development. For CI use EAS or Fastlane match, so certificates aren&#39;t stuck on one person&#39;s Mac.</li>
-<li>Back up to the vault: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).</li>
+<li>Back up the same way, in the vault and in management&#39;s encrypted copy: the distribution certificate (.p12 and its password), the APNs key (.p8 and Key ID), and the App Store Connect API key (.p8, Key ID and Issuer ID).</li>
 <li>Distribution certificates and provisioning profiles expire after a year. Put the dates on the shared calendar (Section 10.4).</li>
 </ul>
 <h2 id="74-store-listing-what-to-prepare"><a class="anchor" href="#74-store-listing-what-to-prepare" aria-hidden="true">#</a>7.4 Store listing: what to prepare</h2>
